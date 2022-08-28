@@ -1,0 +1,3 @@
+[submodule "Iberus/dependencies/spdlog"]
+	path = Iberus/dependencies/spdlog
+	url = https://github.com/gabime/spdlog

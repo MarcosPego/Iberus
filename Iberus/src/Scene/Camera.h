@@ -1,7 +1,12 @@
 #pragma once
 #include "Entity.h"
 
-class Camera : public Entity {
+namespace Iberus {
+	class IBERUS_API Camera : public Entity {
 
-};
+	};
+
+}
+
+
 

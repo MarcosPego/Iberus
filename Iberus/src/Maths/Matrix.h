@@ -118,36 +118,39 @@ namespace Math {
 	};
 
 	struct MatrixFactory {
-		static const Mat2 createZeroMat2();
-		static const Mat2 createIdentityMat2();
-		static const Mat2 createScaleMat2(const Vec2& v);
-		static const Mat2 createRotationMat2(const float angle);
-
-		static const Mat3 createZeroMat3();
-		static const Mat3 createIdentityMat3();
-		static const Mat3 createDualMat3(const Vec3& v);
-		static const Mat3 createScaleMat3(const Vec3& v);
-		static const Mat3 createRotationMat3(const float angle, const Vec3& axis);
-		static const Mat3 createMat3FromMat4(const Mat4& axis);
-
-		static const Mat3 createRandomBet9Mat3();
-
-		static const Mat4 createZeroMat4();
-		static const Mat4 createIdentityMat4();
-		static const Mat4 createScaleMat4(const Vec3& v);
-		static const Mat4 createRotationMat4(const float angle, const Vec3& axis);
-		static const Mat4 createTranslationMat4( const Vec3& vector);
-		static const Mat4 createMat4FromMat3(const Mat3& m3);
-
-		static const Mat4 createRotation2DMat4(const float angle);
-
-		static const Mat4 createViewMat4(const Vec3& eye, const Vec3& center, const Vec3& up);
-		static const Mat4 createOrtoMat4(const float left, const float right, const float bottom, const float top, const float near, const float far);
-		static const Mat4 createPerspectiveMat4(const float fovy, const float aspect, const float nearZ, const float farZ);
-
-		static const Mat4 createModelMatrix(Vec3 scale, float angle, Vec3 position, Vec3 parent_position, float parent_angle);
-
-		static const Mat4 createReflectionMatrix(Vec4 plane_vec);
-		static const Mat4 createNEGY();
+		static const Mat2 CreateZeroMat2();
+		static const Mat2 CreateIdentityMat2();
+		static const Mat2 CreateScaleMat2(const Vec2& v);
+		static const Mat2 CreateRotationMat2(const float angle);
+						  
+		static const Mat3 CreateZeroMat3();
+		static const Mat3 CreateIdentityMat3();
+		static const Mat3 CreateDualMat3(const Vec3& v);
+		static const Mat3 CreateScaleMat3(const Vec3& v);
+		static const Mat3 CreateRotationMat3(const float angle, const Vec3& axis);
+		static const Mat3 CreateMat3FromMat4(const Mat4& axis);
+						  
+		static const Mat3 CreateRandomBet9Mat3();
+						  
+		static const Mat4 CreateZeroMat4();
+		static const Mat4 CreateIdentityMat4();
+		static const Mat4 CreateScaleMat4(const Vec3& v);
+		static const Mat4 CreateRotationMat4(const float angle, const Vec3& axis);
+		static const Mat4 CreateTranslationMat4( const Vec3& vector);
+		static const Mat4 CreateMat4FromMat3(const Mat3& m3);
+						  
+		static const Mat4 CreateRotation2DMat4(const float angle);
+						  
+		static const Mat4 CreateViewMat4(const Vec3& eye, const Vec3& center, const Vec3& up);
+		static const Mat4 CreateOrtoMat4(const float left, const float right, const float bottom, const float top, const float near, const float far);
+		static const Mat4 CreatePerspectiveMat4(const float fovy, const float aspect, const float nearZ, const float farZ);
+						  
+		static const Mat4 CreateModelMatrix(const Vec3& position, const Vec3& rotation, const Vec3& scale,
+			const Vec3& parentPos, const Vec3& parentRot, const Vec3& parentScale);
+			
+			, Vec3 parent_position, float parent_angle);
+						  
+		static const Mat4 CreateReflectionMatrix(Vec4 plane_vec);
+		static const Mat4 CreateNEGY();
 	};
 };

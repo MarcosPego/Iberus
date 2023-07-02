@@ -7,3 +7,5 @@
 		#define IBERUS_API __declspec(dllimport)
 	#endif // IB_BUILD_DLL
 #endif // IB_PLATFORM_WINDOWS
+
+#define BIT(x)  (1 << x)

@@ -11,7 +11,7 @@ workspace "Iberus"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "Iberus"
-	location "Sandbox"
+	location "Iberus"
 	kind "SharedLib"
 	language "C++"
 
@@ -19,12 +19,28 @@ project "Iberus"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files {
+		"%{prj.name}/src/**/**.h",
+		"%{prj.name}/src/**/**.cpp",
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp"
 	}
 
 	includedirs {
-		"%{prj.name}/dependencies/spdlog/include"
+		"%{prj.name}/src/**",
+		"%{prj.name}/src",
+		"%{prj.name}/dependencies/spdlog/include",
+		"%{prj.name}/dependencies/glfw/include/GLFW",
+		"%{prj.name}/dependencies/glew/include/GL"
+	}
+
+	libdirs {
+		"%{prj.name}/dependencies/glfw/lib-vc2019",
+		"%{prj.name}/dependencies/glew/lib/Release/x64"
+	}
+
+	links {
+		"glfw3",
+		"glew32"
 	}
 
 	filter "system:windows"
@@ -68,6 +84,7 @@ project "Sandbox"
 
 	includedirs {
 		"Iberus/dependencies/spdlog/include",
+		"Iberus/src/**",
 		"Iberus/src"
 	}
 

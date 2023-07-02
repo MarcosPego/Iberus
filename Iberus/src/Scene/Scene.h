@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <unordered_map>
-
 #include "Core.h"
 #include "MathUtils.h"
 

@@ -1,11 +1,6 @@
 #pragma once
 
 #include "matrix.h"
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <cassert>
-
 
 namespace Math {
 	struct Qtrn {

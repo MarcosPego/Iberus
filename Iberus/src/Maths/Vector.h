@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 
 namespace Math {
 	static float EPSILON = 0.00001f;

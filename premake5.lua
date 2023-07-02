@@ -18,6 +18,9 @@ project "Iberus"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "Enginepch.h"
+	pchsource "Iberus/src/Enginepch.cpp"
+
 	files {
 		"%{prj.name}/src/**/**.h",
 		"%{prj.name}/src/**/**.cpp",

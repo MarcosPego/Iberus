@@ -76,10 +76,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Core;src\Events;src\Logging;src\Maths;src\Scene;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -89,7 +90,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>dependencies\glfw\lib-vc2019;dependencies\glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>dependencies\glfw\lib-vc2022;dependencies\glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Debug-windows-x86_64\Iberus\Iberus.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
@@ -98,10 +99,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Core;src\Events;src\Logging;src\Maths;src\Scene;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -124,10 +126,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Core;src\Events;src\Logging;src\Maths;src\Scene;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -149,12 +152,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Renderer\Renderer.h" />
-    <ClInclude Include="src\Renderer\Shader.h" />
-    <ClInclude Include="src\Scene\Material.h" />
-    <ClInclude Include="src\Scene\Camera.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Core.h" />
+    <ClInclude Include="src\Core\Enginepch.h" />
     <ClInclude Include="src\Core\EntryPoint.h" />
     <ClInclude Include="src\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Events\Event.h" />
@@ -166,28 +166,36 @@
     <ClInclude Include="src\Maths\Matrix.h" />
     <ClInclude Include="src\Maths\Quaternions.h" />
     <ClInclude Include="src\Maths\Vector.h" />
-    <ClInclude Include="src\Scene\Entity.h" />
-    <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Renderer\Renderer.h" />
+    <ClInclude Include="src\Renderer\Shader.h" />
     <ClInclude Include="src\Renderer\Texture.h" />
+    <ClInclude Include="src\Scene\Camera.h" />
+    <ClInclude Include="src\Scene\Entity.h" />
+    <ClInclude Include="src\Scene\Material.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Scene\Material.cpp" />
-    <ClCompile Include="src\Scene\Camera.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\Enginepch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\Logging\Log.cpp" />
     <ClCompile Include="src\Maths\Mat2.cpp" />
     <ClCompile Include="src\Maths\Mat3.cpp" />
     <ClCompile Include="src\Maths\Mat4.cpp" />
+    <ClCompile Include="src\Maths\MathUtils.cpp" />
     <ClCompile Include="src\Maths\MatrixFactory.cpp" />
     <ClCompile Include="src\Maths\Quaternions.cpp" />
     <ClCompile Include="src\Maths\Vec2.cpp" />
     <ClCompile Include="src\Maths\Vec3.cpp" />
     <ClCompile Include="src\Maths\Vec4.cpp" />
-    <ClCompile Include="src\Scene\Entity.cpp" />
-    <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Scene\Camera.cpp" />
+    <ClCompile Include="src\Scene\Entity.cpp" />
+    <ClCompile Include="src\Scene\Material.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,12 +1,10 @@
 #pragma once
-#include <iostream>
-#include "vector.h"
 
-#include <glew.h>
-#include <glfw3.h>
+#include "vector.h"
 
 namespace Math {
 	//Matrixes are used in Column major
+
 	struct Mat4;
 
 	struct Mat2 {
@@ -147,8 +145,6 @@ namespace Math {
 						  
 		static const Mat4 CreateModelMatrix(const Vec3& position, const Vec3& rotation, const Vec3& scale,
 			const Vec3& parentPos, const Vec3& parentRot, const Vec3& parentScale);
-			
-			, Vec3 parent_position, float parent_angle);
 						  
 		static const Mat4 CreateReflectionMatrix(Vec4 plane_vec);
 		static const Mat4 CreateNEGY();

@@ -1,7 +1,8 @@
+#include "Enginepch.h"
 #include "matrix.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+#undef near
+#undef far
 
 namespace Math {
 	const Mat2 MatrixFactory::CreateZeroMat2() {

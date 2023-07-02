@@ -13,6 +13,9 @@
     <Filter Include="Maths">
       <UniqueIdentifier>{028BA70D-6E9F-CFBE-3721-731EA3F4CBEF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{7CCE658F-689B-C09A-91B4-AE427DE0F528}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{B3F7140E-1F0C-3DBF-E88D-E01E546139F0}</UniqueIdentifier>
     </Filter>
@@ -22,6 +25,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Core.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Enginepch.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\EntryPoint.h">
@@ -55,20 +61,33 @@
     <ClInclude Include="src\Maths\Vector.h">
       <Filter>Maths</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Shader.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Texture.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Camera.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Entity.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Material.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Camera.h" />
-    <ClInclude Include="src\Scene\Material.h" />
-    <ClInclude Include="src\Renderer\Texture.h" />
-    <ClInclude Include="src\Renderer\Shader.h" />
-    <ClInclude Include="src\Renderer\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Enginepch.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Logging\Log.cpp">
@@ -98,16 +117,27 @@
     <ClCompile Include="src\Maths\Vec4.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer\Renderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Shader.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Texture.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Camera.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Entity.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Material.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Camera.cpp" />
-    <ClCompile Include="src\Scene\Material.cpp" />
-    <ClCompile Include="src\Renderer\Texture.cpp" />
-    <ClCompile Include="src\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Maths\MathUtils.cpp" />
   </ItemGroup>
 </Project>

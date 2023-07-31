@@ -19,16 +19,21 @@ project "Iberus"
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "Enginepch.h"
-	pchsource "Iberus/src/Enginepch.cpp"
+	pchsource "Iberus/src/Core/Enginepch.cpp"
 
 	files {
+		"%{prj.name}/src/**/**/**.h",
+		"%{prj.name}/src/**/**/**.cpp",
 		"%{prj.name}/src/**/**.h",
 		"%{prj.name}/src/**/**.cpp",
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/dependencies/glfw/include/GLFW/**.h",
+		"%{prj.name}/dependencies/glew/include/GL/**.h"
 	}
 
 	includedirs {
+		"%{prj.name}/src/**/**",
 		"%{prj.name}/src/**",
 		"%{prj.name}/src",
 		"%{prj.name}/dependencies/spdlog/include",
@@ -42,8 +47,9 @@ project "Iberus"
 	}
 
 	links {
-		"glfw3",
-		"glew32"
+		"glew32",
+		"opengl32",
+		"glfw3_mt"
 	}
 
 	filter "system:windows"
@@ -86,12 +92,22 @@ project "Sandbox"
 	}
 
 	includedirs {
+		"Iberus/dependencies/glfw/include/GLFW",
+		"Iberus/dependencies/glew/include/GL",
 		"Iberus/dependencies/spdlog/include",
 		"Iberus/src/**",
 		"Iberus/src"
 	}
 
-	links {
+	libdirs {
+		"Iberus/dependencies/glfw/lib-vc2019",
+		"Iberus/dependencies/glew/lib/Release/x64"
+	}
+
+	links {		
+		"glew32",
+		"opengl32",
+		"glfw3_mt",
 		"Iberus"
 	}
 

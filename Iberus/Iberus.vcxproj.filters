@@ -1,143 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    <Filter Include="dependencies">
+      <UniqueIdentifier>{8CAD9F58-7810-2FFD-2196-67B30DD8FA7F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
+    <Filter Include="dependencies\glew">
+      <UniqueIdentifier>{AAD8926A-16EF-9000-5F66-1C22CBBB6188}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Logging">
-      <UniqueIdentifier>{AC6878E8-1848-F783-2160-825A8DBE5DE5}</UniqueIdentifier>
+    <Filter Include="dependencies\glew\include">
+      <UniqueIdentifier>{1D0A1B31-89CC-4EBB-D27C-DD473E7E2799}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Maths">
-      <UniqueIdentifier>{028BA70D-6E9F-CFBE-3721-731EA3F4CBEF}</UniqueIdentifier>
+    <Filter Include="dependencies\glew\include\GL">
+      <UniqueIdentifier>{5F82C764-4B3D-B710-F4F4-2F5BE08E01A1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer">
-      <UniqueIdentifier>{7CCE658F-689B-C09A-91B4-AE427DE0F528}</UniqueIdentifier>
+    <Filter Include="dependencies\glfw">
+      <UniqueIdentifier>{CBD8926A-37EF-9000-8066-1C22ECBB6188}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{B3F7140E-1F0C-3DBF-E88D-E01E546139F0}</UniqueIdentifier>
+    <Filter Include="dependencies\glfw\include">
+      <UniqueIdentifier>{3E9B2535-AA5D-59BF-F30D-E84B5F0F329D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\glfw\include\GLFW">
+      <UniqueIdentifier>{3D0DF957-2933-C3BE-1279-488AFE3DE88A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core">
+      <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Events">
+      <UniqueIdentifier>{7162C20E-5D1A-045C-C621-DDB7B2F89E4C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Logging">
+      <UniqueIdentifier>{C368B2F1-2F1E-2BE7-B812-25BE24C721EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Maths">
+      <UniqueIdentifier>{599964B3-C503-192A-0E42-CACF7AEBF67E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer">
+      <UniqueIdentifier>{73D1DFBF-5F34-6F64-08BA-A71AF4FB3AE7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer\Platform">
+      <UniqueIdentifier>{275FA817-93CB-6312-5CBF-FB6FC8EA857A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scene">
+      <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dependencies\glew\include\GL\eglew.h">
+      <Filter>dependencies\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\glew\include\GL\glew.h">
+      <Filter>dependencies\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\glew\include\GL\glxew.h">
+      <Filter>dependencies\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\glew\include\GL\wglew.h">
+      <Filter>dependencies\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\glfw\include\GLFW\glfw3.h">
+      <Filter>dependencies\glfw\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\glfw\include\GLFW\glfw3native.h">
+      <Filter>dependencies\glfw\include\GLFW</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Application.h">
-      <Filter>Core</Filter>
+      <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Core.h">
-      <Filter>Core</Filter>
+      <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Enginepch.h">
-      <Filter>Core</Filter>
+      <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\EntryPoint.h">
-      <Filter>Core</Filter>
+      <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\ApplicationEvent.h">
-      <Filter>Events</Filter>
+      <Filter>src\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\Event.h">
-      <Filter>Events</Filter>
+      <Filter>src\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\KeyEvent.h">
-      <Filter>Events</Filter>
+      <Filter>src\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\MouseEvent.h">
-      <Filter>Events</Filter>
+      <Filter>src\Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Iberus.h" />
+    <ClInclude Include="src\Iberus.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Logging\Log.h">
-      <Filter>Logging</Filter>
+      <Filter>src\Logging</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\MathUtils.h">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Matrix.h">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Quaternions.h">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Vector.h">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Platform\WindowsWindow.h">
+      <Filter>src\Renderer\Platform</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\Renderer.h">
-      <Filter>Renderer</Filter>
+      <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\Shader.h">
-      <Filter>Renderer</Filter>
+      <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\Texture.h">
-      <Filter>Renderer</Filter>
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Window.h">
+      <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Camera.h">
-      <Filter>Scene</Filter>
+      <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Entity.h">
-      <Filter>Scene</Filter>
+      <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Material.h">
-      <Filter>Scene</Filter>
+      <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
-      <Filter>Scene</Filter>
+      <Filter>src\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
-      <Filter>Core</Filter>
+      <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Enginepch.cpp">
-      <Filter>Core</Filter>
+      <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Logging\Log.cpp">
-      <Filter>Logging</Filter>
+      <Filter>src\Logging</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Mat2.cpp">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Mat3.cpp">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Mat4.cpp">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Maths\MathUtils.cpp">
+      <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\MatrixFactory.cpp">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Quaternions.cpp">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Vec2.cpp">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Vec3.cpp">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Vec4.cpp">
-      <Filter>Maths</Filter>
+      <Filter>src\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Platform\WindowsWindow.cpp">
+      <Filter>src\Renderer\Platform</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\Renderer.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\Shader.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\Texture.cpp">
-      <Filter>Renderer</Filter>
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Window.cpp">
+      <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Camera.cpp">
-      <Filter>Scene</Filter>
+      <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Entity.cpp">
-      <Filter>Scene</Filter>
+      <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Material.cpp">
-      <Filter>Scene</Filter>
+      <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
-      <Filter>Scene</Filter>
+      <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Maths\MathUtils.cpp" />
   </ItemGroup>
 </Project>

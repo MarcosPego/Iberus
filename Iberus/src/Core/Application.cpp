@@ -3,15 +3,16 @@
 
 namespace Iberus {
 	Application::Application() {
+		static WindowProps winProps{};
+		window = std::unique_ptr<Window>(Window::Create(winProps));
 	}
 
-	Application::~Application()
-	{
+	Application::~Application() {
 	}
 
 	void Application::Run() {
-		while (true) {
-
+		while (running) {
+			window->Update();
 		}
 	}
 }

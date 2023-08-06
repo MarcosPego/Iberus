@@ -6,7 +6,10 @@ namespace Math {
 	struct Vec3;
 
 	struct Vec2 {
-		float x, y;
+		union {
+			float x, y;
+			float data[2];
+		};
 
 		Vec2();
 		Vec2(const float same_value);
@@ -37,7 +40,10 @@ namespace Math {
 	};
 
 	struct Vec3 {
-		float x, y, z;
+		union {
+			float x, y, z;
+			float data[3];
+		};
 
 		Vec3();
 		Vec3(const float same_value);
@@ -72,7 +78,11 @@ namespace Math {
 	};
 
 	struct Vec4 {
-		float x, y, z, w;
+		union {
+			float x, y, z, w;
+			float data[4];
+		};
+
 
 		Vec4();
 		Vec4(const float same_value);

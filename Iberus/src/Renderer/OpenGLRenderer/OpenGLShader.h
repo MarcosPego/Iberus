@@ -14,10 +14,12 @@ namespace Iberus {
 		// Note(MPP) Not sure this should be private
 		const GLuint AddShader(const GLenum shaderType, Buffer shaderBuffer);
 
+		bool useNormals{ true };
+		bool useUVs{ true };
 
-		GLuint VertexShaderId;
-		GLuint FragmentShaderId;
-		GLuint shaderGLID;
+		GLuint VertexShaderId{ 0 };
+		GLuint FragmentShaderId{ 0 };
+		GLuint shaderGLID{ 0 };
 	};
 }
 

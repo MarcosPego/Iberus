@@ -1,12 +1,28 @@
 #pragma once
 
 #include "Buffer.h"
+#include "MathUtils.h"
+
+using namespace Math;
 
 namespace Iberus {
 	class Mesh {
 	public:
-		virtual bool LoadMesh(Buffer inboundBuffer);
+		virtual bool Load(Buffer inboundBuffer);
 
+		virtual bool Build();
+		virtual void Destroy();
+
+		virtual void Bind();
+		virtual void Unbind();
+
+	protected:
+		bool hasUVs;
+		bool hasNormals;
+
+		std::vector<Vec3> vertices;
+		std::vector<Vec2> uvs;
+		std::vector<Vec3> normals;
 	};
 }
 

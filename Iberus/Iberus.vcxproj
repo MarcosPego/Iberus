@@ -152,6 +152,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h" />
+    <ClInclude Include="src\Renderer\ShaderBindings.h" />
     <ClInclude Include="src\Scene\Resources\Buffer.h" />
     <ClInclude Include="dependencies\glew\include\GL\eglew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glew.h" />
@@ -191,6 +193,8 @@
     <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp" />
+    <ClCompile Include="src\Renderer\ShaderBindings.cpp" />
     <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLTexture.cpp" />

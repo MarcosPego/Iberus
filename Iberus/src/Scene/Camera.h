@@ -8,7 +8,8 @@
 
 namespace Iberus {
 
-	enum ProjectionType {
+	enum class ProjectionType {
+		UNKNOWN,
 		ORTHOGRAFIC,
 		PERSPECTIVE
 	};
@@ -17,7 +18,7 @@ namespace Iberus {
 	class Projection {
 	public:
 		virtual Mat4 GetProjectionMatrix() = 0;
-		ProjectionType projectionType;
+		ProjectionType projectionType{ ProjectionType::UNKNOWN };
 	};
 
 	class OrthoProjection final : public Projection {
@@ -26,7 +27,7 @@ namespace Iberus {
 		OrthoProjection(float l, float r, float b, float t, float n, float f);
 		Mat4 GetProjectionMatrix() override final;
 
-		ProjectionType projectionType{ ORTHOGRAFIC };
+		ProjectionType projectionType{ ProjectionType::ORTHOGRAFIC };
 	};
 
 	class PerspectiveProjection final : public Projection {

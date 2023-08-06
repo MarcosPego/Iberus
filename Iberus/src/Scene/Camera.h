@@ -36,7 +36,7 @@ namespace Iberus {
 		PerspectiveProjection(float fovy, float aspect, float nearZ, float farZ);
 		Mat4 GetProjectionMatrix() override final;
 
-		ProjectionType projectionType{ PERSPECTIVE };
+		ProjectionType projectionType{ ProjectionType::PERSPECTIVE };
 	};
 	
 	class IBERUS_API Camera : public Entity {

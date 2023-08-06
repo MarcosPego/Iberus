@@ -16,7 +16,7 @@ namespace Iberus {
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
-		size_t VertexSize() { vertices.size(); }
+		size_t VertexSize() { return vertices.size(); }
 
 	protected:
 		bool hasUVs;

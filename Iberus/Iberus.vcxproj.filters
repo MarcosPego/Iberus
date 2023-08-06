@@ -159,6 +159,8 @@
     <ClInclude Include="src\Scene\Resources\Buffer.h" />
     <ClInclude Include="src\Renderer\ShaderBindings.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h" />
+    <ClInclude Include="src\Renderer\RenderCmd.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -242,5 +244,7 @@
     <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
     <ClCompile Include="src\Renderer\ShaderBindings.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp" />
+    <ClCompile Include="src\Renderer\RenderCmd.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,8 @@ using namespace Math;
 
 namespace Iberus {
 
+	class RenderBatch;
+
 	struct Transform {
 		Vec3 Position{ 0,0,0 };
 		Vec3 Rotation{ 0,0,0 };
@@ -35,11 +37,20 @@ namespace Iberus {
 		Transform GetTransform() const { return transform; }
 
 		Mat4 GetModelMatrix() const { 
-			return MatrixFactory::CreateModelMatrix(transform.Position, transform.Rotation, transform.Scale,
-				GetParent()->GetTransform().Position, GetParent()->GetTransform().Rotation, GetParent()->GetTransform().Scale);
+			if (parent) {
+				return MatrixFactory::CreateModelMatrix(transform.Position, transform.Rotation, transform.Scale, parent->GetModelMatrix());
+			}
+			else {
+				return MatrixFactory::CreateModelMatrix(transform.Position, transform.Rotation, transform.Scale);
+			}
 		}
 
+		void PushDraw(RenderBatch& renderBatch);
+
 	private:
+		std::string ID; // String or unique int ?
+		std::string Name;
+
 		Transform transform;
 
 		Entity* parent{ nullptr };

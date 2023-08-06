@@ -145,6 +145,9 @@ namespace Math {
 						  
 		static const Mat4 CreateModelMatrix(const Vec3& position, const Vec3& rotation, const Vec3& scale,
 			const Vec3& parentPos, const Vec3& parentRot, const Vec3& parentScale);
+
+		static const Mat4 CreateModelMatrix(const Vec3& position, const Vec3& rotation, const Vec3& scale, const Mat4& parentMatrix);
+		static const Mat4 CreateModelMatrix(const Vec3& position, const Vec3& rotation, const Vec3& scale);
 						  
 		static const Mat4 CreateReflectionMatrix(Vec4 plane_vec);
 		static const Mat4 CreateNEGY();

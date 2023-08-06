@@ -160,6 +160,21 @@ namespace Math {
 			MatrixFactory::CreateScaleMat4(scale);
 	}
 
+	const Mat4 MatrixFactory::CreateModelMatrix(const Vec3& position, const Vec3& rotation, const Vec3& scale, const Mat4& parentMatrix) {
+		return parentMatrix * MatrixFactory::CreateTranslationMat4(position) *
+			MatrixFactory::CreateRotationMat4(rotation.x, Vec3(1, 0, 0)) *
+			MatrixFactory::CreateRotationMat4(rotation.y, Vec3(0, 1, 0)) *
+			MatrixFactory::CreateRotationMat4(rotation.z, Vec3(0, 0, 1)) *
+			MatrixFactory::CreateScaleMat4(scale);
+	}
+
+	const Mat4 MatrixFactory::CreateModelMatrix(const Vec3& position, const Vec3& rotation, const Vec3& scale) {
+		return MatrixFactory::CreateTranslationMat4(position) *
+			MatrixFactory::CreateRotationMat4(rotation.x, Vec3(1, 0, 0)) *
+			MatrixFactory::CreateRotationMat4(rotation.y, Vec3(0, 1, 0)) *
+			MatrixFactory::CreateRotationMat4(rotation.z, Vec3(0, 0, 1)) *
+			MatrixFactory::CreateScaleMat4(scale);
+	}
 
 	const Mat4 MatrixFactory::CreateReflectionMatrix(Vec4 plane_vec) {
 		float a = plane_vec.x;

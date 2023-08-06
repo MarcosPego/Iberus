@@ -1,7 +1,7 @@
 #include "Enginepch.h"
 #include "OpenGLShader.h"
 
-#include "OpenGLShaderBindings.h"
+#include "ShaderBindings.h"
 
 #define VERTICES 0
 #define UVS 1
@@ -28,12 +28,12 @@ bool OpenGLShader::Load(Buffer vertexBuffer, Buffer fragBuffer) {
 	const std::string normalName = "inNormal";
 
 	/// Bind Attributes
-	OpenGLShaderBindings::BindAttribLocation(shaderGLID, VERTICES, positionName.c_str());
+	ShaderBindings::BindAttribLocation(shaderGLID, VERTICES, positionName.c_str());
 	if (useUVs) {
-		OpenGLShaderBindings::BindAttribLocation(shaderGLID, UVS, uvName.c_str());
+		ShaderBindings::BindAttribLocation(shaderGLID, UVS, uvName.c_str());
 	} 
 	if (useNormals) {
-		OpenGLShaderBindings::BindAttribLocation(shaderGLID, NORMALS, normalName.c_str());
+		ShaderBindings::BindAttribLocation(shaderGLID, NORMALS, normalName.c_str());
 	}
 
 	// Link Shader

@@ -41,11 +41,11 @@ namespace Iberus {
 	class IBERUS_API Camera : public Entity {
 	public:
 		Mat4 GetViewMatrix() const { return viewMatrix; }
-		Mat4 GetProjectionMatrix() const { return viewMatrix; }
+		Mat4 GetProjectionMatrix() const { return projection->GetProjectionMatrix(); }
 
 	private:
 		Mat4 viewMatrix;
-		Mat4 projectionMatrix;
+		std::unique_ptr<Projection> projection;
 	};
 
 }

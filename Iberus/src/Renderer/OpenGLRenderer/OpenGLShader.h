@@ -9,6 +9,8 @@ namespace Iberus {
 		void Disable() const override;
 
 		bool Load(Buffer vertexBuffer, Buffer fragBuffer) override;
+
+		GLuint GetProgramID() const { return shaderGLID; }
 	
 	private:
 		// Note(MPP) Not sure this should be private

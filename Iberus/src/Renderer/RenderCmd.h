@@ -18,7 +18,8 @@ namespace Iberus {
 		NULLCMD = 0,
 		PUSH_MESH,
 		PUSH_UNIFORM,
-		PUSH_SHADER
+		PUSH_SHADER,
+		PUSH_CAMERA
 	};
 
 	class RenderCmd {
@@ -87,6 +88,19 @@ namespace Iberus {
 		std::string name;
 		T value;
 	};
+
+	class CameraRenderCmd : public RenderCmd {
+	public:
+		CameraRenderCmd(Mat4 inboundViewMatrix, Mat4 inboundProjectionMatrix) {
+			projectionMatrix = inboundProjectionMatrix;
+			viewMatrix = inboundViewMatrix;
+			renderCmdType = RenderCmdType::PUSH_CAMERA;
+		}
+
+		Mat4 projectionMatrix;
+		Mat4 viewMatrix;
+	};
+
 }
 
 

@@ -10,11 +10,13 @@ namespace Iberus {
 	public:
 		virtual bool Load(Buffer inboundBuffer);
 
-		virtual bool Build();
-		virtual void Destroy();
+		virtual bool Build() = 0;
+		virtual void Destroy() = 0;
 
-		virtual void Bind();
-		virtual void Unbind();
+		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
+
+		size_t VertexSize() { vertices.size(); }
 
 	protected:
 		bool hasUVs;

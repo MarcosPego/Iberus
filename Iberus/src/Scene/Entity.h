@@ -6,7 +6,8 @@
 using namespace Math;
 
 namespace Iberus {
-
+	class Mesh;
+	class Material;
 	class RenderBatch;
 
 	struct Transform {
@@ -55,6 +56,10 @@ namespace Iberus {
 
 		Entity* parent{ nullptr };
 		std::unordered_map<std::string, Entity*> childMap;
+
+		// To decide if this stays here
+		Mesh* mesh{ nullptr };
+		Material* material{ nullptr };
 	};
 
 }

@@ -1,27 +1,59 @@
 #include "Enginepch.h"
 #include "OpenGLRenderer.h"
 
+#include "OpenGLShader.h"
 #include "RenderBatch.h"
 #include "RenderCmd.h"
 #include "ShaderBindings.h"
 
 namespace Iberus {
 	void OpenGLRenderer::RenderFrame(Frame& frame) {
-		static GLuint programID{ 0 };
+		static Shader* shaderInUse{ nullptr };
+		static Mat4 viewMatrix;
+		static Mat4 projectionMatrix;
 
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
 			const auto& renderCmds = renderBatch.GetRenderCmds();
 			for (const auto& renderCmd : renderCmds) {
 
 				switch (renderCmd->GetRenderCmdType()) {
+				case RenderCmdType::PUSH_CAMERA: {
+					auto* cameraCmd = dynamic_cast<CameraRenderCmd*>(renderCmd);
+					projectionMatrix = cameraCmd->projectionMatrix;
+					viewMatrix = cameraCmd->viewMatrix;
+				}	break;
+				case RenderCmdType::PUSH_SHADER: {
+					auto* shaderCmd = dynamic_cast<ShaderRenderCmd*>(renderCmd);
+					auto* shader = shaderCmd->shader;
+					shaderInUse = shader;
+					shaderInUse->Enable();
+
+					GLuint programID{ 0 };
+					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
+						programID = openGLShader->GetProgramID();
+					}
+
+					// Push Camera Uniforms
+					ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
+					ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
+				}	break;
 				case RenderCmdType::PUSH_MESH: {
-					// TODO(MPP) Not sure this even works;
-					dynamic_cast<MeshRenderCmd*>(renderCmd);
+					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(renderCmd);
+					auto* mesh = meshCmd->mesh;
+					mesh->Bind();
+					glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
+					mesh->Unbind();
 				}	break;
 
 				case RenderCmdType::PUSH_UNIFORM: {
-					// TODO(MPP) Not sure this even works;
-					//auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<decltype(renderCmd->type.type())>*>(renderCmd);
+					GLuint programID{ 0 };
+					if (!shaderInUse) {
+						continue;
+					}
+
+					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
+						programID = openGLShader->GetProgramID();
+					}
 
 					switch (renderCmd->GetUniformType())
 					{
@@ -60,5 +92,10 @@ namespace Iberus {
 
 			}
 		}
+	
+		if (shaderInUse) {
+			shaderInUse->Disable();
+		}
+		shaderInUse = nullptr;
 	}
 }

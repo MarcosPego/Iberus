@@ -36,7 +36,7 @@ namespace Iberus {
 	}
 
 	void WindowsWindow::SetupGraphicalContext() {
-		// TODO(MPP) Review this setup later
+		// TODO(MPP) Review this setup later. The ideal is to also support vulkan later
 
 		// Setup GLFW
 		//glfwSetErrorCallback(glfw_error_callback); // TODO(MPP) Implement this

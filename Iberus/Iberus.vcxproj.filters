@@ -40,11 +40,17 @@
     <Filter Include="src\Renderer">
       <UniqueIdentifier>{73D1DFBF-5F34-6F64-08BA-A71AF4FB3AE7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Renderer\OpenGLRenderer">
+      <UniqueIdentifier>{BED6BA1F-2AE4-E805-B3CA-E4F01FD7B4BC}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Renderer\Platform">
       <UniqueIdentifier>{275FA817-93CB-6312-5CBF-FB6FC8EA857A}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scene\Resources">
+      <UniqueIdentifier>{F4BFD167-6021-AF75-E98E-F52755EFE534}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,8 +114,17 @@
     <ClInclude Include="src\Maths\Vector.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\Mesh.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLMesh.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Renderer\Platform\WindowsWindow.h">
       <Filter>src\Renderer\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\RenderBatch.h">
+      <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\Renderer.h">
       <Filter>src\Renderer</Filter>
@@ -132,9 +147,16 @@
     <ClInclude Include="src\Scene\Material.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Resources\ResourceManager.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\FileSystem\FileSystem.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLTexture.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
+    <ClInclude Include="src\Scene\Resources\Buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -173,8 +195,17 @@
     <ClCompile Include="src\Maths\Vec4.cpp">
       <Filter>src\Maths</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer\Mesh.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLMesh.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Renderer\Platform\WindowsWindow.cpp">
       <Filter>src\Renderer\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\RenderBatch.cpp">
+      <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\Renderer.cpp">
       <Filter>src\Renderer</Filter>
@@ -197,8 +228,15 @@
     <ClCompile Include="src\Scene\Material.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Resources\ResourceManager.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\FileSystem\FileSystem.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLTexture.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />
+    <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
   </ItemGroup>
 </Project>

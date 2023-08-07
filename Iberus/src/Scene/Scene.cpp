@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "Renderer.h"
+#include "RenderCmd.h"
 
 namespace Iberus {
 	void Scene::Update(double deltaTime) {

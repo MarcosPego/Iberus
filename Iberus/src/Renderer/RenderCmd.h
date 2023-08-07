@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Mesh.h"
-#include "Shader.h"
+#include "ShaderApi.h"
 #include "MathUtils.h"
 
 using namespace Math;
@@ -54,13 +54,13 @@ namespace Iberus {
 
 	class ShaderRenderCmd : public RenderCmd {
 	public:
-		ShaderRenderCmd(Shader* inboundShader) {
-			shader = inboundShader;
+		ShaderRenderCmd(const std::string& inboundShaderID) {
+			shaderID = inboundShaderID;
 
 			renderCmdType = RenderCmdType::PUSH_SHADER;
 		}
 
-		Shader* shader;
+		std::string shaderID;
 	};
 
 	class MeshRenderCmd : public RenderCmd {
@@ -108,6 +108,36 @@ namespace Iberus {
 
 		Mat4 projectionMatrix;
 		Mat4 viewMatrix;
+	};
+
+	/// Create and Delete Cmds
+
+	class UploadMeshRenderCmd : public RenderCmd {
+	public:
+		UploadMeshRenderCmd(const std::string& inboundMeshID, const std::vector<Vec3>& inboundVertices, const std::vector<Vec2>& inboundUvs, const std::vector<Vec3>& inboundNormals) {
+			meshID = inboundMeshID;
+			vertices = inboundVertices;
+			uvs = inboundUvs;
+			normals = inboundNormals;
+
+			renderCmdType = RenderCmdType::PUSH_MESH;
+		}
+
+		std::string meshID;
+		std::vector<Vec3> vertices;
+		std::vector<Vec2> uvs;
+		std::vector<Vec3> normals;
+	};
+
+	class DeleteMeshRenderCmd : public RenderCmd {
+	public:
+		DeleteMeshRenderCmd(const std::string& inboundMeshID) {
+			meshID = inboundMeshID;
+
+			renderCmdType = RenderCmdType::PUSH_MESH;
+		}
+
+		std::string meshID;
 	};
 
 }

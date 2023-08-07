@@ -4,28 +4,32 @@
 #include "RenderCmd.h"
 
 #include "Renderer.h"
+#include "Engine.h"
 
 namespace Iberus {
 	Application::Application() {
 		static WindowProps winProps{};
 		window = std::unique_ptr<Window>(Window::Create(winProps));
-		renderer = std::unique_ptr<Renderer>(Renderer::Create());
+		engine = Engine::Instance();
 	}
 
 	Application::~Application() {
 	}
 
+	void Application::Boot() {
+		engine->Boot();
+	}
+
 	void Application::Run() {
 		while (running) {
-			auto frame = Frame();
+
 
 			// test case
 			/*auto& renderBatch = frame.PushBatch();
 			auto uniform = new UniformRenderCmd<int>("test", 2, UniformType::INT);
 			renderBatch.PushRenderCmd(uniform);*/
 
-
-			renderer->RenderFrame(frame);
+			engine->Update();			
 			window->Update();
 		}
 	}

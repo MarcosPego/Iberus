@@ -152,6 +152,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Renderer\RenderObject.h" />
+    <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Scene\Resources\Resource.h" />
     <ClInclude Include="src\Scene\Resources\Mesh.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
@@ -187,8 +189,8 @@
     <ClInclude Include="src\Renderer\Platform\WindowsWindow.h" />
     <ClInclude Include="src\Renderer\RenderBatch.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
-    <ClInclude Include="src\Renderer\Shader.h" />
-    <ClInclude Include="src\Renderer\Texture.h" />
+    <ClInclude Include="src\Renderer\ShaderApi.h" />
+    <ClInclude Include="src\Renderer\TextureApi.h" />
     <ClInclude Include="src\Renderer\Window.h" />
     <ClInclude Include="src\Scene\Camera.h" />
     <ClInclude Include="src\Scene\Entity.h" />
@@ -197,6 +199,8 @@
     <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Renderer\RenderObject.cpp" />
+    <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Scene\Resources\Resource.cpp" />
     <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
@@ -226,8 +230,8 @@
     <ClCompile Include="src\Renderer\Platform\WindowsWindow.cpp" />
     <ClCompile Include="src\Renderer\RenderBatch.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Renderer\ShaderApi.cpp" />
+    <ClCompile Include="src\Renderer\TextureApi.cpp" />
     <ClCompile Include="src\Renderer\Window.cpp" />
     <ClCompile Include="src\Scene\Camera.cpp" />
     <ClCompile Include="src\Scene\Entity.cpp" />

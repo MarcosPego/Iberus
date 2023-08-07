@@ -129,10 +129,10 @@
     <ClInclude Include="src\Renderer\Renderer.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Shader.h">
+    <ClInclude Include="src\Renderer\ShaderApi.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Texture.h">
+    <ClInclude Include="src\Renderer\TextureApi.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\Window.h">
@@ -163,6 +163,8 @@
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
     <ClInclude Include="src\Scene\Resources\Mesh.h" />
     <ClInclude Include="src\Scene\Resources\Resource.h" />
+    <ClInclude Include="src\Core\Engine.h" />
+    <ClInclude Include="src\Renderer\RenderObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -216,10 +218,10 @@
     <ClCompile Include="src\Renderer\Renderer.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Shader.cpp">
+    <ClCompile Include="src\Renderer\ShaderApi.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Texture.cpp">
+    <ClCompile Include="src\Renderer\TextureApi.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\Window.cpp">
@@ -250,5 +252,7 @@
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
     <ClCompile Include="src\Scene\Resources\Resource.cpp" />
+    <ClCompile Include="src\Core\Engine.cpp" />
+    <ClCompile Include="src\Renderer\RenderObject.cpp" />
   </ItemGroup>
 </Project>

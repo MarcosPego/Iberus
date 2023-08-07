@@ -1,15 +1,11 @@
 #pragma once
 
-#include "RenderCmd.h"
-
 namespace Iberus {
+	class RenderCmd;
+
 	class RenderBatch {
 	public:
-		~RenderBatch() {
-			for (auto* renderCmd : renderCmds) {
-				delete renderCmd;
-			}
-		}
+		~RenderBatch();
 
 		void PushRenderCmd(RenderCmd* inboundRenderCmd);
 			

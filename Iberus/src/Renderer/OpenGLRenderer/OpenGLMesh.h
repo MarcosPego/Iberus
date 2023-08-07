@@ -5,7 +5,7 @@
 namespace Iberus {
 	class OpenGLMesh final : public MeshApi {
 	public:
-		bool Build() final;
+		bool Build(const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals) final;
 		void Destroy() final;
 
 		void Bind() final;

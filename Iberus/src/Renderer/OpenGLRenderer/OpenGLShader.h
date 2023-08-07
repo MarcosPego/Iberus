@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Shader.h"
+#include "ShaderApi.h"
 
 namespace Iberus {
-	class OpenGLShader : public Shader {
+	class OpenGLShader : public ShaderApi {
 	public:
 		void Enable() const override;
 		void Disable() const override;

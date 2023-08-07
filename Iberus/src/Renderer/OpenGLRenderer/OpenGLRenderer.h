@@ -7,6 +7,7 @@ namespace Iberus {
 	class OpenGLRenderer : public Renderer {
 
 		void RenderFrame(Frame& frame) override;
+		void ExecuteAndFlushCmdQueue() override;
 	};
 }
 

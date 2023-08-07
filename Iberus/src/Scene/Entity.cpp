@@ -2,6 +2,7 @@
 #include "Entity.h"
 
 #include "RenderBatch.h"
+#include "RenderCmd.h"
 
 #include "Material.h"
 #include "Mesh.h"
@@ -11,7 +12,7 @@ namespace Iberus {
 		// TODO(MPP) Initial implementation. Might be revised
 
 		if (material) {
-			renderBatch.PushRenderCmd(new ShaderRenderCmd(material->GetShader()));
+			//renderBatch.PushRenderCmd(new ShaderRenderCmd(material->GetShader()));
 
 			// Push uniforms here;
 			renderBatch.PushRenderCmd(new UniformRenderCmd("ModelMatrix", GetModelMatrix(), UniformType::MAT4));
@@ -19,7 +20,7 @@ namespace Iberus {
 		}
 
 		if (mesh) {
-			renderBatch.PushRenderCmd(new MeshRenderCmd(mesh));
+			//renderBatch.PushRenderCmd(new MeshRenderCmd(mesh));
 		}
 
 		for (const auto& child : childMap) {

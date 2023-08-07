@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Buffer.h"
+#include "RenderObject.h"
 
 namespace Iberus {
-	class Shader {
+	class ShaderApi : public RenderObject {
 	public:
 		virtual void Enable() const = 0;
 		virtual void Disable() const = 0;

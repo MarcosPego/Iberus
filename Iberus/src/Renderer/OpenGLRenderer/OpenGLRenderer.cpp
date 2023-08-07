@@ -8,9 +8,11 @@
 
 namespace Iberus {
 	void OpenGLRenderer::RenderFrame(Frame& frame) {
-		static Shader* shaderInUse{ nullptr };
+		static ShaderApi* shaderInUse{ nullptr };
 		static Mat4 viewMatrix;
 		static Mat4 projectionMatrix;
+
+		ExecuteAndFlushCmdQueue();
 
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
 			const auto& renderCmds = renderBatch.GetRenderCmds();
@@ -24,14 +26,16 @@ namespace Iberus {
 				}	break;
 				case RenderCmdType::PUSH_SHADER: {
 					auto* shaderCmd = dynamic_cast<ShaderRenderCmd*>(renderCmd);
-					auto* shader = shaderCmd->shader;
+					GLuint programID{ 0 };
+					// TODO()
+					/*auto* shader = shaderCmd->shader;
 					shaderInUse = shader;
 					shaderInUse->Enable();
 
-					GLuint programID{ 0 };
+					
 					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
 						programID = openGLShader->GetProgramID();
-					}
+					}*/
 
 					// Push Camera Uniforms
 					ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
@@ -39,12 +43,12 @@ namespace Iberus {
 				}	break;
 				case RenderCmdType::PUSH_MESH: {
 					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(renderCmd);
-					auto* mesh = meshCmd->mesh;
-					mesh->Bind();
-					glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
-					mesh->Unbind();
+					// TODO()
+					//auto* mesh = meshCmd->mesh;
+					//mesh->Bind();
+					//glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
+					//mesh->Unbind();
 				}	break;
-
 				case RenderCmdType::PUSH_UNIFORM: {
 					GLuint programID{ 0 };
 					if (!shaderInUse) {
@@ -97,5 +101,25 @@ namespace Iberus {
 			shaderInUse->Disable();
 		}
 		shaderInUse = nullptr;
+	}
+
+	void OpenGLRenderer::ExecuteAndFlushCmdQueue() {
+		for (auto* renderCmd : renderCmdQueue) {
+			switch (renderCmd->GetRenderCmdType()) {
+
+			case RenderCmdType::UPLOAD_SHADER: {} break;
+			case RenderCmdType::UPLOAD_MESH: {} break;
+			case RenderCmdType::UPLOAD_TEXTURE: {} break;
+			case RenderCmdType::DELETE_SHADER: {} break;
+			case RenderCmdType::DELETE_MESH: {} break;
+			case RenderCmdType::DELETE_TEXTURE: {} break;
+			default:
+				break;
+			}
+			
+
+			delete renderCmd;
+		}
+		renderCmdQueue.clear();
 	}
 }

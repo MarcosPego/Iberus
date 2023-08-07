@@ -7,16 +7,18 @@
 #include "Scene.h" // temp
 
 namespace Iberus {
+	class Engine;
+
 	class IBERUS_API Application {
 	public:
 		Application();
 		virtual ~Application();
 
+		void Boot();
 		void Run();
 	private:
+		Engine* engine{ nullptr };
 		std::unique_ptr<Window> window;
-		std::unique_ptr<Renderer> renderer;
-
 		// temp
 		Scene* baseScene{ nullptr };
 	

@@ -11,6 +11,7 @@ int main(int argc, char** argv) {
 	Iberus::Log::GetClientLogger()->info("Hello!");
 
 	auto app = Iberus::CreateApplication();
+	app->Boot();
 	app->Run();
 	delete app;
 }

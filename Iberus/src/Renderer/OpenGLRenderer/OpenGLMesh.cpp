@@ -7,7 +7,7 @@
 #define NORMALS 2
 
 namespace Iberus {
-	bool OpenGLMesh::Build() {
+	bool OpenGLMesh::Build(const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals) {
 		GLuint vboVertices, vboUVs, vboNormals;
 
 		glGenVertexArrays(1, &vaoID);
@@ -19,7 +19,7 @@ namespace Iberus {
 			glEnableVertexAttribArray(VERTICES);
 			glVertexAttribPointer(VERTICES, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3), 0);
 
-			if (hasUVs)
+			if (!uvs.empty())
 			{
 				glGenBuffers(1, &vboUVs);
 				glBindBuffer(GL_ARRAY_BUFFER, vboUVs);
@@ -27,7 +27,7 @@ namespace Iberus {
 				glEnableVertexAttribArray(UVS);
 				glVertexAttribPointer(UVS, 2, GL_FLOAT, GL_FALSE, sizeof(Vec2), 0);
 			}
-			if (hasNormals)
+			if (!normals.empty())
 			{
 				glGenBuffers(1, &vboNormals);
 				glBindBuffer(GL_ARRAY_BUFFER, vboNormals);

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Mesh.h"
+#include "MeshApi.h"
 
 namespace Iberus {
-	class OpenGLMesh final : public Mesh {
+	class OpenGLMesh final : public MeshApi {
 	public:
 		bool Build() final;
 		void Destroy() final;

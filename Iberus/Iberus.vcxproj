@@ -152,6 +152,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Scene\Resources\Resource.h" />
+    <ClInclude Include="src\Scene\Resources\Mesh.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
     <ClInclude Include="src\Renderer\RenderCmd.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h" />
@@ -180,7 +182,7 @@
     <ClInclude Include="src\Maths\Matrix.h" />
     <ClInclude Include="src\Maths\Quaternions.h" />
     <ClInclude Include="src\Maths\Vector.h" />
-    <ClInclude Include="src\Renderer\Mesh.h" />
+    <ClInclude Include="src\Renderer\MeshApi.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLMesh.h" />
     <ClInclude Include="src\Renderer\Platform\WindowsWindow.h" />
     <ClInclude Include="src\Renderer\RenderBatch.h" />
@@ -195,6 +197,8 @@
     <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Scene\Resources\Resource.cpp" />
+    <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Renderer\RenderCmd.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp" />
@@ -217,7 +221,7 @@
     <ClCompile Include="src\Maths\Vec2.cpp" />
     <ClCompile Include="src\Maths\Vec3.cpp" />
     <ClCompile Include="src\Maths\Vec4.cpp" />
-    <ClCompile Include="src\Renderer\Mesh.cpp" />
+    <ClCompile Include="src\Renderer\MeshApi.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLMesh.cpp" />
     <ClCompile Include="src\Renderer\Platform\WindowsWindow.cpp" />
     <ClCompile Include="src\Renderer\RenderBatch.cpp" />

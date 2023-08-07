@@ -114,7 +114,7 @@
     <ClInclude Include="src\Maths\Vector.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Mesh.h">
+    <ClInclude Include="src\Renderer\MeshApi.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLMesh.h">
@@ -161,6 +161,8 @@
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h" />
     <ClInclude Include="src\Renderer\RenderCmd.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
+    <ClInclude Include="src\Scene\Resources\Mesh.h" />
+    <ClInclude Include="src\Scene\Resources\Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -199,7 +201,7 @@
     <ClCompile Include="src\Maths\Vec4.cpp">
       <Filter>src\Maths</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Mesh.cpp">
+    <ClCompile Include="src\Renderer\MeshApi.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLMesh.cpp">
@@ -246,5 +248,7 @@
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp" />
     <ClCompile Include="src\Renderer\RenderCmd.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
+    <ClCompile Include="src\Scene\Resources\Resource.cpp" />
   </ItemGroup>
 </Project>

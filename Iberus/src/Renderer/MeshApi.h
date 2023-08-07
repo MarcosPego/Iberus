@@ -6,19 +6,22 @@
 using namespace Math;
 
 namespace Iberus {
-	class Mesh {
+	class MeshApi {
 	public:
+		MeshApi(Buffer inboundBuffer);
+		virtual ~MeshApi();
+
+		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
+
+		size_t VertexSize() const { return vertices.size(); }
+
+	protected:
 		virtual bool Load(Buffer inboundBuffer);
 
 		virtual bool Build() = 0;
 		virtual void Destroy() = 0;
 
-		virtual void Bind() = 0;
-		virtual void Unbind() = 0;
-
-		size_t VertexSize() { return vertices.size(); }
-
-	protected:
 		bool hasUVs;
 		bool hasNormals;
 

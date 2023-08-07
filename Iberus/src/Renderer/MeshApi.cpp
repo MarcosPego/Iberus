@@ -1,8 +1,19 @@
 #include "Enginepch.h"
-#include "Mesh.h"
+#include "MeshApi.h"
 
 namespace Iberus {
-	bool Mesh::Load(Buffer inboundBuffer) {
+
+	MeshApi::MeshApi(Buffer inboundBuffer) {
+		// TODO(MPP) Needs to raise exception in case it fails
+		Load(std::move(inboundBuffer));
+		Build();
+	}
+
+	MeshApi::~MeshApi() {
+		Destroy();
+	}
+
+	bool MeshApi::Load(Buffer inboundBuffer) {
 		std::vector<Vec3> vertexData, normalData;
 		std::vector<Vec2> uvData;
 		std::vector<unsigned int> vertexIdx, uvIdx, normalIdx;

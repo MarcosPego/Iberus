@@ -2,6 +2,9 @@
 
 #include "Mesh.h"
 #include "Shader.h"
+#include "MathUtils.h"
+
+using namespace Math;
 
 namespace Iberus {
 	enum class UniformType {
@@ -16,10 +19,16 @@ namespace Iberus {
 
 	enum class RenderCmdType {
 		NULLCMD = 0,
+		UPLOAD_SHADER,
+		UPLOAD_MESH,
+		UPLOAD_TEXTURE,
 		PUSH_MESH,
 		PUSH_UNIFORM,
 		PUSH_SHADER,
-		PUSH_CAMERA
+		PUSH_CAMERA,
+		DELETE_SHADER,
+		DELETE_MESH,
+		DELETE_TEXTURE,
 	};
 
 	class RenderCmd {
@@ -56,13 +65,13 @@ namespace Iberus {
 
 	class MeshRenderCmd : public RenderCmd {
 	public:
-		MeshRenderCmd(Mesh* inboundMesh) {
-			mesh = inboundMesh;
+		MeshRenderCmd(const std::string& inboundMeshID) {
+			meshID = inboundMeshID;
 
 			renderCmdType = RenderCmdType::PUSH_MESH;
 		}
 
-		Mesh* mesh;
+		std::string meshID;
 	};
 
 	template<typename T>

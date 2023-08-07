@@ -7,6 +7,7 @@
 #include <utility>
 #include <algorithm>
 #include <functional>
+#include <filesystem>
 
 #include <string>
 #include <vector>
@@ -29,4 +30,5 @@
 
 /// Common utils
 
+#include "Log.h"
 #include "Buffer.h"

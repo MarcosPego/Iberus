@@ -3,6 +3,12 @@
 
 namespace Iberus {
 
+	std::string FileSystem::GetWorkingDir() {
+		const auto path = std::filesystem::current_path();
+		const std::string pathString{ path.u8string() };
+		return pathString;
+	}
+
 	std::size_t FileSystem::GetRawFileSize(const std::string& filename) {
 		FILE* file;
 
@@ -21,7 +27,7 @@ namespace Iberus {
 		FILE* file;
 		Buffer buffer;
 
-		auto fullSize = GetRawFileSize(filename);
+		const auto fullSize = GetRawFileSize(filename);
 
 		std::unique_ptr<uint8_t[]> bufferData = std::make_unique<uint8_t[]>(fullSize);
 		if (file = std::fopen(filename.c_str(), "rb")) {

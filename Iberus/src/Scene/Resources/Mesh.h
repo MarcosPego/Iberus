@@ -13,7 +13,7 @@ namespace Iberus {
 	public:
 		Mesh(const std::string& ID, Buffer inboundBuffer);
 		~Mesh();
-	private:
+	protected:
 		bool Load(Buffer inboundBuffer) override;
 
 		bool hasUVs{ false };

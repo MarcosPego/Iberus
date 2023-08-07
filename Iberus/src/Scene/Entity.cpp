@@ -4,6 +4,7 @@
 #include "RenderBatch.h"
 #include "RenderCmd.h"
 
+#include "Shader.h"
 #include "Material.h"
 #include "Mesh.h"
 
@@ -25,8 +26,8 @@ namespace Iberus {
 	void Entity::PushDraw(RenderBatch& renderBatch) {
 		// TODO(MPP) Initial implementation. Might be revised
 
-		if (material) {
-			//renderBatch.PushRenderCmd(new ShaderRenderCmd(material->GetShader()));
+		if (shader) {
+			renderBatch.PushRenderCmd(new ShaderRenderCmd(shader->GetID()));
 
 			// Push uniforms here;
 			renderBatch.PushRenderCmd(new UniformRenderCmd("ModelMatrix", GetModelMatrix(), UniformType::MAT4));

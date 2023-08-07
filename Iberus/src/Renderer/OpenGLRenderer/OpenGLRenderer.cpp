@@ -15,6 +15,10 @@ namespace Iberus {
 
 		ExecuteAndFlushCmdQueue();
 
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.15f, 0.15f, 0.15f, 0.3f);
+		glEnable(GL_DEPTH_TEST);
+
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
 			const auto& renderCmds = renderBatch.GetRenderCmds();
 			for (const auto& renderCmd : renderCmds) {
@@ -109,7 +113,6 @@ namespace Iberus {
 				auto* shaderCmd = dynamic_cast<UploadShaderRenderCmd*>(renderCmd.get());
 				auto handle = GenerateHandle(); // Needs to be reviewed
 				auto* shader = new OpenGLShader(shaderCmd->shaderID, handle, std::move(shaderCmd->vertexBuffer), std::move(shaderCmd->fragBuffer));
-
 				renderObjects[shaderCmd->shaderID].reset(shader);
 			} break;
 			case RenderCmdType::UPLOAD_MESH: {

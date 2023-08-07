@@ -6,7 +6,9 @@
 namespace Iberus {
 
 	Buffer FileSystemProvider::GetRawFileBuffer(const std::string& filename) {
-		return FileSystem::GetRawFileBuffer(filename);
+		// TODO see if path is absolute or rel
+		Log::GetClientLogger()->info(workingDir + "/" + filename);
+		return FileSystem::GetRawFileBuffer(workingDir + "/" + filename);
 	}
 
 }

@@ -20,12 +20,14 @@ void OpenGLShader::Disable() const {
 bool OpenGLShader::Load(Buffer vertexBuffer, Buffer fragBuffer) {
 	shaderGLID = glCreateProgram();
 
+	Log::GetClientLogger()->info("HERE!");
+
 	GLuint VertexShaderId = AddShader(GL_VERTEX_SHADER, std::move(vertexBuffer));
 	GLuint FragmentShaderId = AddShader(GL_FRAGMENT_SHADER, std::move(fragBuffer));
 
-	const std::string positionName = "inPosition";
-	const std::string uvName = "inUV";
-	const std::string normalName = "inNormal";
+	const std::string positionName = "inVertices";
+	const std::string uvName = "inUVs";
+	const std::string normalName = "inNormals";
 
 	/// Bind Attributes
 	ShaderBindings::BindAttribLocation(shaderGLID, VERTICES, positionName.c_str());

@@ -9,7 +9,8 @@
 
 namespace Iberus {
 
-	Mesh::Mesh(const std::string& ID, Buffer inboundBuffer) : Resource(ID, std::move(inboundBuffer)) {
+	Mesh::Mesh(const std::string& ID, Buffer inboundBuffer) : Resource(ID) {
+		Load(std::move(inboundBuffer));
 		auto& renderer = Engine::Instance()->GetRenderer();
 		auto uploadMesh = new UploadMeshRenderCmd(ID, vertices, uvs, normals);
 		renderer.PushRenderCmd(uploadMesh);
@@ -39,9 +40,10 @@ namespace Iberus {
 		};
 
 		// Read from buffer
-		std::ifstream ifile(reinterpret_cast<const char*>(inboundBuffer.data.get()), inboundBuffer.size);
+		std::string meshString(inboundBuffer.data.get(), inboundBuffer.data.get() + inboundBuffer.size);
+		std::istringstream file(meshString);
 		std::string line;
-		while (std::getline(ifile, line)) {
+		while (std::getline(file, line)) {
 			std::stringstream sline(line);
 
 			std::string s;

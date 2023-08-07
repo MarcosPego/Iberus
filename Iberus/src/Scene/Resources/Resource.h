@@ -6,7 +6,6 @@ namespace Iberus {
 	class Resource {
 	public:
 		explicit Resource(const std::string& inboundID);
-		Resource(const std::string& inboundID, Buffer inboundBuffer);
 
 		virtual ~Resource() {}
 

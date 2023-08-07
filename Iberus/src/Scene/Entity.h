@@ -7,6 +7,7 @@ using namespace Math;
 
 namespace Iberus {
 	class Mesh;
+	class Shader;
 	class Material;
 	class RenderBatch;
 
@@ -56,6 +57,9 @@ namespace Iberus {
 
 		void PushDraw(RenderBatch& renderBatch);
 
+		Mesh* mesh{ nullptr };
+		Shader* shader{ nullptr };
+
 	private:
 		std::string ID; // String or unique int ?
 		std::string Name;
@@ -65,9 +69,10 @@ namespace Iberus {
 		Entity* parent{ nullptr };
 		std::unordered_map<std::string, Entity*> childMap;
 
-		// To decide if this stays here
-		Mesh* mesh{ nullptr };
-		Material* material{ nullptr };
+		// no materials for now
+		//Material* material{ nullptr };
+		// using shaders instead
+
 	};
 
 }

@@ -2,6 +2,7 @@
 #include "Engine.h"
 
 #include "Scene.h"
+#include "FileSystem.h"
 
 namespace Iberus {
 
@@ -14,6 +15,8 @@ namespace Iberus {
 		renderer = std::unique_ptr<Renderer>(Renderer::Create());
 		resourceManager = std::make_unique<ResourceManager>();
 		sceneManager = std::make_unique<SceneManager>();
+		engineProvider = std::make_unique<FileSystemProvider>();
+		engineProvider->SetWorkingDir(FileSystem::GetWorkingDir());
 	}
 
 	void Engine::Update() {

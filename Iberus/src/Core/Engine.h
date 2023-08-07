@@ -6,6 +6,8 @@
 #include "ResourceManager.h"
 #include "SceneManager.h"
 
+#include "FileSystemProvider.h"
+
 namespace Iberus {
 	class IBERUS_API Engine {
 	public:
@@ -21,10 +23,14 @@ namespace Iberus {
 
 		SceneManager& GetSceneManager() { return *sceneManager.get(); }
 
+		FileSystemProvider& GetEngineProvider() { return *engineProvider.get(); }
+
 	private:
 		std::unique_ptr<Renderer> renderer;
 		std::unique_ptr<ResourceManager> resourceManager;
 		std::unique_ptr<SceneManager> sceneManager;
+
+		std::unique_ptr<FileSystemProvider> engineProvider;
 	};
 }
 

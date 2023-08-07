@@ -10,7 +10,7 @@ using namespace Math;
 
 namespace Iberus {
 	struct Frame {
-		Vec4 clearColor{ 0.0f, 0.0f, 0.0f, 0.0f };
+		Vec4 clearColor{ 0.15f, 0.15f, 0.17f, 1.0f };
 		std::vector<RenderBatch> renderBatches;
 
 		RenderBatch& PushBatch() {

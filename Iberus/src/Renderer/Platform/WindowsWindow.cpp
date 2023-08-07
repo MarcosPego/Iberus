@@ -14,8 +14,6 @@ namespace Iberus {
 	}
 
 	void WindowsWindow::Update() {
-		glClearColor(0.15f, 0.15f, 0.17f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 		glfwSwapBuffers(window);
 		glfwWaitEvents();
 	}

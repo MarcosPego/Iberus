@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core.h"
 #include "Resource.h"
 #include "MathUtils.h"
 
@@ -8,7 +9,7 @@ using namespace Math;
 namespace Iberus {
 	struct Buffer;
 
-	class Mesh : public Resource {
+	class IBERUS_API Mesh : public Resource {
 	public:
 		Mesh(const std::string& ID, Buffer inboundBuffer);
 		~Mesh();

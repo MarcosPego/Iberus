@@ -7,6 +7,16 @@
 #include "RenderCmd.h"
 
 namespace Iberus {
+	Scene::Scene(const std::string& inID) {
+		ID = inID;
+
+		sceneRoot = CreateEntity<Entity>("__rootEntity");
+	}
+
+	void Scene::AddEntity(const std::string& id, Entity* entity) {
+		sceneRoot->AddEntity(id, entity);
+	}
+
 	void Scene::Update(double deltaTime) {
 
 	}
@@ -15,7 +25,10 @@ namespace Iberus {
 		/// For render targets
 		auto& renderBatch = frame.PushBatch();
 
-		renderBatch.PushRenderCmd(new CameraRenderCmd(activeCamera->GetViewMatrix(), activeCamera->GetProjectionMatrix()));
+		if (activeCamera) {
+			renderBatch.PushRenderCmd(new CameraRenderCmd(activeCamera->GetViewMatrix(), activeCamera->GetProjectionMatrix()));
+		}
+		
 		if (sceneRoot) {
 			sceneRoot->PushDraw(renderBatch);
 		}

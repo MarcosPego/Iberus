@@ -8,6 +8,20 @@
 #include "Mesh.h"
 
 namespace Iberus {
+	Entity::Entity(const std::string& inID) {
+		ID = inID;
+	}
+
+	void Entity::AddEntity(const std::string& id, Entity* entity) {
+		if (!entity) {
+			return;
+		}
+		// TODO(MPP) Avoid emplancing repeated
+
+		childMap.emplace(id , entity);
+
+	}
+
 	void Entity::PushDraw(RenderBatch& renderBatch) {
 		// TODO(MPP) Initial implementation. Might be revised
 
@@ -20,7 +34,7 @@ namespace Iberus {
 		}
 
 		if (mesh) {
-			//renderBatch.PushRenderCmd(new MeshRenderCmd(mesh));
+			renderBatch.PushRenderCmd(new MeshRenderCmd(mesh->GetID()));
 		}
 
 		for (const auto& child : childMap) {

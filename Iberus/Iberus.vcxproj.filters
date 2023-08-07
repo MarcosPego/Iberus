@@ -168,6 +168,7 @@
     <ClInclude Include="src\Scene\Resources\Shader.h" />
     <ClInclude Include="src\Scene\Resources\IProvider.h" />
     <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
+    <ClInclude Include="src\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -260,5 +261,6 @@
     <ClCompile Include="src\Scene\Resources\Shader.cpp" />
     <ClCompile Include="src\Scene\Resources\IProvider.cpp" />
     <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
+    <ClCompile Include="src\Scene\SceneManager.cpp" />
   </ItemGroup>
 </Project>

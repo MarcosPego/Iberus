@@ -6,7 +6,7 @@
 using namespace Math;
 
 namespace Iberus {
-	class MeshApi;
+	class Mesh;
 	class Material;
 	class RenderBatch;
 
@@ -21,7 +21,13 @@ namespace Iberus {
 	class IBERUS_API Entity {
 	public:
 		Entity() = default;
-		virtual ~Entity() = default;
+		explicit Entity(const std::string& ID);
+
+		virtual ~Entity() {};
+
+		//Entity(const Entity&) = delete;
+		//Entity& operator= (const Entity&) = delete;
+
 
 		Entity* GetParent() const { return parent;  }
 		void SetParent(Entity* newParent) { parent = newParent; }
@@ -46,6 +52,8 @@ namespace Iberus {
 			}
 		}
 
+		void AddEntity(const std::string& id, Entity* entity);
+
 		void PushDraw(RenderBatch& renderBatch);
 
 	private:
@@ -58,7 +66,7 @@ namespace Iberus {
 		std::unordered_map<std::string, Entity*> childMap;
 
 		// To decide if this stays here
-		MeshApi* mesh{ nullptr };
+		Mesh* mesh{ nullptr };
 		Material* material{ nullptr };
 	};
 

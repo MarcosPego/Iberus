@@ -14,14 +14,14 @@ namespace Iberus {
 		Application();
 		virtual ~Application();
 
-		void Boot();
+		virtual void Boot();
+		virtual void Update();
+
 		void Run();
 	private:
 		Engine* engine{ nullptr };
 		std::unique_ptr<Window> window;
-		// temp
-		Scene* baseScene{ nullptr };
-	
+
 		bool running{true};
 	};
 

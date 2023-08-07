@@ -3,7 +3,7 @@
 
 #include "FileSystem.h"
 
-namespace  Iberus {
+namespace Iberus {
 
 	Buffer FileSystemProvider::GetRawFileBuffer(const std::string& filename) {
 		return FileSystem::GetRawFileBuffer(filename);

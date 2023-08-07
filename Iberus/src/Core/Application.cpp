@@ -20,6 +20,9 @@ namespace Iberus {
 		engine->Boot();
 	}
 
+	void Application::Update() {
+	}
+
 	void Application::Run() {
 		while (running) {
 
@@ -29,7 +32,9 @@ namespace Iberus {
 			auto uniform = new UniformRenderCmd<int>("test", 2, UniformType::INT);
 			renderBatch.PushRenderCmd(uniform);*/
 
-			engine->Update();			
+			engine->Update();		
+			Update();
+
 			window->Update();
 		}
 	}

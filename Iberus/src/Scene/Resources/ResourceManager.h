@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core.h"
 #include "FileSystem.h"
 #include "IProvider.h"
 #include "Shader.h"
@@ -8,8 +9,14 @@
 
 namespace Iberus {
 
-	class ResourceManager {
+	class IBERUS_API ResourceManager {
 	public:
+
+		ResourceManager() = default;
+		virtual ~ResourceManager() = default;
+
+		ResourceManager(const ResourceManager&) = delete;
+		ResourceManager& operator= (const ResourceManager&) = delete;
 
 		template<typename T = Resource>
 		T* GetResource(const std::string& id) {

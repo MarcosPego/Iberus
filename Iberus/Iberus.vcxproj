@@ -152,6 +152,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
     <ClInclude Include="src\Scene\Resources\IProvider.h" />
     <ClInclude Include="src\Scene\Resources\Shader.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
     <ClCompile Include="src\Scene\Resources\IProvider.cpp" />
     <ClCompile Include="src\Scene\Resources\Shader.cpp" />

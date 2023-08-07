@@ -10,6 +10,7 @@ namespace Iberus {
 
 	void Engine::Boot() {
 		renderer = std::unique_ptr<Renderer>(Renderer::Create());
+		resourceManager = std::make_unique<ResourceManager>();
 	}
 
 	void Engine::Update() {

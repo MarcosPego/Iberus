@@ -5,6 +5,7 @@
 namespace Iberus {
 	class Resource {
 	public:
+		explicit Resource(const std::string& inboundID);
 		Resource(const std::string& inboundID, Buffer inboundBuffer);
 
 		void SetSource(const std::string& inboundSource) { source = inboundSource; }

@@ -165,6 +165,9 @@
     <ClInclude Include="src\Scene\Resources\Resource.h" />
     <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Renderer\RenderObject.h" />
+    <ClInclude Include="src\Scene\Resources\Shader.h" />
+    <ClInclude Include="src\Scene\Resources\IProvider.h" />
+    <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -254,5 +257,8 @@
     <ClCompile Include="src\Scene\Resources\Resource.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Renderer\RenderObject.cpp" />
+    <ClCompile Include="src\Scene\Resources\Shader.cpp" />
+    <ClCompile Include="src\Scene\Resources\IProvider.cpp" />
+    <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
   </ItemGroup>
 </Project>

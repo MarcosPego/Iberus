@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer.h"
+#include "ResourceManager.h"
 
 namespace Iberus {
 	class Engine {
@@ -13,8 +14,11 @@ namespace Iberus {
 
 		Renderer& GetRenderer() { return *renderer.get(); }
 
+		ResourceManager& GetResourceManager() { return *resourceManager.get(); }
+
 	private:
 		std::unique_ptr<Renderer> renderer;
+		std::unique_ptr<ResourceManager> resourceManager;
 	};
 }
 

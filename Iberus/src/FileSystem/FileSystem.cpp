@@ -1,8 +1,6 @@
 #include "Enginepch.h"
 #include "FileSystem.h"
 
-#include "Buffer.h"
-
 namespace Iberus {
 
 	std::size_t FileSystem::GetRawFileSize(const std::string& filename) {

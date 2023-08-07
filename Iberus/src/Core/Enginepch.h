@@ -26,3 +26,7 @@
 #ifdef IB_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif
+
+/// Common utils
+
+#include "Buffer.h"

@@ -3,13 +3,12 @@
 #include "RenderBatch.h"
 #include "MathUtils.h"
 
+#include "RenderCmd.h"
+#include "RenderObject.h"
+
 using namespace Math;
 
 namespace Iberus {
-	class RenderCmd;
-	class RenderOject;
-
-
 	struct Frame {
 		Vec4 clearColor{ 0.0f, 0.0f, 0.0f, 0.0f };
 		std::vector<RenderBatch> renderBatches;
@@ -30,9 +29,11 @@ namespace Iberus {
 		virtual void RenderFrame(Frame& frame) = 0;
 		virtual void ExecuteAndFlushCmdQueue();
 
+		uint32_t GenerateHandle();
+
 	protected:
-		std::vector<RenderOject*> renderObjects;
-		std::vector<RenderCmd*> renderCmdQueue; // This queue is meant for other render operations besides push drawing
+		std::unordered_map<std::string, std::unique_ptr<RenderObject>> renderObjects;
+		std::vector<std::unique_ptr<RenderCmd>> renderCmdQueue; // This queue is meant for other render operations besides push drawing
 	};
 }
 

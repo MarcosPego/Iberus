@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "ShaderApi.h"
 #include "MathUtils.h"
+#include "Buffer.h"
 
 using namespace Math;
 
@@ -120,7 +121,7 @@ namespace Iberus {
 			uvs = inboundUvs;
 			normals = inboundNormals;
 
-			renderCmdType = RenderCmdType::PUSH_MESH;
+			renderCmdType = RenderCmdType::UPLOAD_MESH;
 		}
 
 		std::string meshID;
@@ -134,10 +135,36 @@ namespace Iberus {
 		DeleteMeshRenderCmd(const std::string& inboundMeshID) {
 			meshID = inboundMeshID;
 
-			renderCmdType = RenderCmdType::PUSH_MESH;
+			renderCmdType = RenderCmdType::DELETE_MESH;
 		}
 
 		std::string meshID;
+	};
+
+	class UploadShaderRenderCmd : public RenderCmd {
+	public:
+		UploadShaderRenderCmd(const std::string& inboundShaderID, Buffer inboundVertexBuffer, Buffer inboundFragBuffer) {
+			shaderID = inboundShaderID;
+			vertexBuffer = std::move(inboundVertexBuffer);
+			fragBuffer = std::move(inboundFragBuffer);
+
+			renderCmdType = RenderCmdType::UPLOAD_SHADER;
+		}
+
+		std::string shaderID;
+		Buffer vertexBuffer;
+		Buffer fragBuffer;
+	};
+
+	class DeleteShaderRenderCmd : public RenderCmd {
+	public:
+		DeleteShaderRenderCmd(const std::string& inboundShaderID) {
+			shaderID = inboundShaderID;
+
+			renderCmdType = RenderCmdType::DELETE_SHADER;
+		}
+
+		std::string shaderID;
 	};
 
 }

@@ -1,6 +1,7 @@
 #include "Enginepch.h"
 #include "OpenGLRenderer.h"
 
+#include "OpenGLMesh.h"
 #include "OpenGLShader.h"
 #include "RenderBatch.h"
 #include "RenderCmd.h"
@@ -26,16 +27,14 @@ namespace Iberus {
 				}	break;
 				case RenderCmdType::PUSH_SHADER: {
 					auto* shaderCmd = dynamic_cast<ShaderRenderCmd*>(renderCmd);
+					auto* shader = dynamic_cast<ShaderApi*>(renderObjects[shaderCmd->shaderID].get());
+
 					GLuint programID{ 0 };
-					// TODO()
-					/*auto* shader = shaderCmd->shader;
 					shaderInUse = shader;
 					shaderInUse->Enable();
-
-					
 					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
 						programID = openGLShader->GetProgramID();
-					}*/
+					}
 
 					// Push Camera Uniforms
 					ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
@@ -43,11 +42,11 @@ namespace Iberus {
 				}	break;
 				case RenderCmdType::PUSH_MESH: {
 					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(renderCmd);
-					// TODO()
-					//auto* mesh = meshCmd->mesh;
-					//mesh->Bind();
-					//glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
-					//mesh->Unbind();
+					auto mesh = dynamic_cast<MeshApi*>(renderObjects[meshCmd->meshID].get());
+
+					mesh->Bind();
+					glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
+					mesh->Unbind();
 				}	break;
 				case RenderCmdType::PUSH_UNIFORM: {
 					GLuint programID{ 0 };
@@ -93,7 +92,6 @@ namespace Iberus {
 				default:
 					break;
 				}
-
 			}
 		}
 	
@@ -104,21 +102,39 @@ namespace Iberus {
 	}
 
 	void OpenGLRenderer::ExecuteAndFlushCmdQueue() {
-		for (auto* renderCmd : renderCmdQueue) {
+		for (const auto& renderCmd : renderCmdQueue) {
 			switch (renderCmd->GetRenderCmdType()) {
 
-			case RenderCmdType::UPLOAD_SHADER: {} break;
-			case RenderCmdType::UPLOAD_MESH: {} break;
+			case RenderCmdType::UPLOAD_SHADER: {
+				auto* shaderCmd = dynamic_cast<UploadShaderRenderCmd*>(renderCmd.get());
+				auto handle = GenerateHandle(); // Needs to be reviewed
+				auto* shader = new OpenGLShader(shaderCmd->shaderID, handle, std::move(shaderCmd->vertexBuffer), std::move(shaderCmd->fragBuffer));
+
+				renderObjects[shaderCmd->shaderID].reset(shader);
+			} break;
+			case RenderCmdType::UPLOAD_MESH: {
+				auto* meshCmd = dynamic_cast<UploadMeshRenderCmd*>(renderCmd.get());
+				auto handle = GenerateHandle(); // Needs to be reviewed
+				auto* mesh = new OpenGLMesh(meshCmd->meshID, handle, meshCmd->vertices, meshCmd->uvs, meshCmd->normals);
+
+				renderObjects[meshCmd->meshID].reset(mesh);
+			} break;
 			case RenderCmdType::UPLOAD_TEXTURE: {} break;
-			case RenderCmdType::DELETE_SHADER: {} break;
-			case RenderCmdType::DELETE_MESH: {} break;
+			case RenderCmdType::DELETE_SHADER: {
+				auto* shaderCmd = dynamic_cast<DeleteShaderRenderCmd*>(renderCmd.get());
+				renderObjects.erase(shaderCmd->shaderID);
+			} break;
+			case RenderCmdType::DELETE_MESH: {
+				auto* meshCmd = dynamic_cast<DeleteMeshRenderCmd*>(renderCmd.get());
+				renderObjects.erase(meshCmd->meshID);
+			} break;
 			case RenderCmdType::DELETE_TEXTURE: {} break;
 			default:
 				break;
 			}
 			
 
-			delete renderCmd;
+			//delete renderCmd;
 		}
 		renderCmdQueue.clear();
 	}

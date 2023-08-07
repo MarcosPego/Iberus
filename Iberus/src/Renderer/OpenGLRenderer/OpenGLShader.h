@@ -2,9 +2,15 @@
 
 #include "ShaderApi.h"
 
+#include "Buffer.h"
+
 namespace Iberus {
 	class OpenGLShader : public ShaderApi {
 	public:
+		OpenGLShader(const std::string& inboundID, uint32_t inboundHandle, Buffer vertexBuffer, Buffer fragBuffer) : 
+			ShaderApi(inboundID, inboundHandle, std::move(vertexBuffer), std::move(fragBuffer)) {
+		}
+
 		void Enable() const override;
 		void Disable() const override;
 

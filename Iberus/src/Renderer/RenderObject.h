@@ -8,6 +8,8 @@ namespace {
 
 		}
 
+		virtual ~RenderObject() {}
+
 	protected:
 		std::string ID;
 		uint32_t handle; // Develop this

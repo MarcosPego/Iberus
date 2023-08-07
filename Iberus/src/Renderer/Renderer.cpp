@@ -3,6 +3,7 @@
 
 #include "OpenGLRenderer.h"
 
+
 namespace Iberus {
 
 	Renderer* Renderer::Create() {
@@ -10,19 +11,23 @@ namespace Iberus {
 	}
 
 	Renderer::~Renderer() {
-		for (auto* renderCmd : renderCmdQueue) {
+		/*for (auto* renderCmd : renderCmdQueue) {
 			delete renderCmd;
-		}
+		}*/
 	}
 
 	void Renderer::PushRenderCmd(RenderCmd* renderCmd) {
-		renderCmdQueue.push_back(renderCmd);
+		renderCmdQueue.emplace_back(renderCmd);
 	}
 
 	void Renderer::ExecuteAndFlushCmdQueue() {
-		for (auto* renderCmd : renderCmdQueue) {
+		/*for (auto* renderCmd : renderCmdQueue) {
 			delete renderCmd;
-		}
+		}*/
 		renderCmdQueue.clear();
+	}
+
+	uint32_t Renderer::GenerateHandle() {
+		return static_cast<uint32_t>(renderObjects.size());
 	}
 }

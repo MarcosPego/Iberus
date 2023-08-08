@@ -27,7 +27,7 @@ namespace Iberus {
 		T* CreateEntity(Args&&... args) {
 			auto entity = std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 			entities.emplace_back(std::move(entity));
-			return entities.back().get();
+			return dynamic_cast<T*>(entities.back().get());
 		}
 
 		void AddEntity(const std::string& id, Entity* entity);

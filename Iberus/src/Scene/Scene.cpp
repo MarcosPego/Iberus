@@ -11,6 +11,10 @@ namespace Iberus {
 		ID = inID;
 
 		sceneRoot = CreateEntity<Entity>("__rootEntity");
+
+		activeCamera = CreateEntity<Camera>("__camera");
+
+		sceneRoot->AddEntity("__camera", activeCamera);
 	}
 
 	void Scene::AddEntity(const std::string& id, Entity* entity) {

@@ -43,6 +43,11 @@ namespace Iberus {
 					// Push Camera Uniforms
 					ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
 					ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
+					ShaderBindings::SetUniform<Vec4>(programID, "Color", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+					if (glGetError() != GL_NO_ERROR) {
+						std::cout << "Error in Shader" << std::endl;
+					}
 				}	break;
 				case RenderCmdType::PUSH_MESH: {
 					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(renderCmd);
@@ -50,6 +55,9 @@ namespace Iberus {
 
 					mesh->Bind();
 					glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
+					if (glGetError() != GL_NO_ERROR) {
+						std::cout << "Error in Mesh" << std::endl;
+					}
 					mesh->Unbind();
 				}	break;
 				case RenderCmdType::PUSH_UNIFORM: {

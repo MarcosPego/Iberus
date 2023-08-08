@@ -19,6 +19,7 @@ void main(void)
 	exNormals = inNormals;
 
 	vec4 meshPosition = vec4(inVerticies, 1.0);
-	//gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * meshPosition;
-	gl_Position = meshPosition;
+	gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * meshPosition;
+	//gl_Position =  ProjectionMatrix * ViewMatrix * meshPosition;
+	//gl_Position = meshPosition;
 }

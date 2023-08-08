@@ -2,6 +2,7 @@
 
 #include "Enginepch.h"
 
+#include "MathUtils.h"
 
 #include "FileSystem.h"
 #include "Shader.h"

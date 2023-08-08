@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Enginepch.h"
 #include "ShaderBindings.h"
 #include "MathUtils.h"
 
@@ -50,11 +51,5 @@ namespace Iberus {
 	static void ShaderBindings::SetUniform(GLuint programID, const GLchar* name, const Mat4& value) {
 		glUniformMatrix4fv(GetUniformLocation(programID, name), 1, GL_FALSE, value.data);
 	}
-
-/*class OpenGLShaderBindings : public ShaderBindings {
-public:
-
-};*/
-
 }
 

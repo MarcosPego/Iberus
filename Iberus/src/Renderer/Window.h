@@ -9,7 +9,7 @@ namespace Iberus {
 
 	struct WindowProps {
 		std::string title{ "Iberus" };
-		Vec2 resolution{ 1330.0f, 720.0f };
+		Vec2 resolution{ 720.0f, 720.0f };
 		bool vsync{ true };
 		bool isFullScreen{ false };
 

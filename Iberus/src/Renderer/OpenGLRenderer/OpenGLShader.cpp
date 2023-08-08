@@ -72,7 +72,21 @@ const GLuint OpenGLShader::AddShader(const GLenum shaderType, Buffer shaderBuffe
 
 	glShaderSource(shaderID, 1, &code, 0);
 	glCompileShader(shaderID);
+
 	//checkCompilation(shader_id, filename); // TODO Check compilation
+
+	GLint compiled;
+	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &compiled);
+	if (compiled == GL_FALSE)
+	{
+		GLint length;
+		glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
+		GLchar* const log = new char[length];
+		glGetShaderInfoLog(shaderID, length, &length, log);
+		std::cerr << "[" << "shaderFailed" << "] " << std::endl << log;
+		delete[] log;
+	}
+
 	glAttachShader(shaderGLID, shaderID);
 	return shaderID;
 }

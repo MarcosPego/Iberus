@@ -1,13 +1,15 @@
 #pragma once
 
+#include "Core.h"
+
 namespace Math {
 	static float EPSILON = 0.00001f;
 	struct Vec4;
 	struct Vec3;
 
-	struct Vec2 {
+	struct IBERUS_API Vec2 {
 		union {
-			float x, y;
+			struct { float x, y; };
 			float data[2];
 		};
 
@@ -39,9 +41,9 @@ namespace Math {
 		friend std::istream& operator >> (std::istream& is, Vec2& v);
 	};
 
-	struct Vec3 {
+	struct IBERUS_API Vec3 {
 		union {
-			float x, y, z;
+			struct { float x, y, z; };
 			float data[3];
 		};
 
@@ -77,9 +79,9 @@ namespace Math {
 		friend std::istream& operator >> (std::istream& is, Vec3& v);
 	};
 
-	struct Vec4 {
+	struct IBERUS_API Vec4 {
 		union {
-			float x, y, z, w;
+			struct { float x, y, z, w; };
 			float data[4];
 		};
 

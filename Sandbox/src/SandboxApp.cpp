@@ -1,5 +1,7 @@
 #include <Iberus.h>
 
+using namespace Math;
+
 class Sandbox : public Iberus::Application {
 public:
 	Sandbox() {
@@ -17,10 +19,29 @@ public:
 
 		auto* currentScene = Iberus::Engine::Instance()->GetSceneManager().CreateScene("TestScene", true);
 		Iberus::Entity* entity = currentScene->CreateEntity<Iberus::Entity>("Teste");
+		Iberus::Entity* entity2 = currentScene->CreateEntity<Iberus::Entity>("Teste2");
+		Iberus::Entity* entity3 = currentScene->CreateEntity<Iberus::Entity>("Teste3");
 		entity->mesh = mesh;
 		entity->shader = shader;
 
+		entity2->mesh = mesh;
+		entity2->shader = shader;
+
+		entity3->mesh = mesh;
+		entity3->shader = shader;
+
+		entity->SetPosition(Vec3(0, 0, 30));
+		entity2->SetPosition(Vec3(0, 0, -30));
+		entity3->SetPosition(Vec3(0, 0, 0));
+
+		entity3->SetScale(Vec3(10, 10, 10));
+
+		entity->SetRotation(Vec3(0, 45, 0));
+		entity->SetScale(Vec3(2, 5, 2));
+
 		currentScene->AddEntity("Teste", entity);
+		//currentScene->AddEntity("Teste2", entity2);
+		//currentScene->AddEntity("Teste3", entity3);
 	}
 
 	void Update() override {

@@ -9,6 +9,7 @@
 
 namespace Iberus {
 	void OpenGLRenderer::RenderFrame(Frame& frame) {
+		static MeshApi* boundMesh{ nullptr };
 		static ShaderApi* shaderInUse{ nullptr };
 		static Mat4 viewMatrix;
 		static Mat4 projectionMatrix;
@@ -33,6 +34,14 @@ namespace Iberus {
 					auto* shaderCmd = dynamic_cast<ShaderRenderCmd*>(renderCmd);
 					auto* shader = dynamic_cast<ShaderApi*>(renderObjects[shaderCmd->shaderID].get());
 
+					if (shader == shaderInUse) {
+						continue;
+					}
+
+					if (shaderInUse) {
+						shaderInUse->Disable();
+					}
+
 					GLuint programID{ 0 };
 					shaderInUse = shader;
 					shaderInUse->Enable();
@@ -52,13 +61,21 @@ namespace Iberus {
 				case RenderCmdType::PUSH_MESH: {
 					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(renderCmd);
 					auto mesh = dynamic_cast<MeshApi*>(renderObjects[meshCmd->meshID].get());
+					
+					if (mesh != boundMesh) {
+						// Unbind previous mesh
+						if (boundMesh) {
+							boundMesh->Unbind();
+						}
 
-					mesh->Bind();
+						boundMesh = mesh;
+
+						mesh->Bind();
+					}
 					glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
 					if (glGetError() != GL_NO_ERROR) {
 						std::cout << "Error in Mesh" << std::endl;
 					}
-					mesh->Unbind();
 				}	break;
 				case RenderCmdType::PUSH_UNIFORM: {
 					GLuint programID{ 0 };
@@ -107,9 +124,15 @@ namespace Iberus {
 			}
 		}
 	
+		if (boundMesh) {
+			boundMesh->Unbind();
+		}
+
 		if (shaderInUse) {
 			shaderInUse->Disable();
 		}
+
+		boundMesh = nullptr;
 		shaderInUse = nullptr;
 	}
 

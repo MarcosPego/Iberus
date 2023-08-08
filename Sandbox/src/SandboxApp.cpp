@@ -31,17 +31,21 @@ public:
 		entity3->shader = shader;
 
 		entity->SetPosition(Vec3(0, 0, 30));
-		entity2->SetPosition(Vec3(0, 0, -30));
-		entity3->SetPosition(Vec3(0, 0, 0));
-
-		entity3->SetScale(Vec3(10, 10, 10));
+		entity2->SetPosition(Vec3(8, 0, 30));
+		entity3->SetPosition(Vec3(-8, 0, 30));
 
 		entity->SetRotation(Vec3(0, 45, 0));
 		entity->SetScale(Vec3(2, 5, 2));
 
+		entity2->SetRotation(Vec3(0, 45, 45));
+		entity2->SetScale(Vec3(5, 1, 2));
+
+		entity3->SetRotation(Vec3(45, 45, 0));
+		entity3->SetScale(Vec3(5, 5, 2));
+
 		currentScene->AddEntity("Teste", entity);
-		//currentScene->AddEntity("Teste2", entity2);
-		//currentScene->AddEntity("Teste3", entity3);
+		currentScene->AddEntity("Teste2", entity2);
+		currentScene->AddEntity("Teste3", entity3);
 	}
 
 	void Update() override {

@@ -26,12 +26,11 @@ namespace Iberus {
 	void Entity::PushDraw(RenderBatch& renderBatch) {
 		// TODO(MPP) Initial implementation. Might be revised
 
-		if (shader) {
-			renderBatch.PushRenderCmd(new ShaderRenderCmd(shader->GetID()));
+		if (material) {
+			material->PushDraw(renderBatch);
 
 			// Push uniforms here;
 			renderBatch.PushRenderCmd(new UniformRenderCmd("ModelMatrix", GetModelMatrix(), UniformType::MAT4));
-			//renderBatch.PushRenderCmd(new UniformRenderCmd("color", GetModelMatrix, UniformType::COLOR));
 		}
 
 		if (mesh) {

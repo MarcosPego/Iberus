@@ -7,7 +7,7 @@
 #undef far
 
 namespace Iberus {
-
+	
 	enum class ProjectionType {
 		UNKNOWN,
 		ORTHOGRAFIC,
@@ -42,6 +42,7 @@ namespace Iberus {
 	class IBERUS_API Camera : public Entity {
 	public:
 		explicit Camera(const std::string& ID);
+		virtual ~Camera() = default;
 
 		Mat4 GetViewMatrix() const { return viewMatrix; }
 		Mat4 GetProjectionMatrix() const { return projection->GetProjectionMatrix(); }

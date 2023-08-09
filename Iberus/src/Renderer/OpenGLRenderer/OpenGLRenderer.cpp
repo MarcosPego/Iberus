@@ -52,8 +52,6 @@ namespace Iberus {
 					// Push Camera Uniforms
 					ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
 					ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
-					ShaderBindings::SetUniform<Vec4>(programID, "Color", Vec4(0.0f, 0.0f, 1.0f, 1.0f));
-
 					if (glGetError() != GL_NO_ERROR) {
 						std::cout << "Error in Shader" << std::endl;
 					}

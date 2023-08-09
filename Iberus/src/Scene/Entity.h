@@ -55,10 +55,13 @@ namespace Iberus {
 
 		void AddEntity(const std::string& id, Entity* entity);
 
-		void PushDraw(RenderBatch& renderBatch);
+		virtual void PushDraw(RenderBatch& renderBatch);
 
-		Mesh* mesh{ nullptr };
-		Shader* shader{ nullptr };
+		void SetMesh(Mesh* inMesh) { mesh = inMesh; }
+		Mesh* GetMesh() { return mesh; }
+
+		void SetMaterial(Material* inMaterial) { material = inMaterial; }
+		Material* GetMaterial() { return material; }
 
 	private:
 		std::string ID; // String or unique int ?
@@ -69,10 +72,8 @@ namespace Iberus {
 		Entity* parent{ nullptr };
 		std::unordered_map<std::string, Entity*> childMap;
 
-		// no materials for now
-		//Material* material{ nullptr };
-		// using shaders instead
-
+		Mesh* mesh{ nullptr };
+		Material* material{ nullptr };
 	};
 
 }

@@ -1,6 +1,8 @@
 #include "Enginepch.h"
 #include "Camera.h"
 
+#include "RenderBatch.h"
+
 namespace Iberus {
 
 	OrthoProjection::OrthoProjection(float l, float r, float b, float t, float n, float f) {

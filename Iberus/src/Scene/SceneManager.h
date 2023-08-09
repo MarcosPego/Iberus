@@ -16,7 +16,6 @@ namespace Iberus {
 		Scene* GetActiveScene() const { return activeScene; }
 		void SetActiveScene(Scene* scene) { activeScene = scene; }
 		
-
 		/// TODO Find and get other scenes;
 
 		//AddScene(const std::string& sceneID, Scene)

@@ -13,22 +13,29 @@ public:
 		auto& resourceManager = Iberus::Engine::Instance()->GetResourceManager();
 		auto* provider = &Iberus::Engine::Instance()->GetEngineProvider();
 		Iberus::Shader* shader = resourceManager.GetOrCreateResource<Iberus::Shader>("assets/shaders/baseShader", provider);
-
 		Iberus::Mesh* mesh = resourceManager.GetOrCreateResource<Iberus::Mesh>("assets/meshes/cube.obj", provider);
 
-
 		auto* currentScene = Iberus::Engine::Instance()->GetSceneManager().CreateScene("TestScene", true);
+
+		Iberus::Material* material1 = currentScene->GetOrCreateMaterial<Iberus::Material>("Material1");
+		Iberus::Material* material2 = currentScene->GetOrCreateMaterial<Iberus::Material>("Material2");
+
+		material1->SetShader(shader);
+
+		material2->SetShader(shader);
+		material2->albedoColor = Vec4(1.0f, 0.3f, 0.3f, 1.0f);
+
 		Iberus::Entity* entity = currentScene->CreateEntity<Iberus::Entity>("Teste");
 		Iberus::Entity* entity2 = currentScene->CreateEntity<Iberus::Entity>("Teste2");
 		Iberus::Entity* entity3 = currentScene->CreateEntity<Iberus::Entity>("Teste3");
-		entity->mesh = mesh;
-		entity->shader = shader;
+		entity->SetMesh(mesh);
+		entity->SetMaterial(material1);
 
-		entity2->mesh = mesh;
-		entity2->shader = shader;
+		entity2->SetMesh(mesh);
+		entity2->SetMaterial(material1);
 
-		entity3->mesh = mesh;
-		entity3->shader = shader;
+		entity3->SetMesh(mesh);
+		entity3->SetMaterial(material2);
 
 		entity->SetPosition(Vec3(0, 0, 30));
 		entity2->SetPosition(Vec3(8, 0, 30));

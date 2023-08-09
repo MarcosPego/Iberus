@@ -1,16 +1,21 @@
 #pragma once
 
-namespace Iberus {
+#include "MathUtils.h"
 
+using namespace Math;
+
+namespace Iberus {
+	class RenderBatch;
 	class Shader;
 	class Texture;
 
-	class Material {
+	class IBERUS_API Material {
 	public:	
-		Material();
-		~Material();
+		explicit Material(const std::string& inID);
+		virtual ~Material() = default;
 
 		/// Albedo
+		Vec4 albedoColor{0.5f, 1.0f, 0.5f, 1.0f};
 
 		/// Normal Map
 
@@ -24,7 +29,11 @@ namespace Iberus {
 			return shader;
 		}
 
+		void PushDraw(RenderBatch& renderBatch);
+
 	private:
+		std::string ID;
+
 		Shader* shader{ nullptr };
 
 	};

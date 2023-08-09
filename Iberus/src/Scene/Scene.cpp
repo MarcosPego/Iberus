@@ -1,8 +1,6 @@
 #include "Enginepch.h"
 #include "Scene.h"
 
-#include "Camera.h"
-#include "Entity.h"
 #include "Renderer.h"
 #include "RenderCmd.h"
 

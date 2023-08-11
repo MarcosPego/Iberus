@@ -27,7 +27,7 @@ namespace Iberus {
 	bool Texture::Load(Buffer inboundBuffer) {
 		std::unique_ptr<uint8_t[]> bufferData;
 		bufferData.reset(
-			stbi_load_from_memory(static_cast<uint8_t*>(inboundBuffer.data.get()), inboundBuffer.size, &width, &height, &channels, 0)
+			stbi_load_from_memory(static_cast<uint8_t*>(inboundBuffer.data.get()), (int)inboundBuffer.size, &width, &height, &channels, 0)
 		);
 
 		imageBuffer.data = std::move(bufferData);

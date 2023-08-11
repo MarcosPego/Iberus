@@ -9,7 +9,7 @@
 using namespace Math;
 
 namespace Iberus {
-	class Frame;
+	struct Frame;
 
 	class IBERUS_API Scene {
 	public:

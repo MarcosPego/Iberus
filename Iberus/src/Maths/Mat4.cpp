@@ -60,7 +60,6 @@ namespace Math {
 	Mat4 inverse(const Mat4& m)
 	{
 		Mat4 new_matrix = Mat4();
-		int i;
 
 		new_matrix.data[0] = m.data[5] * m.data[10] * m.data[15] - m.data[5] * m.data[11] * m.data[14] - m.data[9] * m.data[6] * m.data[15] + m.data[9] * m.data[7] * m.data[14] + m.data[13] * m.data[6] * m.data[11] - m.data[13] * m.data[7] * m.data[10];
 		new_matrix.data[4] = -m.data[4] * m.data[10] * m.data[15] + m.data[4] * m.data[11] * m.data[14] + m.data[8] * m.data[6] * m.data[15] - m.data[8] * m.data[7] * m.data[14] - m.data[12] * m.data[6] * m.data[11] + m.data[12] * m.data[7] * m.data[10];

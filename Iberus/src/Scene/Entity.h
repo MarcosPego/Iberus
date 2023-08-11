@@ -29,7 +29,6 @@ namespace Iberus {
 		//Entity(const Entity&) = delete;
 		//Entity& operator= (const Entity&) = delete;
 
-
 		Entity* GetParent() const { return parent;  }
 		void SetParent(Entity* newParent) { parent = newParent; }
 

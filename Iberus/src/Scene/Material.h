@@ -19,7 +19,7 @@ namespace Iberus {
 		virtual ~Material() = default;
 
 		/// Albedo
-		Vec4 albedoColor{0.5f, 1.0f, 0.5f, 1.0f};
+		Vec4 albedoColor{1.0f, 1.0f, 1.0f, 1.0f};
 
 		/// Normal Map
 

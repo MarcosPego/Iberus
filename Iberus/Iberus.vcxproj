@@ -79,11 +79,11 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -102,7 +102,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -129,7 +129,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -192,6 +192,7 @@
     <ClInclude Include="src\Renderer\Window.h" />
     <ClInclude Include="src\Scene\Camera.h" />
     <ClInclude Include="src\Scene\Entity.h" />
+    <ClInclude Include="src\Scene\Light.h" />
     <ClInclude Include="src\Scene\Material.h" />
     <ClInclude Include="src\Scene\Resources\Buffer.h" />
     <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="src\Renderer\Window.cpp" />
     <ClCompile Include="src\Scene\Camera.cpp" />
     <ClCompile Include="src\Scene\Entity.cpp" />
+    <ClCompile Include="src\Scene\Light.cpp" />
     <ClCompile Include="src\Scene\Material.cpp" />
     <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
     <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />

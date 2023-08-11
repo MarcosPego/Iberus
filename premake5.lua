@@ -63,6 +63,7 @@ project "Iberus"
 		defines {
 			"IB_PLATFORM_WINDOWS",
 			"IB_BUILD_DLL",
+			"IB_DYNAMIC_LINK"
 		}
 
 		postbuildcommands {
@@ -122,6 +123,7 @@ project "Sandbox"
 
 		defines {
 			"IB_PLATFORM_WINDOWS",
+			"IB_DYNAMIC_LINK"
 		}
 
 	filter "configurations:Debug"

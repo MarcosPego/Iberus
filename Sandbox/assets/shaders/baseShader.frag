@@ -10,10 +10,11 @@ uniform sampler2D albedoTexture;
 uniform sampler2D normalTexture;
 uniform sampler2D metallicTexture;
 
+in vec4 position;
+
+layout(location = 0) out vec4 diffuseColor;
 
 void main(void)
 {
-	vec3 color = (exNormals + vec3(1.0)) * 0.5;
-	//gl_FragColor = vec4(exNormals,1.0) * albedoColor;
-	gl_FragColor = texture(albedoTexture, exUVs) * albedoColor;
+	diffuseColor = texture(albedoTexture, exUVs) * albedoColor;
 }

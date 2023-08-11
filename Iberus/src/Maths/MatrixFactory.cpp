@@ -140,8 +140,8 @@ namespace Math {
 
 
 	const Mat4 MatrixFactory::CreatePerspectiveMat4(const float fovy, const float aspect, const float nearZ, const float farZ) {
-		return Mat4( 1/ (aspect * tan(fovy/2 * M_PI / 180.0)), 0, 0, 0,
-					0, 1 / tan(fovy / 2 * M_PI / 180.0), 0, 0,
+		return Mat4( 1/ (aspect * (float)tan(fovy/2 * M_PI / 180.0)), 0, 0, 0,
+					0, 1 / (float)tan(fovy / 2 * M_PI / 180.0), 0, 0,
 					0, 0, -(farZ + nearZ) / (farZ - nearZ), -1,
 					0, 0, -(2 * farZ * nearZ) / (farZ - nearZ), 0
 		);

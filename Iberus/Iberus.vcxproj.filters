@@ -180,6 +180,9 @@
     <ClInclude Include="src\Scene\Entity.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Light.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Material.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -306,6 +309,9 @@
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Entity.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Light.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Material.cpp">

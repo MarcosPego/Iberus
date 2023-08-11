@@ -66,7 +66,7 @@ namespace Iberus {
 					ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
 					ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
 					if (glGetError() != GL_NO_ERROR) {
-						std::cout << "Error in Shader" << std::endl;
+						//std::cout << "Error in Shader" << std::endl;
 					}
 				}	break;
 				case RenderCmdType::PUSH_MESH: {
@@ -85,7 +85,7 @@ namespace Iberus {
 					}
 					glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
 					if (glGetError() != GL_NO_ERROR) {
-						std::cout << "Error in Mesh" << std::endl;
+						//std::cout << "Error in Mesh" << std::endl;
 					}
 				}	break;
 
@@ -107,7 +107,7 @@ namespace Iberus {
 						/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
 						//std::cout << "texture enabled" << std::endl;
 						if (glGetError() != GL_NO_ERROR) {
-							std::cout << "Error in texture" << std::endl;
+							//std::cout << "Error in texture" << std::endl;
 						}
 					}
 				
@@ -192,15 +192,8 @@ namespace Iberus {
 				auto* textureCmd = dynamic_cast<UploadTextureRenderCmd*>(renderCmd.get());
 				auto handle = GenerateHandle(); // Needs to be reviewed
 				auto* texture = new OpenGLTexture(textureCmd->ID, handle, std::move(textureCmd->buffer), textureCmd->width, textureCmd->height, textureCmd->channels);
-			
-				auto* test2 = dynamic_cast<OpenGLTexture*>(texture);
-				std::unique_ptr<OpenGLTexture> textureUptr;
-				textureUptr.reset(texture);
-				auto* test3 = dynamic_cast<OpenGLTexture*>(textureUptr.get());
-				renderObjects[textureCmd->ID] = std::move(textureUptr);
-				auto* test = static_cast<OpenGLTexture*>(renderObjects[textureCmd->ID].get());
-
-				std::cout << "why" << std::endl;
+				
+				renderObjects[textureCmd->ID].reset(texture);
 			} break;
 			case RenderCmdType::DELETE_SHADER: {
 				auto* shaderCmd = dynamic_cast<DeleteShaderRenderCmd*>(renderCmd.get());

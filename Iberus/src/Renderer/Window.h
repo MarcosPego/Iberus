@@ -31,8 +31,8 @@ namespace Iberus {
 
 		virtual const std::string& GetTitle() const { return  windowProps.title; }
 
-		virtual int GetWidth() const { return windowProps.resolution.x; }
-		virtual int GetHeight() const { return  windowProps.resolution.y; }
+		virtual int GetWidth() const { return (int)windowProps.resolution.x; }
+		virtual int GetHeight() const { return  (int)windowProps.resolution.y; }
 
 		virtual void Update() = 0;
 

@@ -65,15 +65,20 @@ namespace Iberus {
 	private:
 
 		template<typename T = Resource>
-		T* InitializeResource(const std::string& id, Buffer inboundBuffer);
+		T* InitializeResource(const std::string& id, Buffer inboundBuffer) {
+			auto* mesh = new T(id, std::move(inboundBuffer));
+			resources.emplace(id, mesh);
 
-		template<>
+			return dynamic_cast<T*>(resources.at(id).get());
+		}
+
+		/*template<>
 		Mesh* ResourceManager::InitializeResource(const std::string& id, Buffer buffer) {
 			auto* mesh = new Mesh(id, std::move(buffer));
 			resources.emplace(id, mesh);
 
 			return dynamic_cast<Mesh*>(resources.at(id).get());;
-		}
+		}*/
 
 		//template<typename T = Resource>
 		//T* InitializeResource(const std::string& id);

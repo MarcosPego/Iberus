@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\spdlog\include;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -97,7 +97,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\spdlog\include;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -119,7 +119,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\spdlog\include;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

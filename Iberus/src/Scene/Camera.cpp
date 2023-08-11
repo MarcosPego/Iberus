@@ -46,7 +46,28 @@ namespace Iberus {
 		SetPosition(Vec3(0, 0, 0));
 
 		projection = std::make_unique<PerspectiveProjection>(40, 1, 0.1f, 8000.0f);
-		viewMatrix = MatrixFactory::CreateViewMat4(Vec3(0, 0,-5), Vec3(0, 0, 5), Vec3(0, 1, 0));
+		viewMatrix = MatrixFactory::CreateViewMat4(Vec3(0, 0,-5), GetPosition(), Vec3(0, 1, 0));
+	}
+
+
+	void Camera::SetPosition(const Vec3& position) {
+		Entity::SetPosition(position);
+		UpdateViewMatrix();
+	}
+
+	void Camera::SetRotation(const Vec3& rotation) {
+		Camera::SetRotation(rotation);
+		UpdateViewMatrix();
+	}
+
+	void Camera::UpdateViewMatrix() {
+		// TODO(MPP) look at!
+		viewMatrix = MatrixFactory::CreateViewMat4(Vec3(0, 0, -5), GetPosition(), Vec3(0, 1, 0));
+	}
+
+	Mat4 Camera::CalculateViewMatrix() {
+		UpdateViewMatrix();
+		return GetViewMatrix();
 	}
 
 }

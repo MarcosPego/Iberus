@@ -11,8 +11,8 @@ namespace Iberus {
 			Load(std::move(vertexBuffer), std::move(fragBuffer));
 		}
 
-		void Enable() const override;
-		void Disable() const override;
+		void Bind() const override;
+		void Unbind() const override;
 
 		bool Load(Buffer vertexBuffer, Buffer fragBuffer) override;
 

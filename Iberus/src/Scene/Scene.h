@@ -42,6 +42,8 @@ namespace Iberus {
 
 		void AddEntity(const std::string& id, Entity* entity);
 
+		Camera* GetActiveCamera() { return activeCamera; }
+
 	private:
 		std::string ID;
 

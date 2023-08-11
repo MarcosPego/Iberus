@@ -65,7 +65,7 @@ namespace Iberus {
 						std::getline(sline, token, '/');
 						if (token.size() > 0) vertexIdx.push_back(std::stoi(token));
 						std::getline(sline, token, '/');
-						if (token.size() > 0) uvData.push_back(std::stoi(token));
+						if (token.size() > 0) uvIdx.push_back(std::stoi(token));
 						std::getline(sline, token, ' ');
 						if (token.size() > 0) normalIdx.push_back(std::stoi(token));
 					}

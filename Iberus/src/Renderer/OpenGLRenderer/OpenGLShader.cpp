@@ -9,11 +9,11 @@
 
 namespace Iberus {
 
-void OpenGLShader::Enable() const {
+void OpenGLShader::Bind() const {
 	glUseProgram(shaderGLID);
 }
 
-void OpenGLShader::Disable() const {
+void OpenGLShader::Unbind() const {
 	glUseProgram(0);
 }
 
@@ -66,29 +66,29 @@ bool OpenGLShader::Load(Buffer vertexBuffer, Buffer fragBuffer) {
 }
 
 const GLuint OpenGLShader::AddShader(const GLenum shaderType, Buffer shaderBuffer){
-	const GLuint shaderID = glCreateShader(shaderType);
+	const GLuint ID = glCreateShader(shaderType);
 	const std::string shaderCode(shaderBuffer.data.get(), shaderBuffer.data.get() + shaderBuffer.size);
 	const GLchar* code = shaderCode.c_str();
 
-	glShaderSource(shaderID, 1, &code, 0);
-	glCompileShader(shaderID);
+	glShaderSource(ID, 1, &code, 0);
+	glCompileShader(ID);
 
 	//checkCompilation(shader_id, filename); // TODO Check compilation
 
 	GLint compiled;
-	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &compiled);
+	glGetShaderiv(ID, GL_COMPILE_STATUS, &compiled);
 	if (compiled == GL_FALSE)
 	{
 		GLint length;
-		glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
+		glGetShaderiv(ID, GL_INFO_LOG_LENGTH, &length);
 		GLchar* const log = new char[length];
-		glGetShaderInfoLog(shaderID, length, &length, log);
+		glGetShaderInfoLog(ID, length, &length, log);
 		std::cerr << "[" << "shaderFailed" << "] " << std::endl << log;
 		delete[] log;
 	}
 
-	glAttachShader(shaderGLID, shaderID);
-	return shaderID;
+	glAttachShader(shaderGLID, ID);
+	return ID;
 }
 
 }

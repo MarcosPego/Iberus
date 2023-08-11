@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Buffer.h"
 #include "MathUtils.h"
 
 #include "RenderObject.h"
@@ -14,9 +13,6 @@ namespace Iberus {
 			const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals);
 		virtual ~MeshApi();
 
-		virtual void Bind() = 0;
-		virtual void Unbind() = 0;
-
 		size_t VertexSize() const { return vertexSize; }
 
 	protected:
@@ -24,12 +20,6 @@ namespace Iberus {
 		virtual void Destroy() {};
 
 		size_t vertexSize{ 0 };
-		/*bool hasUVs;
-		bool hasNormals;
-
-		std::vector<Vec3> vertices;
-		std::vector<Vec2> uvs;
-		std::vector<Vec3> normals;*/
 	};
 }
 

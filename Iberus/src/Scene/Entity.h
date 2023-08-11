@@ -34,13 +34,13 @@ namespace Iberus {
 		void SetParent(Entity* newParent) { parent = newParent; }
 
 		Vec3 GetPosition() { return transform.Position; }
-		void SetPosition(const Vec3& position) { transform.Position = position; }
+		virtual void SetPosition(const Vec3& position) { transform.Position = position; }
 
 		Vec3 GetRotation() { return transform.Rotation; }
-		void SetRotation(const Vec3& rotation) { transform.Rotation = rotation; }
+		virtual void SetRotation(const Vec3& rotation) { transform.Rotation = rotation; }
 
 		Vec3 GetScale() { return transform.Scale; }
-		void SetScale(const Vec3& scale) { transform.Scale = scale; }
+		virtual void SetScale(const Vec3& scale) { transform.Scale = scale; }
 
 		Transform GetTransform() const { return transform; }
 

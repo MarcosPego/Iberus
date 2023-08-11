@@ -14,8 +14,8 @@ namespace Iberus {
 		bool Build(const std::vector<Vec3>& vertices, const std::vector<Vec2>& uvs, const std::vector<Vec3>& normals) final;
 		void Destroy() final;
 
-		void Bind() final;
-		void Unbind() final;
+		void Bind() const final;
+		void Unbind() const final;
 
 	private:
 		GLuint vaoID{ 0 };

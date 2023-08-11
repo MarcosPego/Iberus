@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -103,7 +103,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -130,7 +130,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -152,36 +152,23 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
-    <ClInclude Include="src\Scene\Resources\IProvider.h" />
-    <ClInclude Include="src\Scene\Resources\Shader.h" />
-    <ClInclude Include="src\Renderer\RenderObject.h" />
-    <ClInclude Include="src\Core\Engine.h" />
-    <ClInclude Include="src\Scene\Resources\Resource.h" />
-    <ClInclude Include="src\Scene\Resources\Mesh.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
-    <ClInclude Include="src\Renderer\RenderCmd.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h" />
-    <ClInclude Include="src\Renderer\ShaderBindings.h" />
-    <ClInclude Include="src\Scene\Resources\Buffer.h" />
     <ClInclude Include="dependencies\glew\include\GL\eglew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glxew.h" />
     <ClInclude Include="dependencies\glew\include\GL\wglew.h" />
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3.h" />
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3native.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLTexture.h" />
-    <ClInclude Include="src\FileSystem\FileSystem.h" />
+    <ClInclude Include="dependencies\stb_image\stb_image.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Core.h" />
+    <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Core\Enginepch.h" />
     <ClInclude Include="src\Core\EntryPoint.h" />
     <ClInclude Include="src\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Events\Event.h" />
     <ClInclude Include="src\Events\KeyEvent.h" />
     <ClInclude Include="src\Events\MouseEvent.h" />
+    <ClInclude Include="src\FileSystem\FileSystem.h" />
     <ClInclude Include="src\Iberus.h" />
     <ClInclude Include="src\Logging\Log.h" />
     <ClInclude Include="src\Maths\MathUtils.h" />
@@ -190,39 +177,40 @@
     <ClInclude Include="src\Maths\Vector.h" />
     <ClInclude Include="src\Renderer\MeshApi.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLMesh.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLTexture.h" />
     <ClInclude Include="src\Renderer\Platform\WindowsWindow.h" />
     <ClInclude Include="src\Renderer\RenderBatch.h" />
+    <ClInclude Include="src\Renderer\RenderCmd.h" />
+    <ClInclude Include="src\Renderer\RenderObject.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Renderer\ShaderApi.h" />
+    <ClInclude Include="src\Renderer\ShaderBindings.h" />
     <ClInclude Include="src\Renderer\TextureApi.h" />
     <ClInclude Include="src\Renderer\Window.h" />
     <ClInclude Include="src\Scene\Camera.h" />
     <ClInclude Include="src\Scene\Entity.h" />
     <ClInclude Include="src\Scene\Material.h" />
+    <ClInclude Include="src\Scene\Resources\Buffer.h" />
+    <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
+    <ClInclude Include="src\Scene\Resources\IProvider.h" />
+    <ClInclude Include="src\Scene\Resources\Mesh.h" />
+    <ClInclude Include="src\Scene\Resources\Resource.h" />
     <ClInclude Include="src\Scene\Resources\ResourceManager.h" />
+    <ClInclude Include="src\Scene\Resources\Shader.h" />
+    <ClInclude Include="src\Scene\Resources\Texture.h" />
     <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Scene\SceneManager.cpp" />
-    <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
-    <ClCompile Include="src\Scene\Resources\IProvider.cpp" />
-    <ClCompile Include="src\Scene\Resources\Shader.cpp" />
-    <ClCompile Include="src\Renderer\RenderObject.cpp" />
-    <ClCompile Include="src\Core\Engine.cpp" />
-    <ClCompile Include="src\Scene\Resources\Resource.cpp" />
-    <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
-    <ClCompile Include="src\Renderer\RenderCmd.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp" />
-    <ClCompile Include="src\Renderer\ShaderBindings.cpp" />
-    <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLTexture.cpp" />
-    <ClCompile Include="src\FileSystem\FileSystem.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Core\Enginepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\FileSystem\FileSystem.cpp" />
     <ClCompile Include="src\Logging\Log.cpp" />
     <ClCompile Include="src\Maths\Mat2.cpp" />
     <ClCompile Include="src\Maths\Mat3.cpp" />
@@ -235,17 +223,32 @@
     <ClCompile Include="src\Maths\Vec4.cpp" />
     <ClCompile Include="src\Renderer\MeshApi.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLMesh.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLTexture.cpp" />
     <ClCompile Include="src\Renderer\Platform\WindowsWindow.cpp" />
     <ClCompile Include="src\Renderer\RenderBatch.cpp" />
+    <ClCompile Include="src\Renderer\RenderCmd.cpp" />
+    <ClCompile Include="src\Renderer\RenderObject.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Renderer\ShaderApi.cpp" />
+    <ClCompile Include="src\Renderer\ShaderBindings.cpp" />
     <ClCompile Include="src\Renderer\TextureApi.cpp" />
     <ClCompile Include="src\Renderer\Window.cpp" />
     <ClCompile Include="src\Scene\Camera.cpp" />
     <ClCompile Include="src\Scene\Entity.cpp" />
     <ClCompile Include="src\Scene\Material.cpp" />
+    <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
+    <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
+    <ClCompile Include="src\Scene\Resources\IProvider.cpp" />
+    <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
+    <ClCompile Include="src\Scene\Resources\Resource.cpp" />
     <ClCompile Include="src\Scene\Resources\ResourceManager.cpp" />
+    <ClCompile Include="src\Scene\Resources\Shader.cpp" />
+    <ClCompile Include="src\Scene\Resources\Texture.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\SceneManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

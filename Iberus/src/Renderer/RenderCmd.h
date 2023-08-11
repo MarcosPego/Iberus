@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Mesh.h"
-#include "ShaderApi.h"
 #include "MathUtils.h"
-#include "Buffer.h"
 
 using namespace Math;
 
@@ -27,6 +24,7 @@ namespace Iberus {
 		PUSH_UNIFORM,
 		PUSH_SHADER,
 		PUSH_CAMERA,
+		PUSH_TEXTURE,
 		DELETE_SHADER,
 		DELETE_MESH,
 		DELETE_TEXTURE,
@@ -56,23 +54,38 @@ namespace Iberus {
 	class ShaderRenderCmd : public RenderCmd {
 	public:
 		ShaderRenderCmd(const std::string& inboundShaderID) {
-			shaderID = inboundShaderID;
+			ID = inboundShaderID;
 
 			renderCmdType = RenderCmdType::PUSH_SHADER;
 		}
 
-		std::string shaderID;
+		std::string ID;
 	};
 
 	class MeshRenderCmd : public RenderCmd {
 	public:
 		MeshRenderCmd(const std::string& inboundMeshID) {
-			meshID = inboundMeshID;
+			ID = inboundMeshID;
 
 			renderCmdType = RenderCmdType::PUSH_MESH;
 		}
 
-		std::string meshID;
+		std::string ID;
+	};
+
+	class TextureRenderCmd : public RenderCmd {
+	public:
+		TextureRenderCmd(const std::string& inboundID, const std::string& inTargetTexture, int targetBind) {
+			targetTexture = inTargetTexture;
+			ID = inboundID;
+			bind = targetBind;
+
+			renderCmdType = RenderCmdType::PUSH_TEXTURE;
+		}
+
+		std::string targetTexture;
+		std::string ID;
+		int bind{ 0 };
 	};
 
 	template<typename T>
@@ -115,8 +128,8 @@ namespace Iberus {
 
 	class UploadMeshRenderCmd : public RenderCmd {
 	public:
-		UploadMeshRenderCmd(const std::string& inboundMeshID, const std::vector<Vec3>& inboundVertices, const std::vector<Vec2>& inboundUvs, const std::vector<Vec3>& inboundNormals) {
-			meshID = inboundMeshID;
+		UploadMeshRenderCmd(const std::string& inboundID, const std::vector<Vec3>& inboundVertices, const std::vector<Vec2>& inboundUvs, const std::vector<Vec3>& inboundNormals) {
+			ID = inboundID;
 			vertices = inboundVertices;
 			uvs = inboundUvs;
 			normals = inboundNormals;
@@ -124,7 +137,7 @@ namespace Iberus {
 			renderCmdType = RenderCmdType::UPLOAD_MESH;
 		}
 
-		std::string meshID;
+		std::string ID;
 		std::vector<Vec3> vertices;
 		std::vector<Vec2> uvs;
 		std::vector<Vec3> normals;
@@ -132,39 +145,67 @@ namespace Iberus {
 
 	class DeleteMeshRenderCmd : public RenderCmd {
 	public:
-		DeleteMeshRenderCmd(const std::string& inboundMeshID) {
-			meshID = inboundMeshID;
+		DeleteMeshRenderCmd(const std::string& inboundID) {
+			ID = inboundID;
 
 			renderCmdType = RenderCmdType::DELETE_MESH;
 		}
 
-		std::string meshID;
+		std::string ID;
 	};
 
 	class UploadShaderRenderCmd : public RenderCmd {
 	public:
-		UploadShaderRenderCmd(const std::string& inboundShaderID, Buffer inboundVertexBuffer, Buffer inboundFragBuffer) {
-			shaderID = inboundShaderID;
+		UploadShaderRenderCmd(const std::string& inboundID, Buffer inboundVertexBuffer, Buffer inboundFragBuffer) {
+			ID = inboundID;
 			vertexBuffer = std::move(inboundVertexBuffer);
 			fragBuffer = std::move(inboundFragBuffer);
 
 			renderCmdType = RenderCmdType::UPLOAD_SHADER;
 		}
 
-		std::string shaderID;
+		std::string ID;
 		Buffer vertexBuffer;
 		Buffer fragBuffer;
 	};
 
 	class DeleteShaderRenderCmd : public RenderCmd {
 	public:
-		DeleteShaderRenderCmd(const std::string& inboundShaderID) {
-			shaderID = inboundShaderID;
+		DeleteShaderRenderCmd(const std::string& inboundID) {
+			ID = inboundID;
 
 			renderCmdType = RenderCmdType::DELETE_SHADER;
 		}
 
-		std::string shaderID;
+		std::string ID;
+	};
+
+	class UploadTextureRenderCmd : public RenderCmd {
+	public:
+		UploadTextureRenderCmd(const std::string& inboundID, Buffer inboundBuffer, int inWidth, int inHeight, int inChannels) {
+			ID = inboundID;
+			width = inWidth;
+			height = inHeight;
+			channels = inChannels;
+			buffer = std::move(inboundBuffer);
+
+			renderCmdType = RenderCmdType::UPLOAD_TEXTURE;
+		}
+
+		std::string ID;
+		Buffer buffer;
+		int width, height, channels;
+	};
+
+	class DeleteTextureRenderCmd : public RenderCmd {
+	public:
+		DeleteTextureRenderCmd(const std::string& inboundID) {
+			ID = inboundID;
+
+			renderCmdType = RenderCmdType::DELETE_TEXTURE;
+		}
+
+		std::string ID;
 	};
 
 }

@@ -55,11 +55,11 @@ namespace Iberus {
 		glBindVertexArray(0);
 	}
 
-	void OpenGLMesh::Bind() {
+	void OpenGLMesh::Bind() const  {
 		glBindVertexArray(vaoID);
 	}
 
-	void OpenGLMesh::Unbind() {
+	void OpenGLMesh::Unbind() const {
 		glBindVertexArray(0);
 	}
 }

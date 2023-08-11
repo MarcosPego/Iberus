@@ -28,6 +28,10 @@
 #include <Windows.h>
 #endif
 
+// TODO(MPP) Fix enginepch generation
+//#define STB_IMAGE_IMPLEMENTATION
+//#include <stb_image.h>
+
 /// Common utils
 
 #include "Log.h"

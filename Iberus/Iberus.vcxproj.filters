@@ -22,6 +22,9 @@
     <Filter Include="dependencies\glfw\include\GLFW">
       <UniqueIdentifier>{3D0DF957-2933-C3BE-1279-488AFE3DE88A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dependencies\stb_image">
+      <UniqueIdentifier>{26BD49FD-12B7-724F-FB23-0960E7BCD8BB}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
@@ -30,6 +33,9 @@
     </Filter>
     <Filter Include="src\Events">
       <UniqueIdentifier>{7162C20E-5D1A-045C-C621-DDB7B2F89E4C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\FileSystem">
+      <UniqueIdentifier>{21178D23-0DE5-8029-F678-F14FE2E55C8E}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Logging">
       <UniqueIdentifier>{C368B2F1-2F1E-2BE7-B812-25BE24C721EB}</UniqueIdentifier>
@@ -72,10 +78,16 @@
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3native.h">
       <Filter>dependencies\glfw\include\GLFW</Filter>
     </ClInclude>
+    <ClInclude Include="dependencies\stb_image\stb_image.h">
+      <Filter>dependencies\stb_image</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Application.h">
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Core.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Engine.h">
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Enginepch.h">
@@ -95,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="src\Events\MouseEvent.h">
       <Filter>src\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FileSystem\FileSystem.h">
+      <Filter>src\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="src\Iberus.h">
       <Filter>src</Filter>
@@ -120,16 +135,37 @@
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLMesh.h">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLTexture.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Renderer\Platform\WindowsWindow.h">
       <Filter>src\Renderer\Platform</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\RenderBatch.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\RenderCmd.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\RenderObject.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Renderer\Renderer.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\ShaderApi.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\ShaderBindings.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\TextureApi.h">
@@ -147,35 +183,49 @@
     <ClInclude Include="src\Scene\Material.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Resources\Buffer.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Resources\FileSystemProvider.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Resources\IProvider.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Resources\Mesh.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Resources\Resource.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Resources\ResourceManager.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Resources\Shader.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Resources\Texture.h">
       <Filter>src\Scene\Resources</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\FileSystem\FileSystem.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLTexture.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
-    <ClInclude Include="src\Scene\Resources\Buffer.h" />
-    <ClInclude Include="src\Renderer\ShaderBindings.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h" />
-    <ClInclude Include="src\Renderer\RenderCmd.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
-    <ClInclude Include="src\Scene\Resources\Mesh.h" />
-    <ClInclude Include="src\Scene\Resources\Resource.h" />
-    <ClInclude Include="src\Core\Engine.h" />
-    <ClInclude Include="src\Renderer\RenderObject.h" />
-    <ClInclude Include="src\Scene\Resources\Shader.h" />
-    <ClInclude Include="src\Scene\Resources\IProvider.h" />
-    <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
-    <ClInclude Include="src\Scene\SceneManager.h" />
+    <ClInclude Include="src\Scene\SceneManager.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Engine.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\Enginepch.cpp">
       <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\FileSystem.cpp">
+      <Filter>src\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\Logging\Log.cpp">
       <Filter>src\Logging</Filter>
@@ -213,16 +263,37 @@
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLMesh.cpp">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLTexture.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Renderer\Platform\WindowsWindow.cpp">
       <Filter>src\Renderer\Platform</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\RenderBatch.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer\RenderCmd.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\RenderObject.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Renderer\Renderer.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\ShaderApi.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\ShaderBindings.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\TextureApi.cpp">
@@ -240,27 +311,35 @@
     <ClCompile Include="src\Scene\Material.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Resources\Buffer.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Resources\IProvider.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Resources\Mesh.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Resources\Resource.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Resources\ResourceManager.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Resources\Shader.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Resources\Texture.cpp">
       <Filter>src\Scene\Resources</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\FileSystem\FileSystem.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLTexture.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />
-    <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
-    <ClCompile Include="src\Renderer\ShaderBindings.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp" />
-    <ClCompile Include="src\Renderer\RenderCmd.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
-    <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
-    <ClCompile Include="src\Scene\Resources\Resource.cpp" />
-    <ClCompile Include="src\Core\Engine.cpp" />
-    <ClCompile Include="src\Renderer\RenderObject.cpp" />
-    <ClCompile Include="src\Scene\Resources\Shader.cpp" />
-    <ClCompile Include="src\Scene\Resources\IProvider.cpp" />
-    <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
-    <ClCompile Include="src\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\Scene\SceneManager.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

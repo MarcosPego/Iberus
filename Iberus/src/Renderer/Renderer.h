@@ -6,6 +6,10 @@
 #include "RenderCmd.h"
 #include "RenderObject.h"
 
+#include "ShaderApi.h"
+#include "TextureApi.h"
+#include "MeshApi.h"
+
 using namespace Math;
 
 namespace Iberus {

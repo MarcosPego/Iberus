@@ -3,12 +3,23 @@
 
 #include "OpenGLMesh.h"
 #include "OpenGLShader.h"
+#include "OpenGLTexture.h"
 #include "RenderBatch.h"
 #include "RenderCmd.h"
 #include "ShaderBindings.h"
 
 namespace Iberus {
+	OpenGLRenderer::OpenGLRenderer() {
+		openGLTexBindings[0] = GL_TEXTURE0;
+		openGLTexBindings[1] = GL_TEXTURE1;
+		openGLTexBindings[2] = GL_TEXTURE2;
+		openGLTexBindings[3] = GL_TEXTURE3;
+		openGLTexBindings[4] = GL_TEXTURE4;
+		openGLTexBindings[5] = GL_TEXTURE5;
+	}
+
 	void OpenGLRenderer::RenderFrame(Frame& frame) {
+		static TextureApi* boundTexture{ nullptr };
 		static MeshApi* boundMesh{ nullptr };
 		static ShaderApi* shaderInUse{ nullptr };
 		static Mat4 viewMatrix;
@@ -32,23 +43,25 @@ namespace Iberus {
 				}	break;
 				case RenderCmdType::PUSH_SHADER: {
 					auto* shaderCmd = dynamic_cast<ShaderRenderCmd*>(renderCmd);
-					auto* shader = dynamic_cast<ShaderApi*>(renderObjects[shaderCmd->shaderID].get());
+					auto* shader = dynamic_cast<ShaderApi*>(renderObjects[shaderCmd->ID].get());
 
 					if (shader == shaderInUse) {
 						continue;
 					}
 
 					if (shaderInUse) {
-						shaderInUse->Disable();
+						shaderInUse->Unbind();
 					}
 
 					GLuint programID{ 0 };
 					shaderInUse = shader;
-					shaderInUse->Enable();
+					shaderInUse->Bind();
 					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
 						programID = openGLShader->GetProgramID();
 					}
 
+					/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
+					//std::cout << "shader enabled" << std::endl;
 					// Push Camera Uniforms
 					ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
 					ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
@@ -58,7 +71,7 @@ namespace Iberus {
 				}	break;
 				case RenderCmdType::PUSH_MESH: {
 					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(renderCmd);
-					auto mesh = dynamic_cast<MeshApi*>(renderObjects[meshCmd->meshID].get());
+					auto* mesh = dynamic_cast<MeshApi*>(renderObjects[meshCmd->ID].get());
 					
 					if (mesh != boundMesh) {
 						// Unbind previous mesh
@@ -74,6 +87,30 @@ namespace Iberus {
 					if (glGetError() != GL_NO_ERROR) {
 						std::cout << "Error in Mesh" << std::endl;
 					}
+				}	break;
+
+				case RenderCmdType::PUSH_TEXTURE: {
+					auto* textureCmd = dynamic_cast<TextureRenderCmd*>(renderCmd);
+					auto* texture = static_cast<TextureApi*>(renderObjects[textureCmd->ID].get());
+
+					if (texture != boundTexture) {
+						// Unbind previous texture
+						if (boundTexture) {
+							boundTexture->Unbind();
+						}
+
+						boundTexture = texture;
+						glActiveTexture(openGLTexBindings[textureCmd->bind]);
+						texture->Bind();
+
+
+						/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
+						//std::cout << "texture enabled" << std::endl;
+						if (glGetError() != GL_NO_ERROR) {
+							std::cout << "Error in texture" << std::endl;
+						}
+					}
+				
 				}	break;
 				case RenderCmdType::PUSH_UNIFORM: {
 					GLuint programID{ 0 };
@@ -127,7 +164,7 @@ namespace Iberus {
 		}
 
 		if (shaderInUse) {
-			shaderInUse->Disable();
+			shaderInUse->Unbind();
 		}
 
 		boundMesh = nullptr;
@@ -141,32 +178,45 @@ namespace Iberus {
 			case RenderCmdType::UPLOAD_SHADER: {
 				auto* shaderCmd = dynamic_cast<UploadShaderRenderCmd*>(renderCmd.get());
 				auto handle = GenerateHandle(); // Needs to be reviewed
-				auto* shader = new OpenGLShader(shaderCmd->shaderID, handle, std::move(shaderCmd->vertexBuffer), std::move(shaderCmd->fragBuffer));
-				renderObjects[shaderCmd->shaderID].reset(shader);
+				auto* shader = new OpenGLShader(shaderCmd->ID, handle, std::move(shaderCmd->vertexBuffer), std::move(shaderCmd->fragBuffer));
+				renderObjects[shaderCmd->ID].reset(shader);
 			} break;
 			case RenderCmdType::UPLOAD_MESH: {
 				auto* meshCmd = dynamic_cast<UploadMeshRenderCmd*>(renderCmd.get());
 				auto handle = GenerateHandle(); // Needs to be reviewed
-				auto* mesh = new OpenGLMesh(meshCmd->meshID, handle, meshCmd->vertices, meshCmd->uvs, meshCmd->normals);
+				auto* mesh = new OpenGLMesh(meshCmd->ID, handle, meshCmd->vertices, meshCmd->uvs, meshCmd->normals);
 
-				renderObjects[meshCmd->meshID].reset(mesh);
+				renderObjects[meshCmd->ID].reset(mesh);
 			} break;
-			case RenderCmdType::UPLOAD_TEXTURE: {} break;
+			case RenderCmdType::UPLOAD_TEXTURE: {
+				auto* textureCmd = dynamic_cast<UploadTextureRenderCmd*>(renderCmd.get());
+				auto handle = GenerateHandle(); // Needs to be reviewed
+				auto* texture = new OpenGLTexture(textureCmd->ID, handle, std::move(textureCmd->buffer), textureCmd->width, textureCmd->height, textureCmd->channels);
+			
+				auto* test2 = dynamic_cast<OpenGLTexture*>(texture);
+				std::unique_ptr<OpenGLTexture> textureUptr;
+				textureUptr.reset(texture);
+				auto* test3 = dynamic_cast<OpenGLTexture*>(textureUptr.get());
+				renderObjects[textureCmd->ID] = std::move(textureUptr);
+				auto* test = static_cast<OpenGLTexture*>(renderObjects[textureCmd->ID].get());
+
+				std::cout << "why" << std::endl;
+			} break;
 			case RenderCmdType::DELETE_SHADER: {
 				auto* shaderCmd = dynamic_cast<DeleteShaderRenderCmd*>(renderCmd.get());
-				renderObjects.erase(shaderCmd->shaderID);
+				renderObjects.erase(shaderCmd->ID);
 			} break;
 			case RenderCmdType::DELETE_MESH: {
 				auto* meshCmd = dynamic_cast<DeleteMeshRenderCmd*>(renderCmd.get());
-				renderObjects.erase(meshCmd->meshID);
+				renderObjects.erase(meshCmd->ID);
 			} break;
-			case RenderCmdType::DELETE_TEXTURE: {} break;
+			case RenderCmdType::DELETE_TEXTURE: {
+				auto* texCmd = dynamic_cast<DeleteTextureRenderCmd*>(renderCmd.get());
+				renderObjects.erase(texCmd->ID); 
+			} break;
 			default:
 				break;
 			}
-			
-
-			//delete renderCmd;
 		}
 		renderCmdQueue.clear();
 	}

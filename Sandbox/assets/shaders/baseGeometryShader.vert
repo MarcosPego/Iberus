@@ -22,7 +22,7 @@ void main(void)
 
 	exVerticies = position.xyz;
 	exUVs = inUVs;
-	exNormals = (worlMatrix * inNormals)xyz;
+	exNormals = (worlMatrix * vec4(inNormals, 0.0)).xyz;
 
 	gl_Position = position;
 }

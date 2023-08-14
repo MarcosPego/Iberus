@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RenderObject.h"
+
 namespace Iberus {
 
 	enum class FramebufferMode {
@@ -7,10 +9,11 @@ namespace Iberus {
 		READING
 	};
 
-	class Framebuffer {
+	class Framebuffer : public RenderObject {
 	public:
+		Framebuffer(const std::string ID);
+
 		virtual void Bind(FramebufferMode mode) = 0;
-		virtual void Unbind() = 0;
 	};
 }
 

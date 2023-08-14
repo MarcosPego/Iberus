@@ -1,9 +1,13 @@
 #pragma once
 
-namespace {
+namespace Iberus {
 
 	class RenderObject {
 	public:
+		RenderObject(const std::string& inboundID) : ID(inboundID) {
+
+		}
+
 		RenderObject(const std::string& inboundID, uint32_t inboundHandle) : ID(inboundID), handle(inboundHandle) {
 
 		}
@@ -15,7 +19,7 @@ namespace {
 
 	protected:
 		std::string ID;
-		uint32_t handle; // Develop this
+		uint32_t handle{ 0 }; // Develop this
 	};
 
 }

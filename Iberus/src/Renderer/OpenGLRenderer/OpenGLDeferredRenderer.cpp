@@ -9,7 +9,7 @@ namespace Iberus {
 	}
 
 	void OpenGLDeferredRenderer::Init() {
-
+		renderPasses.emplace_back(new OpenGLGeometryPass());
 	}
 
 	void OpenGLDeferredRenderer::RenderFrame(Frame& frame) {

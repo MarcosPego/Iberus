@@ -1,6 +1,8 @@
 #pragma once
 
 #include "OpenGLRenderer.h"
+
+#include "OpenGLGeometryPass.h"
 #include "RenderPass.h"
 
 namespace Iberus {

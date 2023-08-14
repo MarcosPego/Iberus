@@ -7,11 +7,14 @@ namespace Iberus {
 
 	class OpenGLFramebuffer : public Framebuffer {
 	public:
-		OpenGLFramebuffer();
+		OpenGLFramebuffer(const std::string& ID, std::vector<TextureApi*> inTextures);
 		~OpenGLFramebuffer();
 
+		void Bind() const override;
 		void Bind(FramebufferMode mode) override;
-		void Unbind() override;
+		void Unbind() const override;
+
+		GLuint GetFBO() const { return fbo; }
 
 	private:
 		GLuint fbo{ 0 };

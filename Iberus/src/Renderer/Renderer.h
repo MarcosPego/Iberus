@@ -13,6 +13,8 @@
 using namespace Math;
 
 namespace Iberus {
+	class Framebuffer;
+
 	struct Frame {
 		Vec4 clearColor{ 0.15f, 0.15f, 0.17f, 1.0f };
 		std::vector<RenderBatch> renderBatches;
@@ -39,6 +41,8 @@ namespace Iberus {
 		uint32_t GenerateHandle();
 
 		RenderObject* GetResource(const std::string& ID) const;
+
+		virtual Framebuffer* CreateFramebuffer(const std::string& ID, const std::vector<TextureApi*>& inTextures) = 0; /// Meant to be used by renderer classes
 
 	protected:
 		std::unordered_map<std::string, std::unique_ptr<RenderObject>> renderObjects;

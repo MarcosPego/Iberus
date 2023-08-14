@@ -3,4 +3,8 @@
 
 namespace Iberus {
 
+	Framebuffer::Framebuffer(const std::string ID) : RenderObject(ID) {
+
+	}
+
 }

@@ -5,7 +5,17 @@
 
 #include "Renderer.h"
 #include "ShaderApi.h"
+#include "TextureApi.h"
 #include "Framebuffer.h"
+
+#ifndef DEBUG_FBO
+#define DEBUG_FBO 0
+#endif
+
+#ifdef DEBUG_FBO
+#include "OpenGLFrameBuffer.h"
+#include "Window.h"
+#endif
 
 namespace Iberus {
 
@@ -15,6 +25,14 @@ namespace Iberus {
 		if (shaderObject) {
 			shaderPass = shaderObject;
 		}
+
+		textures = { "worldPosOut", "diffuseOut", "normalOut", "uvsOut" };
+		std::vector<TextureApi*> texturesAPI;
+		for (const auto& entry : textures) {
+			texturesAPI.push_back(dynamic_cast<TextureApi*>(renderer.GetResource(entry)));
+		}
+
+		frameBuffer = renderer.CreateFramebuffer("geometryFBO", texturesAPI);
 	}
 
 	void OpenGLGeometryPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
@@ -33,6 +51,20 @@ namespace Iberus {
 		// depends on it, but it does not write to it.
 		glDepthMask(GL_FALSE);
 		glDisable(GL_DEPTH_TEST);
+
+	
+#ifdef DEBUG_FBO
+		// Copy fbo to the default fbo (draw to screen)
+		auto fboID = dynamic_cast<OpenGLFramebuffer*>(frameBuffer)->GetFBO();
+		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, fboID);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glBlitFramebuffer(0, 0, currentWindow->GetWidth(), currentWindow->GetHeight(),
+			0, 0, currentWindow->GetWidth(), currentWindow->GetHeight(),
+			GL_COLOR_BUFFER_BIT,
+			GL_LINEAR);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+#endif
 	}
 
 }

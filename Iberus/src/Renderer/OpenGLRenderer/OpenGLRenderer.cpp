@@ -1,6 +1,7 @@
 #include "Enginepch.h"
 #include "OpenGLRenderer.h"
 
+#include "OpenGLFramebuffer.h"
 #include "OpenGLMesh.h"
 #include "OpenGLShader.h"
 #include "OpenGLTexture.h"
@@ -64,6 +65,13 @@ namespace Iberus {
 			}
 		}
 		renderCmdQueue.clear();
+	}
+
+	Framebuffer* OpenGLRenderer::CreateFramebuffer(const std::string& ID, const std::vector<TextureApi*>& inTextures) {
+		auto* framebuffer = new OpenGLFramebuffer(ID, inTextures);
+		renderObjects[ID].reset(framebuffer);
+
+		return dynamic_cast<Framebuffer*>(renderObjects[ID].get());
 	}
 
 	void OpenGLRenderer::RenderBatchCommands(Frame& frame, ShaderApi* globalShader) {

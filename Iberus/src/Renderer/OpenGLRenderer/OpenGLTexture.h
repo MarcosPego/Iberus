@@ -11,6 +11,8 @@ namespace Iberus {
 		void Bind() const final;
 		void Unbind() const final;
 
+		GLuint GetOpenGLID() const { return textureID; }
+
 	private:
 		void Destroy() final;
 

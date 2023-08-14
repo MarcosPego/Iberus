@@ -24,5 +24,5 @@ void main(void)
 	worldPosOut     = exVerticies;					
 	diffuseOut      = texture(albedoTexture, exUVs).xyz;	
 	normalOut       = normalize(exNormals);					
-	uvsOut			= vec3(exUVs, 0.0);	
+	uvsOut			= vec3(exUVs, 0.0);			
 }

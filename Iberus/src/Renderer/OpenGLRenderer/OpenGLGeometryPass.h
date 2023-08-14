@@ -14,7 +14,7 @@ namespace Iberus {
 	private:
 		Framebuffer* frameBuffer{ nullptr };
 		ShaderApi* shaderPass{ nullptr };
-		std::unordered_map<std::string, std::string> textures;
+		std::vector<std::string> textures;
 	};
 
 }

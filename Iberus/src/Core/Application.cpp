@@ -11,6 +11,7 @@ namespace Iberus {
 		static WindowProps winProps{};
 		window = std::unique_ptr<Window>(Window::Create(winProps));
 		engine = Engine::Instance();
+		engine->SetCurrentWindow(window.get());
 	}
 
 	Application::~Application() {

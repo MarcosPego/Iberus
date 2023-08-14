@@ -7,7 +7,7 @@
 #include "Texture.h"
 #include "Window.h"
 
-#define USE_DEFERRED 0
+#define USE_DEFERRED 1
 
 namespace Iberus {
 
@@ -25,6 +25,7 @@ namespace Iberus {
 		if (USE_DEFERRED) {
 			renderer = std::unique_ptr<Renderer>(Renderer::CreateDeferred());
 			SetupDeferredRenderer();
+			renderer->Init();
 		}
 		else {
 			renderer = std::unique_ptr<Renderer>(Renderer::Create());
@@ -57,5 +58,6 @@ namespace Iberus {
 		resourceManager->CreateResource<Texture>("diffuseOut", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
 		resourceManager->CreateResource<Texture>("normalOut", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
 		resourceManager->CreateResource<Texture>("uvsOut", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
+		renderer->ExecuteAndFlushCmdQueue();
 	}
 }

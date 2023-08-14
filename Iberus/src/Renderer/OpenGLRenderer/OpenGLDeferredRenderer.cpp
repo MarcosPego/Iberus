@@ -10,11 +10,11 @@ namespace Iberus {
 
 	void OpenGLDeferredRenderer::Init() {
 		renderPasses.emplace_back(new OpenGLGeometryPass());
+		renderPasses.emplace_back(new OpenGLDeferredLightPass());
 	}
 
 	void OpenGLDeferredRenderer::RenderFrame(Frame& frame) {
 		ExecuteAndFlushCmdQueue();
-		//RenderBatchCommands(frame);
 
 		auto _renderBatchCommands = [&](Frame& frame, ShaderApi* globalShader) {
 			RenderBatchCommands(frame, globalShader);

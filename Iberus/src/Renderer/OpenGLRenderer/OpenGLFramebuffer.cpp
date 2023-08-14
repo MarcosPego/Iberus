@@ -27,6 +27,22 @@ namespace Iberus {
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, openGLTexture->GetOpenGLID(), 0);
 			} // TODO(MPP) Log that it didnt cast well
 		}
+		std::vector<unsigned int> attachments;
+
+		/// Temp
+		GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0,
+							GL_COLOR_ATTACHMENT1,
+							GL_COLOR_ATTACHMENT2,
+							GL_COLOR_ATTACHMENT3 };
+
+		glDrawBuffers(4, DrawBuffers);
+
+		GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+		if (Status != GL_FRAMEBUFFER_COMPLETE) {
+			printf("FB error, status: 0x%x\n", Status);
+			//return false;
+		}
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // TODO(MPP) Restore previews fbo instead of default
 	}
@@ -47,7 +63,8 @@ namespace Iberus {
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 		} break;
 		case Iberus::FramebufferMode::READING: {
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // Zero? Really?
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 			for (unsigned int i = 0; i < textures.size(); i++) {
 				glActiveTexture(GL_TEXTURE0 + i);

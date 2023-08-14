@@ -3,17 +3,17 @@
 #include "RenderPass.h"
 
 namespace Iberus {
-	class ShaderApi;
+	class MeshApi;
 	class Framebuffer;
 
-	class OpenGLGeometryPass : public RenderPass {
+	class OpenGLDeferredLightPass : public RenderPass {
 	public:
-		OpenGLGeometryPass();
+		OpenGLDeferredLightPass();
 
 		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
 	private:
 		Framebuffer* frameBuffer{ nullptr };
-		std::vector<std::string> textures;
+		MeshApi* quadMesh{ nullptr };
 	};
 
 }

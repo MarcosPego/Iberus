@@ -2,7 +2,6 @@
 
 #include "OpenGLRenderer.h"
 
-#include "OpenGLGeometryPass.h"
 #include "RenderPass.h"
 
 namespace Iberus {
@@ -16,7 +15,7 @@ namespace Iberus {
 		void RenderFrame(Frame& frame) override;
 
 	private:
-		std::vector<std::unique_ptr<RenderPass>> renderPasses;
+	
 	};
 
 }

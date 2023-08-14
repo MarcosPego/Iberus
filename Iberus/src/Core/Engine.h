@@ -32,6 +32,7 @@ namespace Iberus {
 
 	private:
 		void SetupDeferredRenderer();
+		void SetupForwardRenderer();
 
 		Window* currentWindow{ nullptr };
 

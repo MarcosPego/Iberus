@@ -16,6 +16,23 @@ namespace Iberus {
 		renderer.PushRenderCmd(uploadMesh);
 	}
 
+	Mesh::Mesh(const std::string& ID, const std::vector<Vec3>& inVertices, const std::vector<Vec2>& inUVs, const std::vector<Vec3>& inNormals) : Resource(ID) {
+		hasUVs = (inUVs.size() > 0);
+		hasNormals = (inUVs.size() > 0);
+
+		vertices = inVertices;
+		if (hasUVs) {
+			uvs = inUVs;
+		}
+		if (hasNormals) {
+			normals = inNormals;
+		}
+
+		auto& renderer = Engine::Instance()->GetRenderer();
+		auto uploadMesh = new UploadMeshRenderCmd(ID, vertices, uvs, normals);
+		renderer.PushRenderCmd(uploadMesh);
+	}
+
 	Mesh::~Mesh() {
 		auto& renderer = Engine::Instance()->GetRenderer();
 		auto deleteMesh = new DeleteMeshRenderCmd(ID);

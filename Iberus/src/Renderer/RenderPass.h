@@ -7,6 +7,11 @@ namespace Iberus {
 	class RenderPass {
 	public:
 		virtual void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) = 0;
+
+		void SetShader(ShaderApi* inShader);
+
+	protected:
+		ShaderApi* shaderPass{ nullptr };
 	};
 }
 

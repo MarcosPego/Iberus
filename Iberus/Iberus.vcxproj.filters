@@ -221,6 +221,9 @@
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.h" />
     <ClInclude Include="src\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.h" />
+    <ClInclude Include="src\Scene\Resources\MeshFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -357,5 +360,8 @@
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.cpp" />
     <ClCompile Include="src\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.cpp" />
+    <ClCompile Include="src\Scene\Resources\MeshFactory.cpp" />
   </ItemGroup>
 </Project>

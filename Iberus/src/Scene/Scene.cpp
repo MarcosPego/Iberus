@@ -28,7 +28,7 @@ namespace Iberus {
 		auto& renderBatch = frame.PushBatch();
 
 		if (activeCamera) {
-			renderBatch.PushRenderCmd(new CameraRenderCmd(activeCamera->GetViewMatrix(), activeCamera->GetProjectionMatrix()));
+			renderBatch.PushCameraRenderCmd(new CameraRenderCmd(activeCamera->GetViewMatrix(), activeCamera->GetProjectionMatrix()));
 		}
 		
 		if (sceneRoot) {

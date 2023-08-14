@@ -5,7 +5,14 @@
 
 #include "RenderCmd.h"
 #include "RenderObject.h"
+#include "RenderPass.h"
 
+//Passes
+#include "OpenGLGeometryPass.h"
+#include "OpenGLForwardPass.h"
+#include "OpenGLDeferredLightPass.h"
+
+//Render Objects
 #include "ShaderApi.h"
 #include "TextureApi.h"
 #include "MeshApi.h"
@@ -47,6 +54,7 @@ namespace Iberus {
 	protected:
 		std::unordered_map<std::string, std::unique_ptr<RenderObject>> renderObjects;
 		std::vector<std::unique_ptr<RenderCmd>> renderCmdQueue; // This queue is meant for other render operations besides push drawing
+		std::vector<std::unique_ptr<RenderPass>> renderPasses;
 	};
 }
 

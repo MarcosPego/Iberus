@@ -21,7 +21,14 @@ namespace Iberus {
 
 	void OpenGLRenderer::RenderFrame(Frame& frame) {
 		ExecuteAndFlushCmdQueue();
-		RenderBatchCommands(frame);
+
+		auto _renderBatchCommands = [&](Frame& frame, ShaderApi* globalShader) {
+			RenderBatchCommands(frame, globalShader);
+		};
+
+		for (const auto& pass : renderPasses) {
+			pass->ExecutePass(frame, _renderBatchCommands);
+		}
 	}
 
 	void OpenGLRenderer::ExecuteAndFlushCmdQueue() {
@@ -74,6 +81,10 @@ namespace Iberus {
 		return dynamic_cast<Framebuffer*>(renderObjects[ID].get());
 	}
 
+	void OpenGLRenderer::Init() {
+		renderPasses.emplace_back(new OpenGLForwardPass());
+	}
+
 	void OpenGLRenderer::RenderBatchCommands(Frame& frame, ShaderApi* globalShader) {
 		static TextureApi* boundTexture{ nullptr };
 		static MeshApi* boundMesh{ nullptr };
@@ -85,25 +96,32 @@ namespace Iberus {
 		glClearColor(0.15f, 0.15f, 0.15f, 0.3f);
 		glEnable(GL_DEPTH_TEST);
 
-		if (globalShader) {
-			GLuint programID{ 0 };
-			shaderInUse = globalShader;
-			shaderInUse->Bind();
-			if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
-				programID = openGLShader->GetProgramID();
-			}
-
-			/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
-			//std::cout << "shader enabled" << std::endl;
-			// Push Camera Uniforms
-			ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
-			ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
-			if (glGetError() != GL_NO_ERROR) {
-				//std::cout << "Error in Shader" << std::endl;
-			}
-		}
-
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
+			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
+			if (cameraRenderCmd) {
+				
+				projectionMatrix = cameraRenderCmd->projectionMatrix;
+				viewMatrix = cameraRenderCmd->viewMatrix;
+			}
+
+			if (globalShader != shaderInUse) {
+				GLuint programID{ 0 };
+				shaderInUse = globalShader;
+				shaderInUse->Bind();
+				if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
+					programID = openGLShader->GetProgramID();
+				}
+
+				/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
+				//std::cout << "shader enabled" << std::endl;
+				// Push Camera Uniforms
+				ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
+				ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
+				if (glGetError() != GL_NO_ERROR) {
+					//std::cout << "Error in Shader" << std::endl;
+				}
+			}
+
 			const auto& renderCmds = renderBatch.GetRenderCmds();
 			for (const auto& renderCmd : renderCmds) {
 

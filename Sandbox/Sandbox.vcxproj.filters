@@ -19,4 +19,14 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\baseDeferredLightShader.frag" />
+    <None Include="assets\shaders\baseDeferredLightShader.vert" />
+    <None Include="assets\shaders\baseGeometryShader.frag" />
+    <None Include="assets\shaders\baseGeometryShader.vert" />
+    <None Include="assets\shaders\baseLitShader.frag" />
+    <None Include="assets\shaders\baseLitShader.vert" />
+    <None Include="assets\shaders\baseShader.frag" />
+    <None Include="assets\shaders\baseShader.vert" />
+  </ItemGroup>
 </Project>

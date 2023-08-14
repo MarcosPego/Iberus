@@ -30,6 +30,7 @@ namespace Iberus {
 	}
 
 	void Material::BindTextures() {
+		// WARNING THIS DOES NOTHING
 		auto& renderer = Engine::Instance()->GetRenderer();
 		renderer.PushRenderCmd(new ShaderRenderCmd(shader->GetID()));
 		for (const auto& entry : texturesBindings) {

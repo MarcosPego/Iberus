@@ -144,6 +144,16 @@
       <Project>{CF524EB9-BBF4-788F-A4AF-8CE390F0FFDF}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\baseDeferredLightShader.frag" />
+    <None Include="assets\shaders\baseDeferredLightShader.vert" />
+    <None Include="assets\shaders\baseGeometryShader.frag" />
+    <None Include="assets\shaders\baseGeometryShader.vert" />
+    <None Include="assets\shaders\baseLitShader.frag" />
+    <None Include="assets\shaders\baseLitShader.vert" />
+    <None Include="assets\shaders\baseShader.frag" />
+    <None Include="assets\shaders\baseShader.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

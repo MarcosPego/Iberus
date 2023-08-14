@@ -9,7 +9,7 @@ namespace Iberus {
 	public:
 		OpenGLRenderer();
 
-		void Init() override {};
+		void Init() override;
 
 		void RenderFrame(Frame& frame) override;
 

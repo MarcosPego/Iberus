@@ -33,8 +33,13 @@ namespace Iberus {
 			return (resource) ? resource : CreateResource<T>(id, provider);
 		}
 
-		template<typename T = Resource>
-		T* CreateResource(const std::string& id, IProvider* provider) {
+		template<typename T = Resource, typename... Args>
+		T* CreateResource(const std::string& id, IProvider* provider, Args&&... args) {
+			if (!provider) {
+				return nullptr;
+			}
+
+			/// Load From Disk
 			auto buffer = provider->GetRawFileBuffer(id);
 
 			if (buffer.Invalid()) {
@@ -42,8 +47,12 @@ namespace Iberus {
 				return nullptr;
 			}
 
-			/// Load From disk
-			return InitializeResource<T>(id, std::move(buffer));
+			return InitializeResource<T>(id, std::move(buffer), std::forward<Args>(args)...);
+		}
+
+		template<typename T = Resource, typename... Args>
+		T* CreateResource(const std::string& id, Args&&... args) {
+			return InitializeResource<T>(id, std::forward<Args>(args)...);
 		}
 
 		template<>
@@ -58,30 +67,26 @@ namespace Iberus {
 			auto* shader = new Shader(id, std::move(vertexBuffer), std::move(fragBuffer));
 
 			resources.emplace(id, shader);
-			/// Load From disk
 			return dynamic_cast<Shader*>(resources.at(id).get());
 		}
 
 	private:
 
-		template<typename T = Resource>
-		T* InitializeResource(const std::string& id, Buffer inboundBuffer) {
-			auto* mesh = new T(id, std::move(inboundBuffer));
-			resources.emplace(id, mesh);
+		template<typename T = Resource, typename... Args>
+		T* InitializeResource(const std::string& id, Args&&... args) {
+			auto* resource = new T(id, std::forward<Args>(args)...);
+			resources.emplace(id, resource);
 
 			return dynamic_cast<T*>(resources.at(id).get());
 		}
 
-		/*template<>
-		Mesh* ResourceManager::InitializeResource(const std::string& id, Buffer buffer) {
-			auto* mesh = new Mesh(id, std::move(buffer));
-			resources.emplace(id, mesh);
+		/*template<typename T = Resource, typename... Args>
+		T* InitializeResource(const std::string& id) {
+			auto* resource = new T(id);
+			resources.emplace(id, resource);
 
-			return dynamic_cast<Mesh*>(resources.at(id).get());;
+			return dynamic_cast<T*>(resources.at(id).get());
 		}*/
-
-		//template<typename T = Resource>
-		//T* InitializeResource(const std::string& id);
 
 	private:
 		std::unordered_map<std::string, std::unique_ptr<Resource>> resources;

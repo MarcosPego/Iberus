@@ -18,6 +18,35 @@ namespace Iberus {
 		}
 	}
 
+	Texture::Texture(const std::string& ID, int inWidth, int inHeight, int inChannels) : Resource(ID) {
+		width = inWidth;
+		height = inHeight;
+		channels = inChannels;
+
+		auto size = ((size_t)width) * ((size_t)height) * ((size_t)channels);
+
+		std::unique_ptr<uint8_t[]> bufferData = std::make_unique<uint8_t[]>(size);
+		std::fill_n(bufferData.get(), size, 0); // Create black texture
+
+		// TODO allow default color;
+		/*const bool alpha = channels == 4;
+		for (int i = 0; i < size; i += channels) {	
+			bufferData[i] = 255;
+			bufferData[i + 1] = 255;
+			bufferData[i + 2] = 255;
+			if (alpha) {
+				bufferData[i + 3] = 255;
+			}
+		}*/
+
+		imageBuffer.data = std::move(bufferData);
+		imageBuffer.size = size;
+
+		auto& renderer = Engine::Instance()->GetRenderer();
+		auto uploadTexture = new UploadTextureRenderCmd(ID, std::move(imageBuffer), width, height, channels);
+		renderer.PushRenderCmd(uploadTexture);
+	}
+
 	Texture::~Texture() {
 		auto& renderer = Engine::Instance()->GetRenderer();
 		auto deleteTextrure = new DeleteTextureRenderCmd(ID);

@@ -26,14 +26,19 @@ namespace Iberus {
 	class Renderer {
 	public:
 		static Renderer* Renderer::Create();
+		static Renderer* Renderer::CreateDeferred();
 
 		virtual ~Renderer();
+
+		virtual void Init() = 0;
 
 		virtual void PushRenderCmd(RenderCmd* renderCmd);
 		virtual void RenderFrame(Frame& frame) = 0;
 		virtual void ExecuteAndFlushCmdQueue();
 
 		uint32_t GenerateHandle();
+
+		RenderObject* GetResource(const std::string& ID) const;
 
 	protected:
 		std::unordered_map<std::string, std::unique_ptr<RenderObject>> renderObjects;

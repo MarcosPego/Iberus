@@ -216,6 +216,11 @@
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\RenderPass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.h" />
+    <ClInclude Include="src\Renderer\Framebuffer.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -347,5 +352,10 @@
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer\RenderPass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.cpp" />
+    <ClCompile Include="src\Renderer\Framebuffer.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.cpp" />
   </ItemGroup>
 </Project>

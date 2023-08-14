@@ -2,6 +2,7 @@
 #include "Renderer.h"
 
 #include "OpenGLRenderer.h"
+#include "OpenGLDeferredRenderer.h"
 
 
 namespace Iberus {
@@ -10,10 +11,11 @@ namespace Iberus {
 		return new OpenGLRenderer();
 	}
 
+	Renderer* Renderer::CreateDeferred() {
+		return new OpenGLDeferredRenderer();
+	}
+
 	Renderer::~Renderer() {
-		/*for (auto* renderCmd : renderCmdQueue) {
-			delete renderCmd;
-		}*/
 	}
 
 	void Renderer::PushRenderCmd(RenderCmd* renderCmd) {
@@ -21,10 +23,14 @@ namespace Iberus {
 	}
 
 	void Renderer::ExecuteAndFlushCmdQueue() {
-		/*for (auto* renderCmd : renderCmdQueue) {
-			delete renderCmd;
-		}*/
 		renderCmdQueue.clear();
+	}
+
+	RenderObject* Renderer::GetResource(const std::string& ID) const {
+		if (renderObjects.find(ID) != renderObjects.end()) {
+			return renderObjects.at(ID).get();
+		}
+		return nullptr;
 	}
 
 	uint32_t Renderer::GenerateHandle() {

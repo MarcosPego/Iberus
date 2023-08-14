@@ -19,156 +19,8 @@ namespace Iberus {
 	}
 
 	void OpenGLRenderer::RenderFrame(Frame& frame) {
-		static TextureApi* boundTexture{ nullptr };
-		static MeshApi* boundMesh{ nullptr };
-		static ShaderApi* shaderInUse{ nullptr };
-		static Mat4 viewMatrix;
-		static Mat4 projectionMatrix;
-
 		ExecuteAndFlushCmdQueue();
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.15f, 0.15f, 0.15f, 0.3f);
-		glEnable(GL_DEPTH_TEST);
-
-		for (const RenderBatch& renderBatch : frame.renderBatches) {
-			const auto& renderCmds = renderBatch.GetRenderCmds();
-			for (const auto& renderCmd : renderCmds) {
-
-				switch (renderCmd->GetRenderCmdType()) {
-				case RenderCmdType::PUSH_CAMERA: {
-					auto* cameraCmd = dynamic_cast<CameraRenderCmd*>(renderCmd);
-					projectionMatrix = cameraCmd->projectionMatrix;
-					viewMatrix = cameraCmd->viewMatrix;
-				}	break;
-				case RenderCmdType::PUSH_SHADER: {
-					auto* shaderCmd = dynamic_cast<ShaderRenderCmd*>(renderCmd);
-					auto* shader = dynamic_cast<ShaderApi*>(renderObjects[shaderCmd->ID].get());
-
-					if (shader == shaderInUse) {
-						continue;
-					}
-
-					if (shaderInUse) {
-						shaderInUse->Unbind();
-					}
-
-					GLuint programID{ 0 };
-					shaderInUse = shader;
-					shaderInUse->Bind();
-					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
-						programID = openGLShader->GetProgramID();
-					}
-
-					/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
-					//std::cout << "shader enabled" << std::endl;
-					// Push Camera Uniforms
-					ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
-					ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
-					if (glGetError() != GL_NO_ERROR) {
-						//std::cout << "Error in Shader" << std::endl;
-					}
-				}	break;
-				case RenderCmdType::PUSH_MESH: {
-					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(renderCmd);
-					auto* mesh = dynamic_cast<MeshApi*>(renderObjects[meshCmd->ID].get());
-					
-					if (mesh != boundMesh) {
-						// Unbind previous mesh
-						if (boundMesh) {
-							boundMesh->Unbind();
-						}
-
-						boundMesh = mesh;
-
-						mesh->Bind();
-					}
-					glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
-					if (glGetError() != GL_NO_ERROR) {
-						//std::cout << "Error in Mesh" << std::endl;
-					}
-				}	break;
-
-				case RenderCmdType::PUSH_TEXTURE: {
-					auto* textureCmd = dynamic_cast<TextureRenderCmd*>(renderCmd);
-					auto* texture = static_cast<TextureApi*>(renderObjects[textureCmd->ID].get());
-
-					if (texture != boundTexture) {
-						// Unbind previous texture
-						if (boundTexture) {
-							boundTexture->Unbind();
-						}
-
-						boundTexture = texture;
-						glActiveTexture(openGLTexBindings[textureCmd->bind]);
-						texture->Bind();
-
-
-						/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
-						//std::cout << "texture enabled" << std::endl;
-						if (glGetError() != GL_NO_ERROR) {
-							//std::cout << "Error in texture" << std::endl;
-						}
-					}
-				
-				}	break;
-				case RenderCmdType::PUSH_UNIFORM: {
-					GLuint programID{ 0 };
-					if (!shaderInUse) {
-						continue;
-					}
-
-					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
-						programID = openGLShader->GetProgramID();
-					}
-
-					switch (renderCmd->GetUniformType())
-					{
-						case UniformType::INT: {
-							auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<int>*>(renderCmd);
-							ShaderBindings::SetUniform<int>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
-						} break;						
-						case UniformType::FLOAT: {
-							auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<float>*>(renderCmd);
-							ShaderBindings::SetUniform<float>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
-						} break;						
-						case UniformType::VEC2: {
-							auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<Vec2>*>(renderCmd);
-							ShaderBindings::SetUniform<Vec2>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
-						} break;						
-						case UniformType::VEC3: {
-							auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<Vec3>*>(renderCmd);
-							ShaderBindings::SetUniform<Vec3>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
-						} break;
-						case UniformType::VEC4: {
-							auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<Vec4>*>(renderCmd);
-							ShaderBindings::SetUniform<Vec4>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
-						} break;
-						case UniformType::MAT4: {
-							auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<Mat4>*>(renderCmd);
-							ShaderBindings::SetUniform<Mat4>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
-						} break;
-						default:
-							break;
-					}
-				
-				}	break;
-				default:
-					break;
-				}
-			}
-		}
-	
-		if (boundMesh) {
-			boundMesh->Unbind();
-		}
-
-		if (shaderInUse) {
-			shaderInUse->Unbind();
-		}
-
-		boundMesh = nullptr;
-		shaderInUse = nullptr;
+		RenderBatchCommands(frame);
 	}
 
 	void OpenGLRenderer::ExecuteAndFlushCmdQueue() {
@@ -212,5 +64,174 @@ namespace Iberus {
 			}
 		}
 		renderCmdQueue.clear();
+	}
+
+	void OpenGLRenderer::RenderBatchCommands(Frame& frame, ShaderApi* globalShader) {
+		static TextureApi* boundTexture{ nullptr };
+		static MeshApi* boundMesh{ nullptr };
+		static ShaderApi* shaderInUse{ nullptr };
+		static Mat4 viewMatrix;
+		static Mat4 projectionMatrix;
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.15f, 0.15f, 0.15f, 0.3f);
+		glEnable(GL_DEPTH_TEST);
+
+		if (globalShader) {
+			GLuint programID{ 0 };
+			shaderInUse = globalShader;
+			shaderInUse->Bind();
+			if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
+				programID = openGLShader->GetProgramID();
+			}
+
+			/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
+			//std::cout << "shader enabled" << std::endl;
+			// Push Camera Uniforms
+			ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
+			ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
+			if (glGetError() != GL_NO_ERROR) {
+				//std::cout << "Error in Shader" << std::endl;
+			}
+		}
+
+		for (const RenderBatch& renderBatch : frame.renderBatches) {
+			const auto& renderCmds = renderBatch.GetRenderCmds();
+			for (const auto& renderCmd : renderCmds) {
+
+				switch (renderCmd->GetRenderCmdType()) {
+				case RenderCmdType::PUSH_CAMERA: {
+					auto* cameraCmd = dynamic_cast<CameraRenderCmd*>(renderCmd);
+					projectionMatrix = cameraCmd->projectionMatrix;
+					viewMatrix = cameraCmd->viewMatrix;
+				}	break;
+				case RenderCmdType::PUSH_SHADER: {
+					auto* shaderCmd = dynamic_cast<ShaderRenderCmd*>(renderCmd);
+					auto* shader = dynamic_cast<ShaderApi*>(renderObjects[shaderCmd->ID].get());
+
+					if (shader == shaderInUse || globalShader) {
+						continue;
+					}
+
+					if (shaderInUse) {
+						shaderInUse->Unbind();
+					}
+
+					GLuint programID{ 0 };
+					shaderInUse = shader;
+					shaderInUse->Bind();
+					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
+						programID = openGLShader->GetProgramID();
+					}
+
+					/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
+					//std::cout << "shader enabled" << std::endl;
+					// Push Camera Uniforms
+					ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", viewMatrix);
+					ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", projectionMatrix);
+					if (glGetError() != GL_NO_ERROR) {
+						//std::cout << "Error in Shader" << std::endl;
+					}
+				}	break;
+				case RenderCmdType::PUSH_MESH: {
+					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(renderCmd);
+					auto* mesh = dynamic_cast<MeshApi*>(renderObjects[meshCmd->ID].get());
+
+					if (mesh != boundMesh) {
+						// Unbind previous mesh
+						if (boundMesh) {
+							boundMesh->Unbind();
+						}
+
+						boundMesh = mesh;
+
+						mesh->Bind();
+					}
+					glDrawArrays(GL_TRIANGLES, 0, (GLsizei)mesh->VertexSize());
+					if (glGetError() != GL_NO_ERROR) {
+						//std::cout << "Error in Mesh" << std::endl;
+					}
+				}	break;
+
+				case RenderCmdType::PUSH_TEXTURE: {
+					auto* textureCmd = dynamic_cast<TextureRenderCmd*>(renderCmd);
+					auto* texture = static_cast<TextureApi*>(renderObjects[textureCmd->ID].get());
+
+					if (texture != boundTexture) {
+						// Unbind previous texture
+						if (boundTexture) {
+							boundTexture->Unbind();
+						}
+
+						boundTexture = texture;
+						glActiveTexture(openGLTexBindings[textureCmd->bind]);
+						texture->Bind();
+
+
+						/// TODO(MPP) Make a enabled/disabled logger for the renderer for debug purposes
+						//std::cout << "texture enabled" << std::endl;
+						if (glGetError() != GL_NO_ERROR) {
+							//std::cout << "Error in texture" << std::endl;
+						}
+					}
+
+				}	break;
+				case RenderCmdType::PUSH_UNIFORM: {
+					GLuint programID{ 0 };
+					if (!shaderInUse) {
+						continue;
+					}
+
+					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
+						programID = openGLShader->GetProgramID();
+					}
+
+					switch (renderCmd->GetUniformType())
+					{
+					case UniformType::INT: {
+						auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<int>*>(renderCmd);
+						ShaderBindings::SetUniform<int>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
+					} break;
+					case UniformType::FLOAT: {
+						auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<float>*>(renderCmd);
+						ShaderBindings::SetUniform<float>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
+					} break;
+					case UniformType::VEC2: {
+						auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<Vec2>*>(renderCmd);
+						ShaderBindings::SetUniform<Vec2>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
+					} break;
+					case UniformType::VEC3: {
+						auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<Vec3>*>(renderCmd);
+						ShaderBindings::SetUniform<Vec3>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
+					} break;
+					case UniformType::VEC4: {
+						auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<Vec4>*>(renderCmd);
+						ShaderBindings::SetUniform<Vec4>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
+					} break;
+					case UniformType::MAT4: {
+						auto uniformRenderCmd = dynamic_cast<UniformRenderCmd<Mat4>*>(renderCmd);
+						ShaderBindings::SetUniform<Mat4>(programID, uniformRenderCmd->GetName().c_str(), uniformRenderCmd->GetValue());
+					} break;
+					default:
+						break;
+					}
+
+				}	break;
+				default:
+					break;
+				}
+			}
+		}
+
+		if (boundMesh) {
+			boundMesh->Unbind();
+		}
+
+		if (shaderInUse) {
+			shaderInUse->Unbind();
+		}
+
+		boundMesh = nullptr;
+		shaderInUse = nullptr;
 	}
 }

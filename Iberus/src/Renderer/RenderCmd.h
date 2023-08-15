@@ -91,7 +91,7 @@ namespace Iberus {
 	template<typename T>
 	class UniformRenderCmd : public RenderCmd {
 	public:
-		UniformRenderCmd(std::string inboundName, const T& inboundValue, UniformType inboundUniType) {
+		UniformRenderCmd(const std::string& inboundName, const T& inboundValue, UniformType inboundUniType) {
 			name = inboundName;
 			value = inboundValue;
 			uniType = inboundUniType;
@@ -114,14 +114,30 @@ namespace Iberus {
 
 	class CameraRenderCmd : public RenderCmd {
 	public:
-		CameraRenderCmd(Mat4 inboundViewMatrix, Mat4 inboundProjectionMatrix) {
+		CameraRenderCmd(const Mat4& inboundViewMatrix, const Mat4& inboundProjectionMatrix, const Vec3& inCameraPos) {
 			projectionMatrix = inboundProjectionMatrix;
 			viewMatrix = inboundViewMatrix;
+			cameraPos = inCameraPos;
+
+			renderCmdType = RenderCmdType::PUSH_CAMERA;
+		}
+
+		CameraRenderCmd(const Mat4& inboundViewMatrix, const Mat4& inboundProjectionMatrix, const Vec3& inCameraPos, const Mat4& inboundCameraToWorld, const Mat4& inFrustum) {
+			projectionMatrix = inboundProjectionMatrix;
+			viewMatrix = inboundViewMatrix;
+			cameraPos = inCameraPos;
+
+			cameraToWorld = inboundCameraToWorld;
+			frustum = inFrustum;
+
 			renderCmdType = RenderCmdType::PUSH_CAMERA;
 		}
 
 		Mat4 projectionMatrix;
 		Mat4 viewMatrix;
+		Vec3 cameraPos;
+		Mat4 cameraToWorld;
+		Mat4 frustum;
 	};
 
 	/// Create and Delete Cmds

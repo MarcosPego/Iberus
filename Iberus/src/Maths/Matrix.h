@@ -140,6 +140,8 @@ namespace Math {
 		static const Mat4 CreateRotation2DMat4(const float angle);
 						  
 		static const Mat4 CreateViewMat4(const Vec3& eye, const Vec3& center, const Vec3& up);
+		static const Mat4 CreateFrustumMat4(float fov, float aspect, Vec3 forward, Vec3 up);
+
 		static const Mat4 CreateOrtoMat4(const float left, const float right, const float bottom, const float top, const float near, const float far);
 		static const Mat4 CreatePerspectiveMat4(const float fovy, const float aspect, const float nearZ, const float farZ);
 						  

@@ -13,7 +13,8 @@ namespace Iberus {
 	public:
 		Framebuffer(const std::string ID);
 
-		virtual void Bind(FramebufferMode mode) = 0;
+		virtual void Bind(FramebufferMode mode, int drawTarget = 0) = 0;
+		virtual void BindTextures(std::vector<int> targetIdx) = 0;
 	};
 }
 

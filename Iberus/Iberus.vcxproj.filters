@@ -224,6 +224,7 @@
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.h" />
     <ClInclude Include="src\Scene\Resources\MeshFactory.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -363,5 +364,6 @@
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.cpp" />
     <ClCompile Include="src\Scene\Resources\MeshFactory.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.cpp" />
   </ItemGroup>
 </Project>

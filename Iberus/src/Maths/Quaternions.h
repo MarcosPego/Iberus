@@ -1,6 +1,6 @@
 #pragma once
 
-#include "matrix.h"
+#include "Matrix.h"
 
 namespace Math {
 	struct Qtrn {

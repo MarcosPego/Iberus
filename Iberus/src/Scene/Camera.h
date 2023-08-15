@@ -47,6 +47,10 @@ namespace Iberus {
 		Mat4 GetViewMatrix() const { return viewMatrix; }
 		Mat4 GetProjectionMatrix() const { return projection->GetProjectionMatrix(); }
 
+		Mat4 GetCameraToWorld() const { return cameraToWorld; }
+
+		Mat4 GetCameraFrustum() const { return frustum; }
+
 		void SetPosition(const Vec3& position) override;
 		void SetRotation(const Vec3& rotation) override;
 		void SetScale(const Vec3& scale) override { }
@@ -56,7 +60,13 @@ namespace Iberus {
 	private:
 		void UpdateViewMatrix();
 
+		Vec3 forward;
+		Vec3 up;
+
 		Mat4 viewMatrix;
+		Mat4 cameraToWorld;
+		Mat4 frustum;
+
 		std::unique_ptr<Projection> projection;
 	};
 

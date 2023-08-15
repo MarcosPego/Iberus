@@ -10,7 +10,8 @@ namespace Iberus {
 
 	void OpenGLDeferredRenderer::Init() {
 		renderPasses.emplace_back(new OpenGLGeometryPass());
-		renderPasses.emplace_back(new OpenGLDeferredLightPass());
+		renderPasses.emplace_back(new OpenGLRaymarchingPass());
+		//renderPasses.emplace_back(new OpenGLDeferredLightPass());
 	}
 
 	void OpenGLDeferredRenderer::RenderFrame(Frame& frame) {

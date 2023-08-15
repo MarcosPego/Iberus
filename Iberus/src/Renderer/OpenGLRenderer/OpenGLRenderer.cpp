@@ -17,6 +17,9 @@ namespace Iberus {
 		openGLTexBindings[3] = GL_TEXTURE3;
 		openGLTexBindings[4] = GL_TEXTURE4;
 		openGLTexBindings[5] = GL_TEXTURE5;
+		openGLTexBindings[6] = GL_TEXTURE6;
+		openGLTexBindings[7] = GL_TEXTURE7;
+		openGLTexBindings[8] = GL_TEXTURE8;
 	}
 
 	void OpenGLRenderer::RenderFrame(Frame& frame) {

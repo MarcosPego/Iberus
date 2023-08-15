@@ -1,5 +1,5 @@
 #include "Enginepch.h"
-#include "OpenGLDeferredLightPass.h"
+#include "OpenGLRaymarchingPass.h"
 
 #include "Engine.h"
 #include "Window.h"
@@ -9,9 +9,9 @@
 
 namespace Iberus {
 
-	OpenGLDeferredLightPass::OpenGLDeferredLightPass() {
+	OpenGLRaymarchingPass::OpenGLRaymarchingPass() {
 		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
-		auto* shaderObject = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseDeferredLightShader"));
+		auto* shaderObject = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseRaymarchingShader"));
 		if (shaderObject) {
 			shaderPass = shaderObject;
 		}
@@ -22,17 +22,17 @@ namespace Iberus {
 		}
 
 		shaderPass->Bind();
-		ShaderBindings::SetUniform<int>(programID, "worldPosOut", 8);
-		ShaderBindings::SetUniform<int>(programID, "diffuseOut", 9);
-		ShaderBindings::SetUniform<int>(programID, "normalOut", 10);
-		ShaderBindings::SetUniform<int>(programID, "uvsOut", 11);
+		ShaderBindings::SetUniform<int>(programID, "worldPosOut", 0);
+		ShaderBindings::SetUniform<int>(programID, "diffuseOut", 1);
+		ShaderBindings::SetUniform<int>(programID, "normalOut", 2);
+		ShaderBindings::SetUniform<int>(programID, "uvsOut", 3);
 
 		frameBuffer = dynamic_cast<Framebuffer*>(renderer.GetResource("geometryFBO"));
 
 		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuad"));
 	}
 
-	void OpenGLDeferredLightPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
+	void OpenGLRaymarchingPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
 		/*glEnable(GL_BLEND);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);*/
@@ -55,6 +55,8 @@ namespace Iberus {
 				ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", cameraRenderCmd->viewMatrix);
 				ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", cameraRenderCmd->projectionMatrix);
 				ShaderBindings::SetUniform<Vec3>(programID, "cameraPos", cameraRenderCmd->cameraPos);
+				ShaderBindings::SetUniform<Mat4>(programID, "cameraFrustum", cameraRenderCmd->frustum);
+				ShaderBindings::SetUniform<Mat4>(programID, "cameraToWorld", cameraRenderCmd->cameraToWorld);
 			}
 		}
 
@@ -70,4 +72,3 @@ namespace Iberus {
 
 	}
 }
-

@@ -56,6 +56,7 @@ namespace Iberus {
 		/// Init necessary deferred renderer resources
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseDeferredLightShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseRaymarchingShader", engineProvider.get());
 		
 		/// Textures reserved for geometry pass
 		resourceManager->CreateResource<Texture>("worldPosOut", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);

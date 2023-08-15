@@ -31,12 +31,14 @@ namespace Iberus {
 			return shader;
 		}
 
-		void BindTextures();
+
 		void SetTexture(const std::string& ID, Texture* inTexture);
 
 		void PushDraw(RenderBatch& renderBatch);
 
 	private:
+		void BindTextures(RenderBatch& renderBatch);
+
 		std::string ID;
 
 		std::unordered_map<std::string, int> texturesBindings;

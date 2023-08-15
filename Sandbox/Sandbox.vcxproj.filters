@@ -28,5 +28,7 @@
     <None Include="assets\shaders\baseLitShader.vert" />
     <None Include="assets\shaders\baseShader.frag" />
     <None Include="assets\shaders\baseShader.vert" />
+    <None Include="assets\shaders\baseRaymarchingShader.frag" />
+    <None Include="assets\shaders\baseRaymarchingShader.vert" />
   </ItemGroup>
 </Project>

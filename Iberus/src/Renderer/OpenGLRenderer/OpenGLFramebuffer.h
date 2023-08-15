@@ -11,7 +11,10 @@ namespace Iberus {
 		~OpenGLFramebuffer();
 
 		void Bind() const override;
-		void Bind(FramebufferMode mode) override;
+		void Bind(FramebufferMode mode, int drawTarget) override;
+
+		void BindTextures(std::vector<int> targetIdx);
+
 		void Unbind() const override;
 
 		GLuint GetFBO() const { return fbo; }

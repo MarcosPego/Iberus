@@ -1,8 +1,10 @@
 #include "Enginepch.h"
-#include "matrix.h"
+#include "Matrix.h"
 
 #undef near
 #undef far
+
+#include "MathUtils.h"
 
 namespace Math {
 	const Mat2 MatrixFactory::CreateZeroMat2() {
@@ -126,6 +128,25 @@ namespace Math {
 					right.y, v.y, -forward.y, 0,
 					right.z, v.z, -forward.z, 0,
 					-dot(right, eye), -dot(v, eye), dot(forward, eye), 1
+		);
+	}
+
+	const Mat4 MatrixFactory::CreateFrustumMat4(float fov, float aspect, Vec3 forward, Vec3 up) {
+		const float rad = Deg2Rad(fov * 0.5f);
+		const float radTan = (float)tan(rad);
+
+		Vec3 newUp = up * radTan;
+		Vec3 right = normalize(cross(forward, up)) * radTan;
+
+		Vec3 topLeft	 = (-forward - right + newUp);
+		Vec3 topRight	 = (-forward + right + newUp);
+		Vec3 bottomRight = (-forward + right - newUp);
+		Vec3 bottomLeft = (-forward - right - newUp);
+
+		return Mat4(topLeft.x, topLeft.y, topLeft.z, 0.0,
+					topRight.x, topRight.y, topRight.z, 0.0,
+					bottomRight.x, bottomRight.y, bottomRight.z, 0.0,
+					bottomLeft.x, bottomLeft.y, bottomLeft.z, 1.0
 		);
 	}
 

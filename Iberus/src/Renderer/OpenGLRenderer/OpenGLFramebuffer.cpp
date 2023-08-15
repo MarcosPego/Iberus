@@ -57,14 +57,14 @@ namespace Iberus {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 	}
 
-	void OpenGLFramebuffer::Bind(FramebufferMode mode) {
+	void OpenGLFramebuffer::Bind(FramebufferMode mode, int drawTarget) {
 		switch (mode) {
 		case Iberus::FramebufferMode::WRITING: {
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 		} break;
 		case Iberus::FramebufferMode::READING: {
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawTarget);
 
 			for (unsigned int i = 0; i < textures.size(); i++) {
 				glActiveTexture(GL_TEXTURE0 + i);

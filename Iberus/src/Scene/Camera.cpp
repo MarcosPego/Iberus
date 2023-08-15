@@ -45,8 +45,14 @@ namespace Iberus {
 		
 		SetPosition(Vec3(0, 0, 0));
 
-		projection = std::make_unique<PerspectiveProjection>(40, 1, 0.1f, 8000.0f);
+		projection = std::make_unique<PerspectiveProjection>(60, 1, 0.1f, 8000.0f);
 		viewMatrix = MatrixFactory::CreateViewMat4(Vec3(0, 0,-5), GetPosition(), Vec3(0, 1, 0));
+
+		forward = normalize(GetPosition() - Vec3(0, 0, -5));
+		up = Vec3(0, 1, 0);
+
+		cameraToWorld = inverse(viewMatrix);
+		frustum = MatrixFactory::CreateFrustumMat4(60, 1, forward, up);
 	}
 
 
@@ -62,7 +68,11 @@ namespace Iberus {
 
 	void Camera::UpdateViewMatrix() {
 		// TODO(MPP) look at!
-		viewMatrix = MatrixFactory::CreateViewMat4(Vec3(0, 0, -5), GetPosition(), Vec3(0, 1, 0));
+		//forward = Vec3(0, 0, -5);
+		//up = Vec3(0, 1, 0);
+
+		//viewMatrix = MatrixFactory::CreateViewMat4(forward, GetPosition(), up);
+		//cameraToWorld = inverse(viewMatrix);
 	}
 
 	Mat4 Camera::CalculateViewMatrix() {

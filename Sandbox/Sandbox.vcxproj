@@ -151,6 +151,8 @@
     <None Include="assets\shaders\baseGeometryShader.vert" />
     <None Include="assets\shaders\baseLitShader.frag" />
     <None Include="assets\shaders\baseLitShader.vert" />
+    <None Include="assets\shaders\baseRaymarchingShader.frag" />
+    <None Include="assets\shaders\baseRaymarchingShader.vert" />
     <None Include="assets\shaders\baseShader.frag" />
     <None Include="assets\shaders\baseShader.vert" />
   </ItemGroup>

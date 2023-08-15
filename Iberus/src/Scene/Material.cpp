@@ -17,29 +17,25 @@ namespace Iberus {
 	void Material::SetShader(Shader* inboundShader) {
 		shader = inboundShader;
 
-		texturesBindings.emplace(ALBEDOTEXTURE, 0);
-		texturesBindings.emplace(NORMALTEXTURE, 1);
-		texturesBindings.emplace(METALICTEXTURE, 2);
-
-		/// Note(MPP) The convention is that every base shader for a material should have albedo, normal and metalic texture
-		BindTextures();
+		texturesBindings.clear();
+		texturesBindings.emplace(ALBEDOTEXTURE, 5);
+		texturesBindings.emplace(NORMALTEXTURE, 6);
+		texturesBindings.emplace(METALICTEXTURE, 7);
 	}
 
 	void Material::SetTexture(const std::string& ID, Texture* inTexture) {
 		textures[ID] = inTexture;
 	}
 
-	void Material::BindTextures() {
-		// WARNING THIS DOES NOTHING
-		auto& renderer = Engine::Instance()->GetRenderer();
-		renderer.PushRenderCmd(new ShaderRenderCmd(shader->GetID()));
+	void Material::BindTextures(RenderBatch& renderBatch) {
 		for (const auto& entry : texturesBindings) {
-			renderer.PushRenderCmd(new UniformRenderCmd(entry.first, entry.second, UniformType::INT));
+			renderBatch.PushRenderCmd(new UniformRenderCmd(entry.first, entry.second, UniformType::INT));
 		}
 	}
 
 	void Material::PushDraw(RenderBatch& renderBatch) {
 		renderBatch.PushRenderCmd(new ShaderRenderCmd(shader->GetID()));
+		BindTextures(renderBatch);
 
 		//TODO(MPP) render color!
 		renderBatch.PushRenderCmd(new UniformRenderCmd("albedoColor", albedoColor, UniformType::VEC4));

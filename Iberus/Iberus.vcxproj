@@ -159,6 +159,7 @@
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3.h" />
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3native.h" />
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.h" />
     <ClInclude Include="src\Scene\Resources\MeshFactory.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="src\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.cpp" />
     <ClCompile Include="src\Scene\Resources\MeshFactory.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.cpp" />

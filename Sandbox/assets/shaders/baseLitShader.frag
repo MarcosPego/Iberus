@@ -22,9 +22,9 @@ void main(void)
 	float ambientStrength = 0.1f;
 	vec3 ambient = ambientStrength * lightBaseColor;
 
-	vec3 normolizedNormal = normalize(exNormals);
+	vec3 normalizedNormal = normalize(exNormals);
 	vec3 lightDir = normalize(lightPos - vec3(position));
-	float diff = max(dot(normolizedNormal, lightDir), 0.0);
+	float diff = max(dot(normalizedNormal, lightDir), 0.0);
 	vec3 diffuse = diff * lightBaseColor;
 	
 	vec3 lightColor = (ambient + diffuse);

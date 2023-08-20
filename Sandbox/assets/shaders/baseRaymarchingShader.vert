@@ -20,6 +20,6 @@ void main(void)
 	exUVs = inUVs;
 	exNormals = inNormals;
 
-	worldMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-	gl_Position = worldMatrix * vec4(inVerticies, 1.0);
+	worldMatrix = ProjectionMatrix * ViewMatrix;
+	gl_Position = worldMatrix * ModelMatrix * vec4(inVerticies, 1.0);
 }

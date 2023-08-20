@@ -49,7 +49,7 @@ public:
 		entity3->SetMesh(mesh);
 		entity3->SetMaterial(material3);
 
-		entity->SetPosition(Vec3(0, -10, 30));
+		entity->SetPosition(Vec3(4, -10, 30));
 		entity2->SetPosition(Vec3(8, 0, 30));
 		entity3->SetPosition(Vec3(-8, 0, 30));
 

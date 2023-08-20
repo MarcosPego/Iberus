@@ -19,11 +19,29 @@ uniform vec3 cameraPos;
 
 vec2 CalcUVCoord() {
     return gl_FragCoord.xy / screenSize;
+	//  return (gl_FragCoord.xy -.5 * screenSize.xy) / screenSize.y;
 }
 
 void main(void)
 {
 	vec2 uvCoord = CalcUVCoord();
+
+	vec3 position = texture(worldPosIn, uvCoord).xyz;
+
+	vec3 lightBaseColor = vec3(1.0f, 1.0f, 1.0f);
+	vec3 lightPos = vec3(15.0f, 15.0f, 25.0f);
+
+	float ambientStrength = 0.1f;
+	vec3 ambient = ambientStrength * lightBaseColor;
+
+	vec3 normalizedNormal = normalize(texture(normalIn, uvCoord).xyz);
+	vec3 lightDir = normalize(lightPos - position);
+	float diff = max(dot(normalizedNormal, lightDir), 0.0);
+	vec3 diffuse = diff * lightBaseColor;
+	
+	vec3 lightColor = (ambient + diffuse);
+
 	vec3 color = texture(diffuseIn, uvCoord).xyz;
-	fragColor = vec4(color, 1.0);
+	fragColor = vec4(lightColor, 1.0) * vec4(color, 1.0);	
+	//fragColor = vec4(texture(normalIn, uvCoord).xyz, 1);
 }

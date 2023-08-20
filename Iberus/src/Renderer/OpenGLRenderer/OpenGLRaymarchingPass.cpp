@@ -22,12 +22,19 @@ namespace Iberus {
 		}
 
 		shaderPass->Bind();
-		ShaderBindings::SetUniform<int>(programID, "worldPosOut", 0);
-		ShaderBindings::SetUniform<int>(programID, "diffuseOut", 1);
-		ShaderBindings::SetUniform<int>(programID, "normalOut", 2);
-		ShaderBindings::SetUniform<int>(programID, "uvsOut", 3);
+		ShaderBindings::SetUniform<int>(programID, "worldPosIn", 4);
+		ShaderBindings::SetUniform<int>(programID, "diffuseIn", 5);
+		ShaderBindings::SetUniform<int>(programID, "normalIn", 6);
+		ShaderBindings::SetUniform<int>(programID, "uvsIn", 7);
 
-		frameBuffer = dynamic_cast<Framebuffer*>(renderer.GetResource("geometryFBO"));
+		sourceBuffer = dynamic_cast<Framebuffer*>(renderer.GetResource("geometryFBO"));
+
+		textures = { "worldPosOut_2", "diffuseOut_2", "normalOut_2", "uvsOut_2" };
+		std::vector<TextureApi*> texturesAPI;
+		for (const auto& entry : textures) {
+			texturesAPI.push_back(dynamic_cast<TextureApi*>(renderer.GetResource(entry)));
+		}
+		targetBuffer = renderer.CreateFramebuffer("raymarchFBO", texturesAPI);
 
 		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuad"));
 	}
@@ -38,7 +45,7 @@ namespace Iberus {
 		glBlendFunc(GL_ONE, GL_ONE);*/
 
 		shaderPass->Bind();
-		frameBuffer->Bind(FramebufferMode::READING);
+		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), {4, 5, 6, 7});
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		GLuint programID{ 0 };

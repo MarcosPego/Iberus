@@ -57,7 +57,7 @@ namespace Iberus {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 	}
 
-	void OpenGLFramebuffer::Bind(FramebufferMode mode, int drawTarget) {
+	void OpenGLFramebuffer::Bind(FramebufferMode mode, int drawTarget, std::vector<int> bindIdxs) {
 		switch (mode) {
 		case Iberus::FramebufferMode::WRITING: {
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
@@ -66,9 +66,17 @@ namespace Iberus {
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawTarget);
 
-			for (unsigned int i = 0; i < textures.size(); i++) {
-				glActiveTexture(GL_TEXTURE0 + i);
-				textures[i]->Bind();
+			if (!bindIdxs.empty() && bindIdxs.size() == textures.size()) { // TODO(MPP) we might not need it to be same size
+				for (unsigned int i = 0; i < textures.size(); i++) {
+					glActiveTexture(GL_TEXTURE0 + bindIdxs[i]);
+					textures[i]->Bind();
+				}
+			}
+			else {
+				for (unsigned int i = 0; i < textures.size(); i++) {
+					glActiveTexture(GL_TEXTURE0 + i);
+					textures[i]->Bind();
+				}
 			}
 		} break;
 		default:

@@ -13,8 +13,11 @@ namespace Iberus {
 
 		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
 	private:
-		Framebuffer* frameBuffer{ nullptr };
+		Framebuffer* sourceBuffer{ nullptr };
+		Framebuffer* targetBuffer{ nullptr };
 		MeshApi* quadMesh{ nullptr };
+
+		std::vector<std::string> textures;
 	};
 
 }

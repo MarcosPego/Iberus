@@ -81,7 +81,11 @@ void main(void)
     vec3 rayOrigin = cameraPos;
     vec3 rayDirection = normalize(farpos - nearpos);
 
-	vec3 diffuseColor = texture(diffuseOut, uvCoord).xyz;
 	vec4 color = raymarching(rayOrigin, rayDirection);
-	fragColor = vec4(diffuseColor,1.0) + color;
+	//fragColor = vec4(diffuseColor,1.0) + color;
+
+	worldPosOut     = texture(worldPosIn, uvCoord).xyz;				
+	diffuseOut      = texture(diffuseIn, uvCoord).xyz + color.xyz;	
+	normalOut       = texture(normalIn, uvCoord).xyz ;					
+	uvsOut			= texture(uvsIn, uvCoord).xyz ;	
 }

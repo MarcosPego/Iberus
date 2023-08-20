@@ -58,11 +58,17 @@ namespace Iberus {
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseDeferredLightShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseRaymarchingShader", engineProvider.get());
 		
-		/// Textures reserved for geometry pass
-		resourceManager->CreateResource<Texture>("worldPosOut", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
-		resourceManager->CreateResource<Texture>("diffuseOut", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
-		resourceManager->CreateResource<Texture>("normalOut", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
-		resourceManager->CreateResource<Texture>("uvsOut", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
+		/// Textures reserved for passes 1
+		resourceManager->CreateResource<Texture>("worldPosOut_1", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
+		resourceManager->CreateResource<Texture>("diffuseOut_1", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
+		resourceManager->CreateResource<Texture>("normalOut_1", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
+		resourceManager->CreateResource<Texture>("uvsOut_1", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
+
+		/// Textures reserved for passes 2
+		resourceManager->CreateResource<Texture>("worldPosOut_2", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
+		resourceManager->CreateResource<Texture>("diffuseOut_2", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
+		resourceManager->CreateResource<Texture>("normalOut_2", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
+		resourceManager->CreateResource<Texture>("uvsOut_2", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
 
 		/// Warning! This does nothing for now
 		renderer->PushRenderCmd(new ShaderRenderCmd("assets/shaders/baseDeferredLightShader"));

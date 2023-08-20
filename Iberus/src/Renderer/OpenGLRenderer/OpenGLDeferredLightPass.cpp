@@ -22,12 +22,12 @@ namespace Iberus {
 		}
 
 		shaderPass->Bind();
-		ShaderBindings::SetUniform<int>(programID, "worldPosOut", 8);
-		ShaderBindings::SetUniform<int>(programID, "diffuseOut", 9);
-		ShaderBindings::SetUniform<int>(programID, "normalOut", 10);
-		ShaderBindings::SetUniform<int>(programID, "uvsOut", 11);
+		ShaderBindings::SetUniform<int>(programID, "worldPosIn", 0);
+		ShaderBindings::SetUniform<int>(programID, "diffuseIn", 1);
+		ShaderBindings::SetUniform<int>(programID, "normalIn", 2);
+		ShaderBindings::SetUniform<int>(programID, "uvsIn", 3);
 
-		frameBuffer = dynamic_cast<Framebuffer*>(renderer.GetResource("geometryFBO"));
+		frameBuffer = dynamic_cast<Framebuffer*>(renderer.GetResource("raymarchFBO"));
 
 		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuad"));
 	}

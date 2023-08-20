@@ -25,8 +25,8 @@ namespace Iberus {
 		if (shaderObject) {
 			shaderPass = shaderObject;
 		}
-
-		textures = { "worldPosOut", "diffuseOut", "normalOut", "uvsOut" };
+		
+		textures = { "worldPosOut_1", "diffuseOut_1", "normalOut_1", "uvsOut_1" };
 		std::vector<TextureApi*> texturesAPI;
 		for (const auto& entry : textures) {
 			texturesAPI.push_back(dynamic_cast<TextureApi*>(renderer.GetResource(entry)));

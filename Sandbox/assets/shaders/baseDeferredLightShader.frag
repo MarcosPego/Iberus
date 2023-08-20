@@ -1,9 +1,9 @@
 #version 330 core
 
-uniform sampler2D worldPosOut;   
-uniform sampler2D diffuseOut;     
-uniform sampler2D normalOut;     
-uniform sampler2D uvsOut; 
+uniform sampler2D worldPosIn;   
+uniform sampler2D diffuseIn;     
+uniform sampler2D normalIn;     
+uniform sampler2D uvsIn; 
 
 //uniform vec4 albedoColor;
 
@@ -24,6 +24,6 @@ vec2 CalcUVCoord() {
 void main(void)
 {
 	vec2 uvCoord = CalcUVCoord();
-	vec3 color = texture(diffuseOut, uvCoord).xyz;
+	vec3 color = texture(diffuseIn, uvCoord).xyz;
 	fragColor = vec4(color, 1.0);
 }

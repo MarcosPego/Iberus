@@ -20,8 +20,6 @@ void OpenGLShader::Unbind() const {
 bool OpenGLShader::Load(Buffer vertexBuffer, Buffer fragBuffer) {
 	shaderGLID = glCreateProgram();
 
-	Log::GetClientLogger()->info("HERE!");
-
 	GLuint VertexShaderId = AddShader(GL_VERTEX_SHADER, std::move(vertexBuffer));
 	GLuint FragmentShaderId = AddShader(GL_FRAGMENT_SHADER, std::move(fragBuffer));
 

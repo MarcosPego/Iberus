@@ -9,7 +9,7 @@ namespace Iberus {
 
 	struct WindowProps {
 		std::string title{ "Iberus" };
-		Vec2 resolution{ 720.0f, 720.0f };
+		Vec2 resolution{ 1920.0f, 1000.f };
 		bool vsync{ true };
 		bool isFullScreen{ false };
 
@@ -33,6 +33,8 @@ namespace Iberus {
 
 		virtual int GetWidth() const { return (int)windowProps.resolution.x; }
 		virtual int GetHeight() const { return  (int)windowProps.resolution.y; }
+
+		virtual float GetAspectRatio() const { return  windowProps.resolution.x / windowProps.resolution.y; }
 
 		virtual void Update() = 0;
 

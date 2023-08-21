@@ -122,13 +122,12 @@ namespace Iberus {
 			renderCmdType = RenderCmdType::PUSH_CAMERA;
 		}
 
-		CameraRenderCmd(const Mat4& inboundViewMatrix, const Mat4& inboundProjectionMatrix, const Vec3& inCameraPos, const Mat4& inboundCameraToWorld, const Mat4& inFrustum) {
+		CameraRenderCmd(const Mat4& inboundViewMatrix, const Mat4& inboundProjectionMatrix, const Vec3& inCameraPos, const Mat4& inboundCameraToWorld) {
 			projectionMatrix = inboundProjectionMatrix;
 			viewMatrix = inboundViewMatrix;
 			cameraPos = inCameraPos;
 
 			cameraToWorld = inboundCameraToWorld;
-			frustum = inFrustum;
 
 			renderCmdType = RenderCmdType::PUSH_CAMERA;
 		}
@@ -137,7 +136,6 @@ namespace Iberus {
 		Mat4 viewMatrix;
 		Vec3 cameraPos;
 		Mat4 cameraToWorld;
-		Mat4 frustum;
 	};
 
 	/// Create and Delete Cmds

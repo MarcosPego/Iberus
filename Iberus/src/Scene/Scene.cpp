@@ -29,7 +29,7 @@ namespace Iberus {
 
 		if (activeCamera) {
 			renderBatch.PushCameraRenderCmd(new CameraRenderCmd(activeCamera->GetViewMatrix(), activeCamera->GetProjectionMatrix(), activeCamera->GetPosition(),
-				activeCamera->GetCameraToWorld(), activeCamera->GetCameraFrustum()			
+				activeCamera->GetCameraToWorld()			
 			));
 		}
 		

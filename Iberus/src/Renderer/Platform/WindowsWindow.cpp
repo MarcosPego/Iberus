@@ -48,6 +48,7 @@ namespace Iberus {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_major);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_minor);
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+		glfwWindowHint(GLFW_MAXIMIZED, 1);
 
 		SetupWindow();
 

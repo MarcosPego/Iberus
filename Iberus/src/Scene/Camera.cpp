@@ -2,6 +2,8 @@
 #include "Camera.h"
 
 #include "RenderBatch.h"
+#include "Engine.h"
+#include "Window.h"
 
 namespace Iberus {
 
@@ -44,15 +46,15 @@ namespace Iberus {
 	Camera::Camera(const std::string& ID) : Entity(ID) {
 		
 		SetPosition(Vec3(0, 0, 0));
+		auto aspectRatio = Iberus::Engine::Instance()->GetCurrentWindow()->GetAspectRatio();
 
-		projection = std::make_unique<PerspectiveProjection>(60, 1, 0.1f, 8000.0f);
+		projection = std::make_unique<PerspectiveProjection>(60, aspectRatio, 0.1f, 8000.0f);
 		viewMatrix = MatrixFactory::CreateViewMat4(Vec3(0, 0,-5), GetPosition(), Vec3(0, 1, 0));
 
 		forward = normalize(GetPosition() - Vec3(0, 0, -5));
 		up = Vec3(0, 1, 0);
 
 		cameraToWorld = inverse(viewMatrix);
-		frustum = MatrixFactory::CreateFrustumMat4(60, 1, forward, up);
 	}
 
 

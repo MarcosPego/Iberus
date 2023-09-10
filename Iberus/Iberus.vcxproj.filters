@@ -129,10 +129,31 @@
     <ClInclude Include="src\Maths\Vector.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\Framebuffer.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Renderer\MeshApi.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLMesh.h">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.h">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h">
@@ -157,6 +178,9 @@
       <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\RenderObject.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\RenderPass.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\Renderer.h">
@@ -198,6 +222,9 @@
     <ClInclude Include="src\Scene\Resources\Mesh.h">
       <Filter>src\Scene\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Resources\MeshFactory.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Resources\Resource.h">
       <Filter>src\Scene\Resources</Filter>
     </ClInclude>
@@ -210,21 +237,15 @@
     <ClInclude Include="src\Scene\Resources\Texture.h">
       <Filter>src\Scene\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\SDFEntity.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\RenderPass.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.h" />
-    <ClInclude Include="src\Renderer\Framebuffer.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.h" />
-    <ClInclude Include="src\Scene\Resources\MeshFactory.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -269,10 +290,31 @@
     <ClCompile Include="src\Maths\Vec4.cpp">
       <Filter>src\Maths</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer\Framebuffer.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Renderer\MeshApi.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLMesh.cpp">
+      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.cpp">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp">
@@ -297,6 +339,9 @@
       <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\RenderObject.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\RenderPass.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\Renderer.cpp">
@@ -338,6 +383,9 @@
     <ClCompile Include="src\Scene\Resources\Mesh.cpp">
       <Filter>src\Scene\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Resources\MeshFactory.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Resources\Resource.cpp">
       <Filter>src\Scene\Resources</Filter>
     </ClCompile>
@@ -350,20 +398,14 @@
     <ClCompile Include="src\Scene\Resources\Texture.cpp">
       <Filter>src\Scene\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\SDFEntity.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\RenderPass.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.cpp" />
-    <ClCompile Include="src\Renderer\Framebuffer.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.cpp" />
-    <ClCompile Include="src\Scene\Resources\MeshFactory.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.cpp" />
   </ItemGroup>
 </Project>

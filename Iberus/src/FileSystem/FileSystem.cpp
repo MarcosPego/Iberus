@@ -5,7 +5,8 @@ namespace Iberus {
 
 	std::string FileSystem::GetWorkingDir() {
 		const auto path = std::filesystem::current_path();
-		const std::string pathString{ path.u8string() };
+		const auto u8String = path.u8string();
+		const std::string pathString{ u8String.begin(), u8String.end() };
 		return pathString;
 	}
 

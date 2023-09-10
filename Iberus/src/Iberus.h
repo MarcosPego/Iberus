@@ -5,9 +5,9 @@
 #include "MathUtils.h"
 
 #include "FileSystem.h"
-#include "Shader.h"
-#include "Mesh.h"
-#include "Material.h"
+//#include "Shader.h"
+//#include "Mesh.h"
+//#include "Material.h"
 #include "Texture.h"
 
 #include "Engine.h"

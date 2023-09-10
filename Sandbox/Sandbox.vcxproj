@@ -82,8 +82,8 @@
       <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,7 +104,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,7 +126,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

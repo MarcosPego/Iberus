@@ -62,6 +62,8 @@ namespace Iberus {
 		void SetMaterial(Material* inMaterial) { material = inMaterial; }
 		Material* GetMaterial() { return material; }
 
+		const std::unordered_map<std::string, Entity*>& GetChildMap() { return childMap; }
+
 	private:
 		std::string ID; // String or unique int ?
 		std::string Name;

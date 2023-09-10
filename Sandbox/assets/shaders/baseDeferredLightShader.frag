@@ -13,6 +13,31 @@ uniform sampler2D uvsIn;
 
 layout (location = 0) out vec4 fragColor;    
 
+struct Light {
+	// 1 = PointLight, 2 = SpotLight, 3 = DirLight, 4 = AreaLight
+	int type;
+	vec3 color;
+	float intensity;
+
+	// Point Light
+	vec3 position;
+
+	float constant;
+	float linear;
+	float quadratic;
+	
+	// Spot Light
+	float angel;
+	float cutoffDiameter;
+
+	float range;
+
+	// Directional Light
+	vec3 direction;
+};
+
+uniform Light lights[32];
+
 uniform vec2 screenSize;
 
 uniform vec3 cameraPos;

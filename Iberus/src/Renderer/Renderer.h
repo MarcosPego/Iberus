@@ -14,14 +14,18 @@
 #include "OpenGLRaymarchingPass.h"
 
 //Render Objects
-#include "ShaderApi.h"
-#include "TextureApi.h"
-#include "MeshApi.h"
+//#include "ShaderApi.h"
+//#include "TextureApi.h"
+//#include "MeshApi.h"
 
 using namespace Math;
 
 namespace Iberus {
 	class Framebuffer;
+
+	class ShaderApi;
+	class TextureApi;
+	class MeshApi;
 
 	struct Frame {
 		Vec4 clearColor{ 0.15f, 0.15f, 0.17f, 1.0f };
@@ -35,8 +39,8 @@ namespace Iberus {
 
 	class Renderer {
 	public:
-		static Renderer* Renderer::Create();
-		static Renderer* Renderer::CreateDeferred();
+		static Renderer* Create();
+		static Renderer* CreateDeferred();
 
 		virtual ~Renderer();
 
@@ -45,6 +49,8 @@ namespace Iberus {
 		virtual void PushRenderCmd(RenderCmd* renderCmd);
 		virtual void RenderFrame(Frame& frame) = 0;
 		virtual void ExecuteAndFlushCmdQueue();
+
+		virtual void PushUniform(RenderCmd* renderCmd, int programID);
 
 		uint32_t GenerateHandle();
 

@@ -65,6 +65,31 @@ public:
 		currentScene->AddEntity("Teste", entity);
 		currentScene->AddEntity("Teste2", entity2);
 		currentScene->AddEntity("Teste3", entity3);
+
+		/// Add SDF entities
+		auto* sdfentity1 = currentScene->CreateEntity<Iberus::SDFEntity>("SDFteste1");
+		auto* sdfentity2 = currentScene->CreateEntity<Iberus::SDFEntity>("SDFteste2");
+		auto* sdfentity3 = currentScene->CreateEntity<Iberus::SDFEntity>("SDFteste3");
+
+		auto* sdfmaterial1 = currentScene->GetOrCreateMaterial<Iberus::Material>("SDFMaterial1");
+		auto* sdfmaterial2 = currentScene->GetOrCreateMaterial<Iberus::Material>("SDFMaterial2");
+		auto* sdfmaterial3 = currentScene->GetOrCreateMaterial<Iberus::Material>("SDFMaterial3");
+
+		sdfmaterial1->albedoColor = Vec4(0, 0.8, 1, 1);
+		sdfmaterial2->albedoColor = Vec4(0.34, 0.45, 0, 1);
+		sdfmaterial3->albedoColor = Vec4(0.24, 0, 0.67, 1);
+
+		sdfentity1->SetMaterial(sdfmaterial1);
+		sdfentity2->SetMaterial(sdfmaterial2);
+		sdfentity3->SetMaterial(sdfmaterial3);
+		
+		sdfentity1->SetPosition(Vec3(0, 0, 20));
+		sdfentity2->SetPosition(Vec3(-10, -10, 20));
+		sdfentity3->SetPosition(Vec3(10, 10, 20));
+
+		currentScene->AddEntity("SDFteste1", sdfentity1);
+		currentScene->AddEntity("SDFteste2", sdfentity2);
+		currentScene->AddEntity("SDFteste3", sdfentity3);
 	}
 
 	void Update() override {

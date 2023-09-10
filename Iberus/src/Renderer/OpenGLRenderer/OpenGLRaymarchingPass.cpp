@@ -7,6 +7,10 @@
 #include "ShaderBindings.h"
 #include "OpenGLShader.h"
 
+#include "ShaderApi.h"
+#include "TextureApi.h"
+#include "MeshApi.h"
+
 namespace Iberus {
 
 	OpenGLRaymarchingPass::OpenGLRaymarchingPass() {
@@ -56,6 +60,7 @@ namespace Iberus {
 		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
 		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(currentWindow->GetWidth(), currentWindow->GetHeight()));
 
+		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
 			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
 			if (cameraRenderCmd) {
@@ -64,12 +69,17 @@ namespace Iberus {
 				ShaderBindings::SetUniform<Vec3>(programID, "cameraPos", cameraRenderCmd->cameraPos);
 				ShaderBindings::SetUniform<Mat4>(programID, "cameraToWorld", cameraRenderCmd->cameraToWorld);
 			}
+
+			for (const auto& renderCmd : renderBatch.GetSDFRenderCmds()) {
+				renderer.PushUniform(renderCmd, programID);
+			}		
 		}
 
 		static const auto modelMatrix = MatrixFactory::CreateModelMatrix({ -currentWindow->GetWidth() * 0.5f, -currentWindow->GetHeight() * 0.5f, 0.0 }, { 0,0,0 }, { 1,1,1 });
 
 		// RenderQuad 
 		ShaderBindings::SetUniform<Mat4>(programID, "ModelMatrix", modelMatrix);
+
 		quadMesh->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)quadMesh->VertexSize());
 		if (glGetError() != GL_NO_ERROR) {

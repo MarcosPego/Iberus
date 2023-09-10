@@ -41,6 +41,7 @@ namespace Iberus {
 		auto* scene = sceneManager->GetActiveScene();
 		scene->Update(0);
 		scene->PushDraw(frame);
+		scene->PushDrawSDF(frame);
 		renderer->RenderFrame(frame);
 	}
 

@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Material.h"
 #include "Camera.h"
+#include "SDFEntity.h"
 
 using namespace Math;
 
@@ -23,6 +24,7 @@ namespace Iberus {
 
 		void Update(double deltaTime);
 		void PushDraw(Frame& frame);
+		void PushDrawSDF(Frame& frame);
 
 		template<typename T = Entity, typename... Args>
 		T* CreateEntity(Args&&... args) {
@@ -52,6 +54,8 @@ namespace Iberus {
 
 		std::unordered_map<std::string, std::unique_ptr<Material>> materials;
 		std::vector<std::unique_ptr<Entity>> entities;
+
+		std::vector<SDFEntity*> sdfEntities;
 	};
 
  }

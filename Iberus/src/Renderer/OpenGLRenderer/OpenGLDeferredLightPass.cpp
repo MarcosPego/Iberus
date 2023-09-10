@@ -7,6 +7,10 @@
 #include "ShaderBindings.h"
 #include "OpenGLShader.h"
 
+#include "ShaderApi.h"
+#include "TextureApi.h"
+#include "MeshApi.h"
+
 namespace Iberus {
 
 	OpenGLDeferredLightPass::OpenGLDeferredLightPass() {

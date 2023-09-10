@@ -4,14 +4,27 @@ namespace Iberus {
 	class CameraRenderCmd;
 	class RenderCmd;
 
+	enum class CMDQueue {
+		Default,
+		Camera,
+		SDF,
+		Light
+	};
+
 	class RenderBatch {
 	public:
 		~RenderBatch();
 
-		void PushCameraRenderCmd(RenderCmd* inboundRenderCmd);
-		
-		void PushRenderCmd(RenderCmd* inboundRenderCmd);
-			
+		void PushRenderCmdToQueue(RenderCmd* inboundRenderCmd, CMDQueue queue = CMDQueue::Default);
+	
+		const std::vector<RenderCmd*>& GetLightRenderCmd() const {
+			return lightRenderCmds;
+		}
+
+		const std::vector<RenderCmd*>& GetSDFRenderCmds() const {
+			return sdfRenderCmds;
+		}
+
 		const CameraRenderCmd* GetCameraRenderCmd() const {
 			return cameraCmd;
 		}
@@ -22,6 +35,10 @@ namespace Iberus {
 
 	private:
 		std::vector<RenderCmd*> renderCmds;
+
+		std::vector<RenderCmd*> sdfRenderCmds;
+		std::vector<RenderCmd*> lightRenderCmds;
+
 		CameraRenderCmd* cameraCmd{ nullptr };
 	};
 }

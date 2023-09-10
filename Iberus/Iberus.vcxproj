@@ -83,8 +83,8 @@
       <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,7 +110,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,7 +137,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,15 +159,6 @@
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3.h" />
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3native.h" />
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.h" />
-    <ClInclude Include="src\Scene\Resources\MeshFactory.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.h" />
-    <ClInclude Include="src\Renderer\Framebuffer.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.h" />
-    <ClInclude Include="src\Renderer\RenderPass.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Engine.h" />
@@ -184,8 +175,15 @@
     <ClInclude Include="src\Maths\Matrix.h" />
     <ClInclude Include="src\Maths\Quaternions.h" />
     <ClInclude Include="src\Maths\Vector.h" />
+    <ClInclude Include="src\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Renderer\MeshApi.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLMesh.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h" />
@@ -194,6 +192,7 @@
     <ClInclude Include="src\Renderer\RenderBatch.h" />
     <ClInclude Include="src\Renderer\RenderCmd.h" />
     <ClInclude Include="src\Renderer\RenderObject.h" />
+    <ClInclude Include="src\Renderer\RenderPass.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Renderer\ShaderApi.h" />
     <ClInclude Include="src\Renderer\ShaderBindings.h" />
@@ -207,23 +206,16 @@
     <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
     <ClInclude Include="src\Scene\Resources\IProvider.h" />
     <ClInclude Include="src\Scene\Resources\Mesh.h" />
+    <ClInclude Include="src\Scene\Resources\MeshFactory.h" />
     <ClInclude Include="src\Scene\Resources\Resource.h" />
     <ClInclude Include="src\Scene\Resources\ResourceManager.h" />
     <ClInclude Include="src\Scene\Resources\Shader.h" />
     <ClInclude Include="src\Scene\Resources\Texture.h" />
+    <ClInclude Include="src\Scene\SDFEntity.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.cpp" />
-    <ClCompile Include="src\Scene\Resources\MeshFactory.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.cpp" />
-    <ClCompile Include="src\Renderer\Framebuffer.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.cpp" />
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.cpp" />
-    <ClCompile Include="src\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Core\Enginepch.cpp">
@@ -240,8 +232,15 @@
     <ClCompile Include="src\Maths\Vec2.cpp" />
     <ClCompile Include="src\Maths\Vec3.cpp" />
     <ClCompile Include="src\Maths\Vec4.cpp" />
+    <ClCompile Include="src\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Renderer\MeshApi.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLMesh.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp" />
@@ -250,6 +249,7 @@
     <ClCompile Include="src\Renderer\RenderBatch.cpp" />
     <ClCompile Include="src\Renderer\RenderCmd.cpp" />
     <ClCompile Include="src\Renderer\RenderObject.cpp" />
+    <ClCompile Include="src\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Renderer\ShaderApi.cpp" />
     <ClCompile Include="src\Renderer\ShaderBindings.cpp" />
@@ -263,10 +263,12 @@
     <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
     <ClCompile Include="src\Scene\Resources\IProvider.cpp" />
     <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
+    <ClCompile Include="src\Scene\Resources\MeshFactory.cpp" />
     <ClCompile Include="src\Scene\Resources\Resource.cpp" />
     <ClCompile Include="src\Scene\Resources\ResourceManager.cpp" />
     <ClCompile Include="src\Scene\Resources\Shader.cpp" />
     <ClCompile Include="src\Scene\Resources\Texture.cpp" />
+    <ClCompile Include="src\Scene\SDFEntity.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
   </ItemGroup>

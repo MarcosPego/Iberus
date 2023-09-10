@@ -1,5 +1,7 @@
 #include <Iberus.h>
 
+#include "SandboxBehaviour.h"
+
 using namespace Math;
 
 class Sandbox : public Iberus::Application {
@@ -86,6 +88,8 @@ public:
 		sdfentity1->SetPosition(Vec3(0, 0, 20));
 		sdfentity2->SetPosition(Vec3(-10, -10, 20));
 		sdfentity3->SetPosition(Vec3(10, 10, 20));
+
+		sdfentity1->PushBehaviour(new SandboxBehaviour());
 
 		currentScene->AddEntity("SDFteste1", sdfentity1);
 		currentScene->AddEntity("SDFteste2", sdfentity2);

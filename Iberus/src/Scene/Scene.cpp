@@ -24,7 +24,7 @@ namespace Iberus {
 	}
 
 	void Scene::Update(double deltaTime) {
-
+		sceneRoot->Upadate();
 	}
 
 	void Scene::PushDraw(Frame& frame) {

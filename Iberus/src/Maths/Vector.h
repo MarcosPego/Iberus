@@ -64,19 +64,19 @@ namespace Math {
 		Vec3& operator += (const Vec3& v);
 		Vec3& operator -= (const Vec3& v);
 		Vec3& operator *= (const Vec3& v);
-		friend const Vec3 normalize(const Vec3& v);
-		friend const Vec3 operator + (const Vec3& v1, const Vec3& v2);
-		friend const Vec3 operator - (const Vec3& v1, const Vec3& v2);
-		friend const Vec3 operator * (const float k, const Vec3& v);
-		friend const Vec3 operator * (const Vec3& v, const float k);
-		friend const Vec3 operator / (const float k, const Vec3& v);
-		friend const Vec3 operator / (const Vec3& v, const float k);
-		friend const float dot(const Vec3& v1, const Vec3& v2);
-		friend const Vec3 cross(const Vec3& v1, const Vec3& v2);
-		friend const bool operator == (const Vec3& v1, const Vec3& v2);
-		friend const bool operator !=  (const Vec3& v1, const Vec3& v2);
-		friend std::ostream& operator << (std::ostream& os, const Vec3& v);
-		friend std::istream& operator >> (std::istream& is, Vec3& v);
+		friend IBERUS_API const Vec3 normalize(const Vec3& v);
+		friend IBERUS_API const Vec3 operator + (const Vec3& v1, const Vec3& v2);
+		friend IBERUS_API const Vec3 operator - (const Vec3& v1, const Vec3& v2);
+		friend IBERUS_API const Vec3 operator * (const float k, const Vec3& v);
+		friend IBERUS_API const Vec3 operator * (const Vec3& v, const float k);
+		friend IBERUS_API const Vec3 operator / (const float k, const Vec3& v);
+		friend IBERUS_API const Vec3 operator / (const Vec3& v, const float k);
+		friend IBERUS_API const float dot(const Vec3& v1, const Vec3& v2);
+		friend IBERUS_API const Vec3 cross(const Vec3& v1, const Vec3& v2);
+		friend IBERUS_API const bool operator == (const Vec3& v1, const Vec3& v2);
+		friend IBERUS_API const bool operator !=  (const Vec3& v1, const Vec3& v2);
+		friend IBERUS_API std::ostream& operator << (std::ostream& os, const Vec3& v);
+		friend IBERUS_API std::istream& operator >> (std::istream& is, Vec3& v);
 	};
 
 	struct IBERUS_API Vec4 {

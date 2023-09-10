@@ -10,6 +10,7 @@ namespace Iberus {
 	class Shader;
 	class Material;
 	class RenderBatch;
+	class Behaviour;
 
 	struct Transform {
 		Vec3 Position{ 0,0,0 };
@@ -24,10 +25,12 @@ namespace Iberus {
 		Entity() = default;
 		explicit Entity(const std::string& ID);
 
-		virtual ~Entity() {};
+		virtual ~Entity();
 
 		//Entity(const Entity&) = delete;
 		//Entity& operator= (const Entity&) = delete;
+
+		virtual void Upadate(); // TODO(MPP) Needs time delta;
 
 		Entity* GetParent() const { return parent;  }
 		void SetParent(Entity* newParent) { parent = newParent; }
@@ -56,6 +59,8 @@ namespace Iberus {
 
 		virtual void PushDraw(RenderBatch& renderBatch);
 
+		void PushBehaviour(Behaviour* behaviour);
+
 		void SetMesh(Mesh* inMesh) { mesh = inMesh; }
 		Mesh* GetMesh() { return mesh; }
 
@@ -75,6 +80,8 @@ namespace Iberus {
 
 		Mesh* mesh{ nullptr };
 		Material* material{ nullptr };
+
+		std::vector<Behaviour*> behaviours;
 	};
 
 }

@@ -246,6 +246,8 @@
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Behaviour.h" />
+    <ClInclude Include="src\SceneInclude.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -407,5 +409,6 @@
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Behaviour.cpp" />
   </ItemGroup>
 </Project>

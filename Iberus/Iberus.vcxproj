@@ -152,6 +152,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\SceneInclude.h" />
+    <ClInclude Include="src\Scene\Behaviour.h" />
     <ClInclude Include="dependencies\glew\include\GL\eglew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glxew.h" />
@@ -216,6 +218,7 @@
     <ClInclude Include="src\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Scene\Behaviour.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Core\Enginepch.cpp">

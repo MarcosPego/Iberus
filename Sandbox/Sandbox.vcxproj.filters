@@ -18,6 +18,9 @@
     <ClCompile Include="src\SandboxApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SandboxBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\baseDeferredLightShader.frag" />
@@ -30,5 +33,10 @@
     <None Include="assets\shaders\baseRaymarchingShader.vert" />
     <None Include="assets\shaders\baseShader.frag" />
     <None Include="assets\shaders\baseShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\SandboxBehaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

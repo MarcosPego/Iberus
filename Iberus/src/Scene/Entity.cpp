@@ -8,9 +8,27 @@
 #include "Material.h"
 #include "Mesh.h"
 
+#include "Behaviour.h"
+
 namespace Iberus {
 	Entity::Entity(const std::string& inID) {
 		ID = inID;
+	}
+
+	Entity::~Entity() {
+		for (auto* behaviour : behaviours) {
+			delete behaviour;
+		}
+	}
+
+	void Entity::Upadate() {
+		for (const auto& behaviour : behaviours) {
+			behaviour->Update();
+		}
+
+		for (const auto& child : childMap) {
+			child.second->Upadate();
+		}
 	}
 
 	void Entity::AddEntity(const std::string& id, Entity* entity) {
@@ -40,5 +58,10 @@ namespace Iberus {
 		for (const auto& child : childMap) {
 			child.second->PushDraw(renderBatch);
 		}
+	}
+
+	void Entity::PushBehaviour(Behaviour* behaviour) {
+		behaviour->BindBehaviour(this);
+		behaviours.push_back(behaviour);
 	}
 }

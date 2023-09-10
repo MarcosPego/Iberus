@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SandboxBehaviour.cpp" />
     <ClCompile Include="src\SandboxApp.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,9 @@
     <None Include="assets\shaders\baseRaymarchingShader.vert" />
     <None Include="assets\shaders\baseShader.frag" />
     <None Include="assets\shaders\baseShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\SandboxBehaviour.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

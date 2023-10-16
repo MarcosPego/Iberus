@@ -1,10 +1,9 @@
 #pragma once
-
 #include <SceneInclude.h>
 
-class SandboxBehaviour : public Iberus::Behaviour {
+class SandboxBehaviour2 : public Iberus::Behaviour {
 public:
-	SandboxBehaviour() { type = "b_sandbox"; }
+	SandboxBehaviour2() { type = "b_sandbox2"; }
 
 	void Init() override;
 

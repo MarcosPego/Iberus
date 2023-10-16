@@ -1,6 +1,7 @@
 #include <Iberus.h>
 
 #include "SandboxBehaviour.h"
+#include "SandboxBehaviour2.h"
 
 using namespace Math;
 
@@ -85,11 +86,13 @@ public:
 		sdfentity2->SetMaterial(sdfmaterial2);
 		sdfentity3->SetMaterial(sdfmaterial3);
 		
-		sdfentity1->SetPosition(Vec3(0, 0, 20));
+		sdfentity1->SetPosition(Vec3(0, 5, 20));
 		sdfentity2->SetPosition(Vec3(-10, -10, 20));
 		sdfentity3->SetPosition(Vec3(10, 10, 20));
 
 		sdfentity1->PushBehaviour(new SandboxBehaviour());
+		sdfentity2->PushBehaviour(new SandboxBehaviour2());
+		sdfentity3->PushBehaviour(new SandboxBehaviour2());
 
 		currentScene->AddEntity("SDFteste1", sdfentity1);
 		currentScene->AddEntity("SDFteste2", sdfentity2);

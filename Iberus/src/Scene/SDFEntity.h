@@ -5,7 +5,7 @@ namespace Iberus {
 
 	class IBERUS_API SDFEntity : public Entity {
 	public:
-		explicit SDFEntity(const std::string& ID);
+		explicit SDFEntity(const std::string& ID, Scene* inScene);
 		virtual ~SDFEntity() = default;
 
 		virtual void PushDrawSDF(RenderBatch& renderBatch, int sdfSlot);

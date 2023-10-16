@@ -8,10 +8,14 @@
 
 namespace Iberus {
 
-	SDFEntity::SDFEntity(const std::string& ID) : Entity(ID) {
+	SDFEntity::SDFEntity(const std::string& ID, Scene* inScene) : Entity(ID, inScene) {
 	}
 
 	void SDFEntity::PushDrawSDF(RenderBatch& renderBatch, int sdfSlot) {
+		if (!GetActive()) {
+			return;
+		}
+
 		/// TODO(MPP) A string formater here would be nice
 		const std::string sdfMesh = std::format("sdfMeshes[{0}]", sdfSlot);
 		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfMesh + ".type", type, UniformType::INT), CMDQueue::SDF);
@@ -25,6 +29,10 @@ namespace Iberus {
 	}
 
 	void SDFEntity::PushDraw(RenderBatch& renderBatch) {
+		if (!GetActive()) {
+			return;
+		}
+
 		for (const auto& child : GetChildMap()) {
 			child.second->PushDraw(renderBatch);
 		}

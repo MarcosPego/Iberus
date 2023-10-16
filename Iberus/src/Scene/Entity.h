@@ -11,6 +11,7 @@ namespace Iberus {
 	class Material;
 	class RenderBatch;
 	class Behaviour;
+	class Scene;
 
 	struct Transform {
 		Vec3 Position{ 0,0,0 };
@@ -23,14 +24,14 @@ namespace Iberus {
 	class IBERUS_API Entity {
 	public:
 		Entity() = default;
-		explicit Entity(const std::string& ID);
+		explicit Entity(const std::string& inID, Scene* inScene);
 
 		virtual ~Entity();
 
 		//Entity(const Entity&) = delete;
 		//Entity& operator= (const Entity&) = delete;
 
-		virtual void Upadate(); // TODO(MPP) Needs time delta;
+		const std::string& GetID() { return ID; }
 
 		Entity* GetParent() const { return parent;  }
 		void SetParent(Entity* newParent) { parent = newParent; }
@@ -67,11 +68,16 @@ namespace Iberus {
 		void SetMaterial(Material* inMaterial) { material = inMaterial; }
 		Material* GetMaterial() { return material; }
 
+		void SetActive(bool inActive) { active = inActive; }
+		bool GetActive() const{ return active; }
+
 		const std::unordered_map<std::string, Entity*>& GetChildMap() { return childMap; }
 
 	private:
 		std::string ID; // String or unique int ?
 		std::string Name;
+
+		Scene* scene{ nullptr };
 
 		Transform transform;
 
@@ -82,6 +88,8 @@ namespace Iberus {
 		Material* material{ nullptr };
 
 		std::vector<Behaviour*> behaviours;
+
+		bool active{ true };
 	};
 
 }

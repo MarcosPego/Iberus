@@ -15,7 +15,7 @@ namespace Iberus {
 
 	void WindowsWindow::Update() {
 		glfwSwapBuffers(window);
-		glfwWaitEvents();
+		//glfwWaitEvents(); // TODO(MPP) Fix window event manager!
 	}
 
 	void WindowsWindow::Shutdown() {

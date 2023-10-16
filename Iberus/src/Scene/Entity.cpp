@@ -10,24 +10,17 @@
 
 #include "Behaviour.h"
 
+#include "Scene.h"
+
 namespace Iberus {
-	Entity::Entity(const std::string& inID) {
+	Entity::Entity(const std::string& inID, Scene* inScene) {
 		ID = inID;
+		scene = inScene;
 	}
 
 	Entity::~Entity() {
 		for (auto* behaviour : behaviours) {
 			delete behaviour;
-		}
-	}
-
-	void Entity::Upadate() {
-		for (const auto& behaviour : behaviours) {
-			behaviour->Update();
-		}
-
-		for (const auto& child : childMap) {
-			child.second->Upadate();
 		}
 	}
 
@@ -43,6 +36,9 @@ namespace Iberus {
 
 	void Entity::PushDraw(RenderBatch& renderBatch) {
 		// TODO(MPP) Initial implementation. Might be revised
+		if (!active) {
+			return;
+		}
 
 		if (material) {
 			material->PushDraw(renderBatch);
@@ -61,7 +57,8 @@ namespace Iberus {
 	}
 
 	void Entity::PushBehaviour(Behaviour* behaviour) {
-		behaviour->BindBehaviour(this);
-		behaviours.push_back(behaviour);
+		if (scene->PushBehaviour(behaviour, this)) {
+			behaviours.push_back(behaviour);
+		}
 	}
 }

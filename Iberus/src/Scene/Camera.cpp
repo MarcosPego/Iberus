@@ -4,6 +4,7 @@
 #include "RenderBatch.h"
 #include "Engine.h"
 #include "Window.h"
+#include "Scene.h"
 
 namespace Iberus {
 
@@ -43,7 +44,7 @@ namespace Iberus {
 		);
 	}
 
-	Camera::Camera(const std::string& ID) : Entity(ID) {
+	Camera::Camera(const std::string& ID, Scene* inScene) : Entity(ID, inScene) {
 		
 		SetPosition(Vec3(0, 0, 0));
 		auto aspectRatio = Iberus::Engine::Instance()->GetCurrentWindow()->GetAspectRatio();

@@ -24,7 +24,13 @@ namespace Iberus {
 	}
 
 	void Scene::Update(double deltaTime) {
-		sceneRoot->Upadate();
+		for (auto& [behaviourType, behaviours] : registeredBehaviours) {
+			for (auto& [entity, behaviour] : behaviours) {
+				if (entity->GetActive()) {
+					behaviour->Update(deltaTime);
+				}
+			}
+		}
 	}
 
 	void Scene::PushDraw(Frame& frame) {

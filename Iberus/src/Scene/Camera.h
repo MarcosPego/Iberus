@@ -41,7 +41,7 @@ namespace Iberus {
 	
 	class IBERUS_API Camera : public Entity {
 	public:
-		explicit Camera(const std::string& ID);
+		explicit Camera(const std::string& ID, Scene* inScene);
 		virtual ~Camera() = default;
 
 		Mat4 GetViewMatrix() const { return viewMatrix; }

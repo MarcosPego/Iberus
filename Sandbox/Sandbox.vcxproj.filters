@@ -21,6 +21,9 @@
     <ClCompile Include="src\SandboxBehaviour.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SandboxBehaviour2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\baseDeferredLightShader.frag" />
@@ -36,6 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\SandboxBehaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SandboxBehaviour2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

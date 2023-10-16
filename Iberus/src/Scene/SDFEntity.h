@@ -3,7 +3,7 @@
 
 namespace Iberus {
 
-	struct SDFPart {
+	struct IBERUS_API SDFPart {
 		Transform transform;
 		int type{ 1 };
 		float radius{ 1.0f };
@@ -29,6 +29,8 @@ namespace Iberus {
 		void PushDraw(RenderBatch& renderBatch) override;
 			
 		void PushPart(Vec3 transform, int type, float radius, Material* material = nullptr);
+
+		std::vector<SDFPart>& GetParts() { return sdfParts; }
 
 	private:
 		std::vector<SDFPart> sdfParts;

@@ -90,15 +90,15 @@ public:
 		//sdfentity2->SetPosition(Vec3(-10, -10, 20));
 		//sdfentity3->SetPosition(Vec3(10, 10, 20));
 
-		sdfentity1->PushBehaviour(new SandboxBehaviour());
+		sdfentity1->PushBehaviour(new SandboxBehaviour2());
 		//sdfentity2->PushBehaviour(new SandboxBehaviour2());
 		//sdfentity3->PushBehaviour(new SandboxBehaviour2());
 
-		sdfentity1->PushPart(Vec3(0, 0, 20), 1, 1.0f, sdfmaterial1);
-		sdfentity1->PushPart(Vec3(0, 2, 20), 1, 1.0f, sdfmaterial1);
-		sdfentity1->PushPart(Vec3(0, 4, 20), 1, 1.0f, sdfmaterial2);
-		sdfentity1->PushPart(Vec3(0, 6, 20), 1, 1.0f, sdfmaterial2);
-		sdfentity1->PushPart(Vec3(0, 8, 20), 1, 1.0f, sdfmaterial2);
+		sdfentity1->PushPart(Vec3(-20, 0, 20), 1, 1.0f, sdfmaterial1);
+		sdfentity1->PushPart(Vec3(-20, 0, 20), 1, 1.0f, sdfmaterial1);
+		sdfentity1->PushPart(Vec3(-20, 0, 20), 1, 1.0f, sdfmaterial2);
+		sdfentity1->PushPart(Vec3(-20, 0, 20), 1, 1.0f, sdfmaterial2);
+		sdfentity1->PushPart(Vec3(-20, 0, 20), 1, 1.0f, sdfmaterial2);
 
 		currentScene->AddEntity("SDFteste1", sdfentity1);
 		//currentScene->AddEntity("SDFteste2", sdfentity2);

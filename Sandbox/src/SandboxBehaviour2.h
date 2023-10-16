@@ -9,5 +9,9 @@ public:
 
 	void Update(double deltaTime) override;
 
+private:
+	float maxTension{ 2.0f };
+	//std::vector<Vec3> lastPosition;
+	Iberus::SDFEntity* entity{nullptr};
 };
 

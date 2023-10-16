@@ -10,6 +10,8 @@
 //#include "Material.h"
 #include "Texture.h"
 
+#include "SDFEntity.h"
+
 #include "Behaviour.h"
 
 #include "Engine.h"

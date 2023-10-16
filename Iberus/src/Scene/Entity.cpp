@@ -58,6 +58,7 @@ namespace Iberus {
 
 	void Entity::PushBehaviour(Behaviour* behaviour) {
 		if (scene->PushBehaviour(behaviour, this)) {
+			behaviour->Init();
 			behaviours.push_back(behaviour);
 		}
 	}

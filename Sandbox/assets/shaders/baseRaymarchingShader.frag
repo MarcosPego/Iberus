@@ -7,14 +7,19 @@ uniform sampler2D diffuseIn;
 uniform sampler2D normalIn;     
 uniform sampler2D uvsIn; 
 
-struct SDFMesh {
+struct SDFPart {
 	vec3 center;
 	vec4 color; // For now only color, later I want textures too
 	float radius;
 	int type;
 };
 
-const int sdfMeshBufferSize = 32;
+struct SDFMesh {
+    int size;
+	SDFPart sdfParts[3];
+};
+
+const int sdfMeshBufferSize = 4;
 uniform SDFMesh sdfMeshes[sdfMeshBufferSize];
 
 layout (location = 0) out vec3 worldPosOut;   
@@ -45,26 +50,51 @@ float sdBox(vec3 position, float size) {
 
 vec4 finalColor = vec4(0,0,0,0);
 
+float smoothMax(float a, float b, float k) {
+	return log(exp(k * a) + exp(k * b)) / k;
+}
+
+float smootMin(float a, float b, float k) {
+	return -smoothMax(-a, -b, k);
+}
+
 float distanceField(vec3 position) {
 	float result =  2^128;
 	for (int i = 0; i < sdfMeshBufferSize; i++) {
 		SDFMesh mesh = sdfMeshes[i];
-		if (mesh.type <= 0) {
-			break;
-		}
-
 		float resultingT = result;
-		if (mesh.type == 1) {
-			resultingT = sdSphere(position - mesh.center, mesh.radius);
+		for (int j = 0; j < mesh.size; j++) {
+			SDFPart part = mesh.sdfParts[j];
+			if (part.type <= 0) {
+				break;
+			}
 
-		} else if (mesh.type == 2) {
-			resultingT = sdBox(position - mesh.center, mesh.radius);
-		}
+			if (j == 0) {
+				if (part.type == 1) {
+					resultingT = sdSphere(position - part.center, part.radius);
 
-		if (resultingT < result) {
-			finalColor = mesh.color;
-			result = resultingT;
-		}
+				} else if (part.type == 2) {
+					resultingT = sdBox(position - part.center, part.radius), resultingT;
+				}
+
+				if (resultingT < result) {
+					finalColor = part.color;
+					result = resultingT;
+				}	
+			} else {
+				float _previousT = resultingT;
+				if (part.type == 1) {
+					resultingT = smootMin(sdSphere(position - part.center, part.radius), resultingT, 0.5f);
+
+				} else if (part.type == 2) {
+					resultingT = smootMin(sdBox(position - part.center, part.radius), resultingT, 1.0f);
+				}
+				if (resultingT < result) {
+					finalColor = mix(finalColor, part.color, clamp(_previousT - resultingT, 0, 1));
+					result = resultingT;
+				}	
+			}			
+		}		
 	}
 	return result;
 }

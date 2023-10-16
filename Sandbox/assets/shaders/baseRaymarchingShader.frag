@@ -14,12 +14,13 @@ struct SDFPart {
 	int type;
 };
 
+const int sdfPartBufferSize = 8;
 struct SDFMesh {
     int size;
-	SDFPart sdfParts[3];
+	SDFPart sdfParts[sdfPartBufferSize];
 };
 
-const int sdfMeshBufferSize = 4;
+const int sdfMeshBufferSize = 3;
 uniform SDFMesh sdfMeshes[sdfMeshBufferSize];
 
 layout (location = 0) out vec3 worldPosOut;   
@@ -84,7 +85,7 @@ float distanceField(vec3 position) {
 			} else {
 				float _previousT = resultingT;
 				if (part.type == 1) {
-					resultingT = smootMin(sdSphere(position - part.center, part.radius), resultingT, 0.5f);
+					resultingT = smootMin(sdSphere(position - part.center, part.radius), resultingT, 1.50f);
 
 				} else if (part.type == 2) {
 					resultingT = smootMin(sdBox(position - part.center, part.radius), resultingT, 1.0f);

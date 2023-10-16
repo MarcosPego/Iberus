@@ -16,36 +16,29 @@ namespace Iberus {
 			return;
 		}
 
-		/// TODO(MPP) A string formater here would be nice
+		if (sdfParts.empty()) {
+			return;
+		}
+
 		const std::string sdfMesh = std::format("sdfMeshes[{0}]", sdfSlot);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfMesh + ".size", 3, UniformType::INT), CMDQueue::SDF);
+		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfMesh + ".size", (int)sdfParts.size(), UniformType::INT), CMDQueue::SDF);
+		int count = 0;
+		for (const auto& part : sdfParts) {
+			auto _center = GetPosition() + part.transform.Position;
 
-		std::string sdfPart = std::format("{0}.sdfParts[{1}]", sdfMesh, 0);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".type", type, UniformType::INT), CMDQueue::SDF);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".radius", 0.5f, UniformType::FLOAT), CMDQueue::SDF);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".center", GetPosition() + Vec3(-2, 0, 0), UniformType::VEC3), CMDQueue::SDF);
+			std::string sdfPart = std::format("{0}.sdfParts[{1}]", sdfMesh, count);
+			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".type", part.type, UniformType::INT), CMDQueue::SDF);
+			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".radius", part.radius, UniformType::FLOAT), CMDQueue::SDF);
+			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".center", _center, UniformType::VEC3), CMDQueue::SDF);
 
-		auto* material = GetMaterial();
-		if (material) {
-			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".color", material->albedoColor, UniformType::VEC4), CMDQueue::SDF);
-		}
-
-		sdfPart = std::format("{0}.sdfParts[{1}]", sdfMesh, 1);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".type", type, UniformType::INT), CMDQueue::SDF);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".radius", 1.5f, UniformType::FLOAT), CMDQueue::SDF);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".center", GetPosition() + Vec3(2,0,0), UniformType::VEC3), CMDQueue::SDF);
-
-		if (material) {
-			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".color", Vec4( 1.0f, 0.0f, 0.0f, 1.0f ), UniformType::VEC4), CMDQueue::SDF);
-		}
-
-		sdfPart = std::format("{0}.sdfParts[{1}]", sdfMesh, 2);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".type", 2, UniformType::INT), CMDQueue::SDF);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".radius", 2.0f, UniformType::FLOAT), CMDQueue::SDF);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".center", GetPosition() + Vec3(0, -3, 0), UniformType::VEC3), CMDQueue::SDF);
-
-		if (material) {
-			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".color", Vec4(0.0f, 1.0f, 0.5f, 1.0f), UniformType::VEC4), CMDQueue::SDF);
+			auto* material = GetMaterial();
+			if (part.material) {
+				renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".color", part.material->albedoColor, UniformType::VEC4), CMDQueue::SDF);
+			}
+			else if (material) {
+				renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".color", material->albedoColor, UniformType::VEC4), CMDQueue::SDF);
+			}
+			count++;
 		}
 	}
 
@@ -57,5 +50,15 @@ namespace Iberus {
 		for (const auto& child : GetChildMap()) {
 			child.second->PushDraw(renderBatch);
 		}
+	}
+
+	void SDFEntity::PushPart(Vec3 transform, int type, float radius, Material* material) {
+		SDFPart part = {};
+		part.SetPosition(transform);
+		part.type = type;
+		part.radius = radius;
+		part.material = material;
+
+		sdfParts.push_back(part);
 	}
 }

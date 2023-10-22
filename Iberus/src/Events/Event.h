@@ -45,6 +45,8 @@ namespace Iberus {
 		bool handled = false;
 	};
 
+	using EventCallbackFn = std::function<void(Event&)>;
+
 	class IBERUS_API EventDispatcher
 	{
 		template<typename T>

@@ -30,7 +30,8 @@ project "Iberus"
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/dependencies/glfw/include/GLFW/**.h",
 		"%{prj.name}/dependencies/glew/include/GL/**.h",
-		"%{prj.name}/dependencies/stb_image/**.h"
+		"%{prj.name}/dependencies/stb_image/**.h",
+		"%{prj.name}/dependencies/imgui/**.h"
 	}
 
 	includedirs {
@@ -41,7 +42,8 @@ project "Iberus"
 		"%{prj.name}/dependencies/spdlog/include",
 		"%{prj.name}/dependencies/glfw/include/GLFW",
 		"%{prj.name}/dependencies/glew/include/GL",
-		"%{prj.name}/dependencies/stb_image"
+		"%{prj.name}/dependencies/stb_image",
+		"%{prj.name}/dependencies/imgui"
 	}
 
 	libdirs {
@@ -100,6 +102,7 @@ project "Sandbox"
 		"Iberus/dependencies/glew/include/GL",
 		"Iberus/dependencies/glew/include/stb_image",
 		"Iberus/dependencies/spdlog/include",
+		"Iberus/dependencies/imgui",
 		"Iberus/src/**",
 		"Iberus/src"
 	}

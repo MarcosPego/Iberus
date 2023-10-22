@@ -22,6 +22,48 @@
     <Filter Include="dependencies\glfw\include\GLFW">
       <UniqueIdentifier>{3D0DF957-2933-C3BE-1279-488AFE3DE88A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dependencies\imgui">
+      <UniqueIdentifier>{F6B312BD-E297-D312-4BF8-CD6537FBBD94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\backends">
+      <UniqueIdentifier>{E00289C4-4C10-B7AA-D5F6-B29541038361}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\examples">
+      <UniqueIdentifier>{64D6496F-D0E3-7755-59CA-7340C5D6430C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\examples\example_allegro5">
+      <UniqueIdentifier>{79BA939C-65CD-93F5-0EB7-70E2FAA83043}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\examples\libs">
+      <UniqueIdentifier>{3DF9B281-294A-9EC3-52AE-8C853E5E312D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\examples\libs\emscripten">
+      <UniqueIdentifier>{26E95ED3-924E-F259-1B27-9432878BE7C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\examples\libs\glfw">
+      <UniqueIdentifier>{1C1B4EC7-88DF-4CB7-5145-7D81BDC8E8EC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\examples\libs\glfw\include">
+      <UniqueIdentifier>{8F9E620D-FB0E-6586-C42D-DF0E305D9D87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\examples\libs\glfw\include\GLFW">
+      <UniqueIdentifier>{2ECBC19A-1A5F-B742-8323-11F76FD6F134}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\examples\libs\usynergy">
+      <UniqueIdentifier>{121338DB-7E2D-9B7C-C74F-AB1033A9C283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\misc">
+      <UniqueIdentifier>{91B01F85-FDE7-671C-06F2-CB3F72A88E15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\misc\cpp">
+      <UniqueIdentifier>{E30AD377-4F18-015E-D8FE-FC48440BCD14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\misc\freetype">
+      <UniqueIdentifier>{64E24205-5033-2E47-7997-1C096547C1B0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\imgui\misc\single_file">
+      <UniqueIdentifier>{01DBB58C-6D94-2037-F6F3-3A1162ACD6A6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="dependencies\stb_image">
       <UniqueIdentifier>{26BD49FD-12B7-724F-FB23-0960E7BCD8BB}</UniqueIdentifier>
     </Filter>
@@ -77,6 +119,108 @@
     </ClInclude>
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3native.h">
       <Filter>dependencies\glfw\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_allegro5.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_android.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx10.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx11.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx12.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx9.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_glfw.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_glut.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_metal.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl2.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3_loader.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_osx.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdl2.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdl3.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlrenderer2.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlrenderer3.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_vulkan.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_wgpu.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_win32.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\examples\example_allegro5\imconfig_allegro5.h">
+      <Filter>dependencies\imgui\examples\example_allegro5</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\examples\libs\emscripten\emscripten_mainloop_stub.h">
+      <Filter>dependencies\imgui\examples\libs\emscripten</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\examples\libs\glfw\include\GLFW\glfw3.h">
+      <Filter>dependencies\imgui\examples\libs\glfw\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\examples\libs\glfw\include\GLFW\glfw3native.h">
+      <Filter>dependencies\imgui\examples\libs\glfw\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\examples\libs\usynergy\uSynergy.h">
+      <Filter>dependencies\imgui\examples\libs\usynergy</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imconfig.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imgui.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imgui_internal.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imstb_rectpack.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imstb_textedit.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\imstb_truetype.h">
+      <Filter>dependencies\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\misc\cpp\imgui_stdlib.h">
+      <Filter>dependencies\imgui\misc\cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\misc\freetype\imgui_freetype.h">
+      <Filter>dependencies\imgui\misc\freetype</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\misc\single_file\imgui_single_file.h">
+      <Filter>dependencies\imgui\misc\single_file</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\stb_image\stb_image.h">
       <Filter>dependencies\stb_image</Filter>
@@ -198,6 +342,9 @@
     <ClInclude Include="src\Renderer\Window.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Behaviour.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Camera.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -246,8 +393,13 @@
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Behaviour.h" />
-    <ClInclude Include="src\SceneInclude.h" />
+    <ClInclude Include="src\SceneInclude.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor.h" />
+    <ClInclude Include="src\Core\Layer.h" />
+    <ClInclude Include="src\Core\LayerStack.h" />
+    <ClInclude Include="src\Events\EventImport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -361,6 +513,9 @@
     <ClCompile Include="src\Renderer\Window.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Behaviour.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Camera.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -409,6 +564,8 @@
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Behaviour.cpp" />
+    <ClCompile Include="src\Tools\Editor.cpp" />
+    <ClCompile Include="src\Core\Layer.cpp" />
+    <ClCompile Include="src\Core\LayerStack.cpp" />
   </ItemGroup>
 </Project>

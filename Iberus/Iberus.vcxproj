@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -103,7 +103,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -130,7 +130,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -152,15 +152,51 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\SceneInclude.h" />
-    <ClInclude Include="src\Scene\Behaviour.h" />
     <ClInclude Include="dependencies\glew\include\GL\eglew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glxew.h" />
     <ClInclude Include="dependencies\glew\include\GL\wglew.h" />
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3.h" />
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3native.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_allegro5.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_android.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx10.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx12.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx9.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_glut.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_metal.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl2.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_osx.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdl2.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdl3.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlrenderer2.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlrenderer3.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_vulkan.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_wgpu.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="dependencies\imgui\examples\example_allegro5\imconfig_allegro5.h" />
+    <ClInclude Include="dependencies\imgui\examples\libs\emscripten\emscripten_mainloop_stub.h" />
+    <ClInclude Include="dependencies\imgui\examples\libs\glfw\include\GLFW\glfw3.h" />
+    <ClInclude Include="dependencies\imgui\examples\libs\glfw\include\GLFW\glfw3native.h" />
+    <ClInclude Include="dependencies\imgui\examples\libs\usynergy\uSynergy.h" />
+    <ClInclude Include="dependencies\imgui\imconfig.h" />
+    <ClInclude Include="dependencies\imgui\imgui.h" />
+    <ClInclude Include="dependencies\imgui\imgui_internal.h" />
+    <ClInclude Include="dependencies\imgui\imstb_rectpack.h" />
+    <ClInclude Include="dependencies\imgui\imstb_textedit.h" />
+    <ClInclude Include="dependencies\imgui\imstb_truetype.h" />
+    <ClInclude Include="dependencies\imgui\misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="dependencies\imgui\misc\freetype\imgui_freetype.h" />
+    <ClInclude Include="dependencies\imgui\misc\single_file\imgui_single_file.h" />
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
+    <ClInclude Include="src\Core\LayerStack.h" />
+    <ClInclude Include="src\Core\Layer.h" />
+    <ClInclude Include="src\Events\EventImport.h" />
+    <ClInclude Include="src\Tools\Editor.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Engine.h" />
@@ -200,6 +236,7 @@
     <ClInclude Include="src\Renderer\ShaderBindings.h" />
     <ClInclude Include="src\Renderer\TextureApi.h" />
     <ClInclude Include="src\Renderer\Window.h" />
+    <ClInclude Include="src\Scene\Behaviour.h" />
     <ClInclude Include="src\Scene\Camera.h" />
     <ClInclude Include="src\Scene\Entity.h" />
     <ClInclude Include="src\Scene\Light.h" />
@@ -216,9 +253,12 @@
     <ClInclude Include="src\Scene\SDFEntity.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
+    <ClInclude Include="src\SceneInclude.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Scene\Behaviour.cpp" />
+    <ClCompile Include="src\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Core\Layer.cpp" />
+    <ClCompile Include="src\Tools\Editor.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Core\Enginepch.cpp">
@@ -258,6 +298,7 @@
     <ClCompile Include="src\Renderer\ShaderBindings.cpp" />
     <ClCompile Include="src\Renderer\TextureApi.cpp" />
     <ClCompile Include="src\Renderer\Window.cpp" />
+    <ClCompile Include="src\Scene\Behaviour.cpp" />
     <ClCompile Include="src\Scene\Camera.cpp" />
     <ClCompile Include="src\Scene\Entity.cpp" />
     <ClCompile Include="src\Scene\Light.cpp" />

@@ -3,8 +3,7 @@
 #include "Core.h"
 #include "Window.h"
 #include "Renderer.h"
-
-#include "Scene.h" // temp
+#include "EventImport.h"
 
 namespace Iberus {
 	class Engine;
@@ -16,6 +15,10 @@ namespace Iberus {
 
 		virtual void Boot();
 		virtual void Update();
+
+		void OnEvent(Event& event);
+
+		bool OnWindowClose(WindowCloseEvent& event);
 
 		void Run();
 	private:

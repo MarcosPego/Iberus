@@ -2,6 +2,10 @@
 #include "WindowsWindow.h"
 
 namespace Iberus {
+	static void GLFWErrorCallback(int error, const char* description) {
+		IB_CORE_ERROR("GLFW Error ({}) : {}", error, description);
+	}
+
 	WindowsWindow::WindowsWindow(const Vec2& resolution, const std::string& title) : Window(resolution, title) {
 		SetupGraphicalContext();
 	}
@@ -15,7 +19,7 @@ namespace Iberus {
 
 	void WindowsWindow::Update() {
 		glfwSwapBuffers(window);
-		//glfwWaitEvents(); // TODO(MPP) Fix window event manager!
+		glfwPollEvents();; // TODO(MPP) Fix window event manager!
 	}
 
 	void WindowsWindow::Shutdown() {
@@ -33,6 +37,11 @@ namespace Iberus {
 		windowData.vsync = enabled;
 	}
 
+
+	void WindowsWindow::SetEventCallback(const EventCallbackFn& eventCallback) {
+		windowData.EventCallback = eventCallback;
+	}
+
 	void WindowsWindow::SetupGraphicalContext() {
 		// TODO(MPP) Review this setup later. The ideal is to also support vulkan later
 
@@ -42,6 +51,7 @@ namespace Iberus {
 
 		if (!glfwInit())
 		{
+			glfwSetErrorCallback(GLFWErrorCallback);
 			exit(EXIT_FAILURE);
 			return;
 		}
@@ -55,11 +65,12 @@ namespace Iberus {
 		// Setup Glew
 		glewExperimental = GL_TRUE;
 		GLenum result = glewInit();
-		if (result != GLEW_OK)
-		{
-			std::cerr << "ERROR glewInit: " << glewGetString(result) << std::endl;
+		if (result != GLEW_OK) {
+			glfwSetErrorCallback(GLFWErrorCallback);
+			//std::cerr << "ERROR glewInit: " << glewGetString(result) << std::endl;
 			exit(EXIT_FAILURE);
 		}
+
 		GLenum err_code = glGetError();
 
 		const GLubyte* renderer = glGetString(GL_RENDERER);
@@ -84,8 +95,6 @@ namespace Iberus {
 	}
 
 	void WindowsWindow::SetupWindow() {
-		// TODO(MPP) Review this setup later
-
 		GLFWmonitor* monitor = windowProps.isFullScreen ? glfwGetPrimaryMonitor() : 0;
 		GLFWwindow* win = glfwCreateWindow(GetWidth(), GetHeight(), GetTitle().c_str(), monitor, 0);
 		if (!win) {
@@ -95,7 +104,83 @@ namespace Iberus {
 
 		window = win;
 		glfwMakeContextCurrent(window);
+		glfwSetWindowUserPointer(window, &windowData);
 		SetVSync(true);
+
+		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+		/// Set Callbacks
+		glfwSetWindowSizeCallback(window, [](GLFWwindow* glfwWindow, int width, int height) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+			data.resolution.x = width;
+			data.resolution.y = height;
+
+			WindowResizeEvent event({ (uint32_t)width, (uint32_t)height });
+			data.EventCallback(event);
+		});
+
+		glfwSetWindowCloseCallback(window, [](GLFWwindow* glfwWindow) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+
+			WindowCloseEvent event;
+			data.EventCallback(event);
+		});
+
+		glfwSetKeyCallback(window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+
+			switch (action) {
+				case GLFW_PRESS: {
+					KeyPressedEvent event(key, 0);
+					data.EventCallback(event);
+				} break;
+				case GLFW_RELEASE: {
+					KeyReleasedEvent event(key);
+					data.EventCallback(event);
+				} break;
+				case GLFW_REPEAT: {
+					KeyPressedEvent event(key, 1);
+					data.EventCallback(event);
+				} break;
+				default:
+					break;
+			}
+		});
+
+		glfwSetMouseButtonCallback(window, [](GLFWwindow* glfwWindow, int button, int action, int mods) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+
+			switch (action) {
+				case GLFW_PRESS: {
+					MouseButtonPressedEvent event(button);
+					data.EventCallback(event);
+				} break;
+				case GLFW_RELEASE: {
+					MouseButtonReleasedEvent event(button);
+					data.EventCallback(event);
+				} break;
+				case GLFW_REPEAT: {
+					MouseButtonPressedEvent event(button);
+					data.EventCallback(event);
+				} break;
+				default:
+					break;
+			}
+		});
+
+		glfwSetScrollCallback(window, [](GLFWwindow* glfwWindow, double xOffset, double yOffset) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+
+			MouseScrolledEvent event({ (float)xOffset , (float)yOffset });
+			data.EventCallback(event);
+		});
+
+		glfwSetCursorPosCallback(window, [](GLFWwindow* glfwWindow, double xPos, double yPos) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+
+			MouseMovedEvent event({ (float)xPos , (float)yPos });
+			data.EventCallback(event);
+		});
 	}
 }
 

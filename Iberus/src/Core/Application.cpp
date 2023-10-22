@@ -7,9 +7,13 @@
 #include "Engine.h"
 
 namespace Iberus {
+
+#define BIND_FN(x) std::bind(&x, this, std::placeholders::_1)
+
 	Application::Application() {
 		static WindowProps winProps{};
 		window = std::unique_ptr<Window>(Window::Create(winProps));
+		window->SetEventCallback(BIND_FN(Application::OnEvent));
 		engine = Engine::Instance();
 		engine->SetCurrentWindow(window.get());
 	}
@@ -21,21 +25,25 @@ namespace Iberus {
 		engine->Boot();
 	}
 
+	void Application::OnEvent(Event& event) {
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_FN(Application::OnWindowClose));
+
+		IB_CORE_TRACE("{}", event.ToString());
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& event) {
+		running = false;
+		return true;
+	}
+
 	void Application::Update() {
 	}
 
 	void Application::Run() {
 		while (running) {
-
-
-			// test case
-			/*auto& renderBatch = frame.PushBatch();
-			auto uniform = new UniformRenderCmd<int>("test", 2, UniformType::INT);
-			renderBatch.PushRenderCmd(uniform);*/
-
 			engine->Update();		
 			Update();
-
 			window->Update();
 		}
 	}

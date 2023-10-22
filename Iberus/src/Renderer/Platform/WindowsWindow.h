@@ -3,6 +3,8 @@
 #include "Enginepch.h"
 #include "Window.h"
 
+#include "EventImport.h"
+
 namespace Iberus {
 	class WindowsWindow : public Window {
 	public:
@@ -17,6 +19,8 @@ namespace Iberus {
 
 		void SetVSync(bool enabled) override;
 
+		void SetEventCallback(const EventCallbackFn& eventCallback) override;
+
 	private: // Window internal setup
 
 		virtual void SetupGraphicalContext();
@@ -30,6 +34,8 @@ namespace Iberus {
 			std::string title{ "Iberus" };
 			Vec2 resolution{ 1330.0f, 720.0f };
 			bool vsync{ true };
+
+			EventCallbackFn EventCallback;
 		};
 
 		WindowData windowData;

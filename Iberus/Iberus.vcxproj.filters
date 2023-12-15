@@ -4,6 +4,15 @@
     <Filter Include="dependencies">
       <UniqueIdentifier>{8CAD9F58-7810-2FFD-2196-67B30DD8FA7F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dependencies\fast_noise_simd">
+      <UniqueIdentifier>{7295E702-5E50-D7AE-0708-50F9F3A1213F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\fast_noise_simd\FastNoiseSIMD">
+      <UniqueIdentifier>{1A4AF046-06B2-B614-6F1D-CB2A5BA4CD00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\fast_noise_simd\FastNoiseSIMD\ARM">
+      <UniqueIdentifier>{49ACF67B-352A-4715-1E22-05AD0A3F893D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="dependencies\glew">
       <UniqueIdentifier>{AAD8926A-16EF-9000-5F66-1C22CBBB6188}</UniqueIdentifier>
     </Filter>
@@ -100,8 +109,20 @@
     <Filter Include="src\Scene\Resources">
       <UniqueIdentifier>{F4BFD167-6021-AF75-E98E-F52755EFE534}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Tools">
+      <UniqueIdentifier>{6DDDEAB3-D947-9F2A-2286-50D08E2F7D7F}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dependencies\fast_noise_simd\FastNoiseSIMD\ARM\cpu-features.h">
+      <Filter>dependencies\fast_noise_simd\FastNoiseSIMD\ARM</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\fast_noise_simd\FastNoiseSIMD\FastNoiseSIMD.h">
+      <Filter>dependencies\fast_noise_simd\FastNoiseSIMD</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\fast_noise_simd\FastNoiseSIMD\FastNoiseSIMD_internal.h">
+      <Filter>dependencies\fast_noise_simd\FastNoiseSIMD</Filter>
+    </ClInclude>
     <ClInclude Include="dependencies\glew\include\GL\eglew.h">
       <Filter>dependencies\glew\include\GL</Filter>
     </ClInclude>
@@ -240,10 +261,19 @@
     <ClInclude Include="src\Core\EntryPoint.h">
       <Filter>src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Layer.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\LayerStack.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Events\ApplicationEvent.h">
       <Filter>src\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\Event.h">
+      <Filter>src\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Events\EventImport.h">
       <Filter>src\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\KeyEvent.h">
@@ -396,10 +426,10 @@
     <ClInclude Include="src\SceneInclude.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tools\Editor.h" />
-    <ClInclude Include="src\Core\Layer.h" />
-    <ClInclude Include="src\Core\LayerStack.h" />
-    <ClInclude Include="src\Events\EventImport.h" />
+    <ClInclude Include="src\Tools\Editor.h">
+      <Filter>src\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\Noise.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -409,6 +439,12 @@
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Enginepch.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Layer.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\LayerStack.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\FileSystem\FileSystem.cpp">
@@ -564,8 +600,9 @@
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tools\Editor.cpp" />
-    <ClCompile Include="src\Core\Layer.cpp" />
-    <ClCompile Include="src\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Tools\Editor.cpp">
+      <Filter>src\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Maths\Noise.cpp" />
   </ItemGroup>
 </Project>

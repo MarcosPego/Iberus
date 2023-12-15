@@ -14,4 +14,13 @@ namespace Iberus {
 		return scene;
 	}
 
+	Scene* SceneManager::GetScene(const std::string& sceneID) const {
+		if (scenes.find(sceneID) != scenes.end()) {
+			scenes.at(sceneID).get();
+		}
+
+		IB_CORE_WARN("No scene was found with ID ({})", sceneID);
+		return nullptr;
+	}
+
 }

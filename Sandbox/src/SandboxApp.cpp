@@ -11,6 +11,8 @@ public:
 	}
 
 	void Boot() override {
+		if (false) {
+
 		Application::Boot();
 
 		auto& resourceManager = Iberus::Engine::Instance()->GetResourceManager();
@@ -103,6 +105,17 @@ public:
 		currentScene->AddEntity("SDFteste1", sdfentity1);
 		//currentScene->AddEntity("SDFteste2", sdfentity2);
 		//currentScene->AddEntity("SDFteste3", sdfentity3);
+		}
+
+		Application::Boot();
+
+		auto& resourceManager = Iberus::Engine::Instance()->GetResourceManager();
+		auto* provider = &Iberus::Engine::Instance()->GetEngineProvider();
+		Iberus::Shader* shader = resourceManager.GetOrCreateResource<Iberus::Shader>("assets/shaders/baseLitShader", provider);
+
+		auto* currentScene = Iberus::Engine::Instance()->GetSceneManager().CreateScene("TestScene", true);
+
+		currentScene->GetActiveCamera()->SetPosition(Vec3(0, 0, 10));
 	}
 
 	void Update() override {

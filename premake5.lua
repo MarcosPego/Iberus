@@ -31,7 +31,8 @@ project "Iberus"
 		"%{prj.name}/dependencies/glfw/include/GLFW/**.h",
 		"%{prj.name}/dependencies/glew/include/GL/**.h",
 		"%{prj.name}/dependencies/stb_image/**.h",
-		"%{prj.name}/dependencies/imgui/**.h"
+		"%{prj.name}/dependencies/imgui/**.h",
+		"%{prj.name}/dependencies/fast_noise_simd/FastNoiseSIMD/**.h"
 	}
 
 	includedirs {
@@ -43,7 +44,8 @@ project "Iberus"
 		"%{prj.name}/dependencies/glfw/include/GLFW",
 		"%{prj.name}/dependencies/glew/include/GL",
 		"%{prj.name}/dependencies/stb_image",
-		"%{prj.name}/dependencies/imgui"
+		"%{prj.name}/dependencies/imgui",
+		"%{prj.name}/dependencies/fast_noise_simd/FastNoiseSIMD"
 	}
 
 	libdirs {
@@ -103,6 +105,7 @@ project "Sandbox"
 		"Iberus/dependencies/glew/include/stb_image",
 		"Iberus/dependencies/spdlog/include",
 		"Iberus/dependencies/imgui",
+		"Iberus/dependencies/fast_noise_simd/FastNoiseSIMD",
 		"Iberus/src/**",
 		"Iberus/src"
 	}

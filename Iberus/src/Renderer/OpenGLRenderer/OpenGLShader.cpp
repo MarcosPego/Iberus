@@ -65,7 +65,7 @@ bool OpenGLShader::Load(Buffer vertexBuffer, Buffer fragBuffer) {
 
 const GLuint OpenGLShader::AddShader(const GLenum shaderType, Buffer shaderBuffer){
 	const GLuint ID = glCreateShader(shaderType);
-	const std::string shaderCode(shaderBuffer.data.get(), shaderBuffer.data.get() + shaderBuffer.size);
+	const std::string shaderCode(shaderBuffer.GetData(), shaderBuffer.GetData() + shaderBuffer.GetSize());
 	const GLchar* code = shaderCode.c_str();
 
 	glShaderSource(ID, 1, &code, 0);

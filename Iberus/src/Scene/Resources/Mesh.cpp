@@ -57,7 +57,7 @@ namespace Iberus {
 		};
 
 		// Read from buffer
-		std::string meshString(inboundBuffer.data.get(), inboundBuffer.data.get() + inboundBuffer.size);
+		std::string meshString(inboundBuffer.GetData(), inboundBuffer.GetData() + inboundBuffer.GetSize());
 		std::istringstream file(meshString);
 		std::string line;
 		while (std::getline(file, line)) {

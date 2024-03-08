@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Renderer.h"
 #include "EventImport.h"
+#include "LayerStack.h"
 
 namespace Iberus {
 	class Engine;
@@ -18,12 +19,16 @@ namespace Iberus {
 
 		void OnEvent(Event& event);
 
-		bool OnWindowClose(WindowCloseEvent& event);
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
 
 		void Run();
 	private:
+		bool OnWindowClose(WindowCloseEvent& event);
+
 		Engine* engine{ nullptr };
 		std::unique_ptr<Window> window;
+		LayerStack layerStack;
 
 		bool running{true};
 	};

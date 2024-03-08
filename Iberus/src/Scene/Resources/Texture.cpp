@@ -25,8 +25,8 @@ namespace Iberus {
 
 		auto size = ((size_t)width) * ((size_t)height) * ((size_t)channels);
 
-		std::unique_ptr<uint8_t[]> bufferData = std::make_unique<uint8_t[]>(size);
-		std::fill_n(bufferData.get(), size, 0); // Create black texture
+		Buffer bufferData = Buffer(size);
+		std::fill_n(bufferData.GetData(), bufferData.GetSize(), 0); // Create black texture
 
 		// TODO allow default color;
 		/*const bool alpha = channels == 4;
@@ -39,8 +39,20 @@ namespace Iberus {
 			}
 		}*/
 
-		imageBuffer.data = std::move(bufferData);
-		imageBuffer.size = size;
+		auto& renderer = Engine::Instance()->GetRenderer();
+		auto uploadTexture = new UploadTextureRenderCmd(ID, std::move(imageBuffer), width, height, channels);
+		renderer.PushRenderCmd(uploadTexture);
+	}
+
+	Texture::Texture(const std::string& ID, Buffer inboundBuffer, int inWidth, int inHeight, int inChannels) : Resource(ID) {
+		width = inWidth;
+		height = inHeight;
+		channels = inChannels;
+		imageBuffer = std::move(inboundBuffer);
+
+		if (imageBuffer.Invalid() || imageBuffer.GetSize() != (width * height * channels)) {
+			return;
+		}
 
 		auto& renderer = Engine::Instance()->GetRenderer();
 		auto uploadTexture = new UploadTextureRenderCmd(ID, std::move(imageBuffer), width, height, channels);
@@ -56,11 +68,10 @@ namespace Iberus {
 	bool Texture::Load(Buffer inboundBuffer) {
 		std::unique_ptr<uint8_t[]> bufferData;
 		bufferData.reset(
-			stbi_load_from_memory(static_cast<uint8_t*>(inboundBuffer.data.get()), (int)inboundBuffer.size, &width, &height, &channels, 0)
+			stbi_load_from_memory(static_cast<uint8_t*>(inboundBuffer.GetData()), (int)inboundBuffer.GetSize(), &width, &height, &channels, 0)
 		);
 
-		imageBuffer.data = std::move(bufferData);
-		imageBuffer.size = ((size_t) width) * ((size_t) height) * ((size_t) channels);
+		imageBuffer = Buffer(std::move(bufferData), ((size_t)width) * ((size_t)height) * ((size_t)channels));
 
 		if (imageBuffer.Invalid()) {
 			return false;

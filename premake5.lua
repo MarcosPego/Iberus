@@ -32,7 +32,8 @@ project "Iberus"
 		"%{prj.name}/dependencies/glew/include/GL/**.h",
 		"%{prj.name}/dependencies/stb_image/**.h",
 		"%{prj.name}/dependencies/imgui/**.h",
-		"%{prj.name}/dependencies/fast_noise_simd/FastNoiseSIMD/**.h"
+		"%{prj.name}/dependencies/FastNoise2/include/**",
+		"%{prj.name}/dependencies/FastNoise2/include/**/**.h"
 	}
 
 	includedirs {
@@ -45,18 +46,22 @@ project "Iberus"
 		"%{prj.name}/dependencies/glew/include/GL",
 		"%{prj.name}/dependencies/stb_image",
 		"%{prj.name}/dependencies/imgui",
-		"%{prj.name}/dependencies/fast_noise_simd/FastNoiseSIMD"
+		"%{prj.name}/dependencies/FastNoise2/include/",
+		"%{prj.name}/dependencies/FastNoise2/include/**"
 	}
 
 	libdirs {
 		"%{prj.name}/dependencies/glfw/lib-vc2019",
-		"%{prj.name}/dependencies/glew/lib/Release/x64"
+		"%{prj.name}/dependencies/glew/lib/Release/x64",
+		"%{prj.name}/dependencies/FastNoise2/lib"
 	}
 
 	links {
 		"glew32",
 		"opengl32",
-		"glfw3_mt"
+		"glfw3_mt",
+		"FastNoise",
+		"FastNoiseD"
 	}
 
 	filter "system:windows"
@@ -105,20 +110,22 @@ project "Sandbox"
 		"Iberus/dependencies/glew/include/stb_image",
 		"Iberus/dependencies/spdlog/include",
 		"Iberus/dependencies/imgui",
-		"Iberus/dependencies/fast_noise_simd/FastNoiseSIMD",
+		"Iberus/dependencies/FastNoise2/include",
 		"Iberus/src/**",
 		"Iberus/src"
 	}
 
 	libdirs {
 		"Iberus/dependencies/glfw/lib-vc2019",
-		"Iberus/dependencies/glew/lib/Release/x64"
+		"Iberus/dependencies/glew/lib/Release/x64",
+		"Iberus/dependencies/FastNoise2/lib"
 	}
 
 	links {		
 		"glew32",
 		"opengl32",
 		"glfw3_mt",
+		"FastNoise",
 		"Iberus"
 	}
 

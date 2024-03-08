@@ -4,14 +4,20 @@
     <Filter Include="dependencies">
       <UniqueIdentifier>{8CAD9F58-7810-2FFD-2196-67B30DD8FA7F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="dependencies\fast_noise_simd">
-      <UniqueIdentifier>{7295E702-5E50-D7AE-0708-50F9F3A1213F}</UniqueIdentifier>
+    <Filter Include="dependencies\FastNoise2">
+      <UniqueIdentifier>{19197D0D-8550-C5A4-8E5A-29C8FA10EC9D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="dependencies\fast_noise_simd\FastNoiseSIMD">
-      <UniqueIdentifier>{1A4AF046-06B2-B614-6F1D-CB2A5BA4CD00}</UniqueIdentifier>
+    <Filter Include="dependencies\FastNoise2\include">
+      <UniqueIdentifier>{8C493ABC-F82C-49FC-0130-77386D920F4D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="dependencies\fast_noise_simd\FastNoiseSIMD\ARM">
-      <UniqueIdentifier>{49ACF67B-352A-4715-1E22-05AD0A3F893D}</UniqueIdentifier>
+    <Filter Include="dependencies\FastNoise2\include\FastNoise">
+      <UniqueIdentifier>{07B4C7F0-73CE-2A92-BCF0-3A26284A5299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\FastNoise2\include\FastNoise\Generators">
+      <UniqueIdentifier>{D032CF7E-BC71-79FA-65F4-552C51122F65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\FastNoise2\include\FastSIMD">
+      <UniqueIdentifier>{D6DFF092-C25C-E4D5-EBD9-E4E9D7B58069}</UniqueIdentifier>
     </Filter>
     <Filter Include="dependencies\glew">
       <UniqueIdentifier>{AAD8926A-16EF-9000-5F66-1C22CBBB6188}</UniqueIdentifier>
@@ -82,6 +88,9 @@
     <Filter Include="src\Core">
       <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Core\Types">
+      <UniqueIdentifier>{09FF4E05-F5CC-420B-DE60-B331CACD1E70}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Events">
       <UniqueIdentifier>{7162C20E-5D1A-045C-C621-DDB7B2F89E4C}</UniqueIdentifier>
     </Filter>
@@ -114,14 +123,74 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dependencies\fast_noise_simd\FastNoiseSIMD\ARM\cpu-features.h">
-      <Filter>dependencies\fast_noise_simd\FastNoiseSIMD\ARM</Filter>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\fast_noise_simd\FastNoiseSIMD\FastNoiseSIMD.h">
-      <Filter>dependencies\fast_noise_simd\FastNoiseSIMD</Filter>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_C.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\fast_noise_simd\FastNoiseSIMD\FastNoiseSIMD_internal.h">
-      <Filter>dependencies\fast_noise_simd\FastNoiseSIMD</Filter>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_Config.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_Export.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\BasicGenerators.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Blends.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Cellular.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarp.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarpFractal.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Fractal.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Generator.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Modifiers.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Perlin.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Simplex.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Value.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Metadata.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\SmartNode.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_Config.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_Export.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FunctionList.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\InlInclude.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\SIMDTypeList.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\glew\include\GL\eglew.h">
       <Filter>dependencies\glew\include\GL</Filter>
@@ -267,6 +336,9 @@
     <ClInclude Include="src\Core\LayerStack.h">
       <Filter>src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Types\Color.h">
+      <Filter>src\Core\Types</Filter>
+    </ClInclude>
     <ClInclude Include="src\Events\ApplicationEvent.h">
       <Filter>src\Events</Filter>
     </ClInclude>
@@ -295,6 +367,9 @@
       <Filter>src\Maths</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Matrix.h">
+      <Filter>src\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\Noise.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Quaternions.h">
@@ -429,7 +504,6 @@
     <ClInclude Include="src\Tools\Editor.h">
       <Filter>src\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maths\Noise.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -446,6 +520,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\LayerStack.cpp">
       <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Types\Color.cpp">
+      <Filter>src\Core\Types</Filter>
     </ClCompile>
     <ClCompile Include="src\FileSystem\FileSystem.cpp">
       <Filter>src\FileSystem</Filter>
@@ -466,6 +543,9 @@
       <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\MatrixFactory.cpp">
+      <Filter>src\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Maths\Noise.cpp">
       <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Quaternions.cpp">
@@ -603,6 +683,5 @@
     <ClCompile Include="src\Tools\Editor.cpp">
       <Filter>src\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="src\Maths\Noise.cpp" />
   </ItemGroup>
 </Project>

@@ -14,10 +14,10 @@ namespace Iberus {
 		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		if (inChannel == 3) {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, inWidth, inHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, inboundBuffer.data.get());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, inWidth, inHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, inboundBuffer.GetData());
 		}
 		else if (inChannel == 4) {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, inWidth, inHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, inboundBuffer.data.get());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, inWidth, inHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, inboundBuffer.GetData());
 		}
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

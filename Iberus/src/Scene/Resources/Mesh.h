@@ -7,8 +7,6 @@
 using namespace Math;
 
 namespace Iberus {
-	struct Buffer;
-
 	class IBERUS_API Mesh : public Resource {
 	public:
 		Mesh(const std::string& ID, Buffer inboundBuffer);

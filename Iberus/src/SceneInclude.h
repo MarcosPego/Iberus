@@ -9,6 +9,7 @@
 //#include "Mesh.h"
 //#include "Material.h"
 #include "Texture.h"
+#include "MeshFactory.h"
 
 #include "SDFEntity.h"
 

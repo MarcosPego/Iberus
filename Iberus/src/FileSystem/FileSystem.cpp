@@ -37,8 +37,7 @@ namespace Iberus {
 
 			auto size = std::fread(bufferData.get(), sizeof(uint8_t), fullSize, file);
 			
-			buffer.data = std::move(bufferData);
-			buffer.size = size;
+			buffer.Reset(bufferData.release(), size);
 
 			std::fclose(file);
 		}

@@ -63,7 +63,7 @@ namespace Iberus {
 			
 			//const auto index = std::type_index(typeid(T*));
 
-			if (registeredBehaviours.find(behaviourCast->GetType()) == registeredBehaviours.end()) {
+			if (registeredBehaviours.empty() || registeredBehaviours.find(behaviourCast->GetType()) == registeredBehaviours.end()) {
 				behaviourCast->BindBehaviour(entity, this);
 				registeredBehaviours[behaviourCast->GetType()].emplace_back(entity, behaviour);
 				return true;
@@ -94,7 +94,7 @@ namespace Iberus {
 
 			const auto index = behaviourCast->GetType();
 
-			if (registeredBehaviours.find(index) == registeredBehaviours.end()) {
+			if (registeredBehaviours.empty() || registeredBehaviours.find(index) == registeredBehaviours.end()) {
 				return;
 			}
 

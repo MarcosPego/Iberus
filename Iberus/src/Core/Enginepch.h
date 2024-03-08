@@ -21,6 +21,9 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+// TODO(MPP) Fix enginepch generation
+//#include <FastNoise.h>
+
 #include <iomanip>
 #include <cassert>
 

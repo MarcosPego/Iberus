@@ -3,14 +3,20 @@
 #include "Enginepch.h"
 #include "MathUtils.h"
 
-class FastNoiseSIMD;
+#ifdef min
+#undef min
+#endif
 
+#ifdef max
+#undef max
+#endif
+
+class FastNoiseSIMD;
 namespace Math {
 
-
 	struct NoiseSample {
-		Vec3 start;
-		Vec3 offset;
+		Vec3 start{ 0,0,0 };
+		Vec3 offset{ 0,0,0 };
 
 		Iberus::FloatBuffer noiseFloatBuffer;
 
@@ -18,21 +24,22 @@ namespace Math {
 			return !valid || noiseFloatBuffer.Invalid();
 		}
 
-		bool valid{ false };
+		bool valid{ true }; // TODO(MPP) Use this?
 	};
 
-	class Noise {
+	class IBERUS_API Noise {
 	public:
 		static Noise* Instance();
 
-		NoiseSample GetNoise(const Vec3 start, const Vec3& offset);
+		NoiseSample GetNoise(const Vec3& start, const Vec3& offset, int seed, float frequency, int octaves);
+
+		Iberus::Buffer SampleToTextureBuffer(NoiseSample& noiseSample, int channel = 4);
 
 	private:
 		Noise();
 		virtual ~Noise();
 
-		std::unique_ptr<FastNoiseSIMD> noiseAPI;
-	
+		//FastNoise::SmartNode* noiseAPI{nullptr};
 	};
 
 }

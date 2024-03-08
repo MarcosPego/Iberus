@@ -25,16 +25,16 @@ namespace Iberus {
 	}
 
 	void LayerStack::PopOverlay(Layer* layer) {
-		/*auto it = std::find(overlays.begin(), overlays.end(), overlays);
+		auto it = std::find(overlays.begin(), overlays.end(), layer);
 		if (it != overlays.end()) {
 			overlays.erase(it);
-		}*/
+		}
 	}
 
 	void LayerStack::PopLayer(Layer* layer) {
-		/*auto it = std::find(layers.begin(), layers.end(), layers);
+		auto it = std::find(layers.begin(), layers.end(), layer);
 		if (it != layers.end()) {
 			layers.erase(it);
-		}*/
+		}
 	}
 }

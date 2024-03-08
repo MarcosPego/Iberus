@@ -222,6 +222,10 @@ namespace Iberus {
 			}
 		}
 
+		if (boundTexture) {
+			boundTexture->Unbind();
+		}
+
 		if (boundMesh) {
 			boundMesh->Unbind();
 		}
@@ -230,6 +234,7 @@ namespace Iberus {
 			shaderInUse->Unbind();
 		}
 
+		boundTexture = nullptr;
 		boundMesh = nullptr;
 		shaderInUse = nullptr;
 	}

@@ -5,7 +5,7 @@
 namespace Iberus {
 	class Mesh;
 
-	class MeshFactory {
+	class IBERUS_API MeshFactory {
 	public:
 		static Mesh* CreateQuad(const std::string& ID, ResourceManager& resourceManager, int width, int height);
 	};

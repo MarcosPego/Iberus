@@ -56,7 +56,7 @@ void main(void)
 	vec3 lightBaseColor = vec3(1.0f, 1.0f, 1.0f);
 	vec3 lightPos = vec3(15.0f, 15.0f, 25.0f);
 
-	float ambientStrength = 0.1f;
+	float ambientStrength = 1.0f;
 	vec3 ambient = ambientStrength * lightBaseColor;
 
 	vec3 normalizedNormal = normalize(texture(normalIn, uvCoord).xyz);
@@ -67,6 +67,7 @@ void main(void)
 	vec3 lightColor = (ambient + diffuse);
 
 	vec3 color = texture(diffuseIn, uvCoord).xyz;
-	fragColor = vec4(lightColor, 1.0) * vec4(color, 1.0);	
+	fragColor = vec4(lightColor, 1.0) * vec4(color, 1.0);
+	//fragColor = vec4(color, 1.0);	
 	//fragColor = vec4(texture(normalIn, uvCoord).xyz, 1);
 }

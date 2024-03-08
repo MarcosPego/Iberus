@@ -40,6 +40,14 @@ namespace Iberus {
 	void Application::Update() {
 	}
 
+	void Application::PushLayer(Layer* layer) {
+		layerStack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* layer) {
+		layerStack.PushOverlay(layer);
+	}
+
 	void Application::Run() {
 		while (running) {
 			engine->Update();		

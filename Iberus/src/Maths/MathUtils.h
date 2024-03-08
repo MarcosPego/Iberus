@@ -6,6 +6,7 @@
 #include "Vector.h"
 #include "Matrix.h"
 #include "Quaternions.h"
+#include "Noise.h"
 
 namespace Math {
 #define DEGREES_TO_RADIANS 0.01745329251994329547

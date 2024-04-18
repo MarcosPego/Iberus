@@ -29,7 +29,7 @@ namespace Iberus {
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_FN(Application::OnWindowClose));
 
-		IB_CORE_TRACE("{}", event.ToString());
+		//IB_CORE_TRACE("{}", event.ToString());
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& event) {

@@ -13,11 +13,11 @@
 
 namespace Iberus {
 
-	OpenGLRaymarchingPass::OpenGLRaymarchingPass() {
+	OpenGLRaymarchingPass::OpenGLRaymarchingPass(Framebuffer* inSourceBuffer, Framebuffer* inTargetBuffer) : RenderPass(inSourceBuffer, inTargetBuffer) {
 		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
-		auto* shaderObject = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseRaymarchingShader"));
-		if (shaderObject) {
-			shaderPass = shaderObject;
+		shaderPass = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseRaymarchingShader"));
+		if (!shaderPass) {
+			return; // Logging deal with this;
 		}
 
 		GLuint programID{ 0 };
@@ -26,30 +26,37 @@ namespace Iberus {
 		}
 
 		shaderPass->Bind();
-		ShaderBindings::SetUniform<int>(programID, "worldPosIn", 4);
-		ShaderBindings::SetUniform<int>(programID, "diffuseIn", 5);
-		ShaderBindings::SetUniform<int>(programID, "normalIn", 6);
-		ShaderBindings::SetUniform<int>(programID, "uvsIn", 7);
+		if (texturesIdxs.size() == 4) {
+			ShaderBindings::SetUniform<int>(programID, "worldPosIn", texturesIdxs.at(0));
+			ShaderBindings::SetUniform<int>(programID, "diffuseIn", texturesIdxs.at(1));
+			ShaderBindings::SetUniform<int>(programID, "normalIn", texturesIdxs.at(2));
+			ShaderBindings::SetUniform<int>(programID, "uvsIn", texturesIdxs.at(3));
+		}
 
-		sourceBuffer = dynamic_cast<Framebuffer*>(renderer.GetResource("geometryFBO"));
+
+		/*sourceBuffer = dynamic_cast<Framebuffer*>(renderer.GetResource("geometryFBO"));
 
 		textures = { "worldPosOut_2", "diffuseOut_2", "normalOut_2", "uvsOut_2" };
 		std::vector<TextureApi*> texturesAPI;
 		for (const auto& entry : textures) {
 			texturesAPI.push_back(dynamic_cast<TextureApi*>(renderer.GetResource(entry)));
 		}
-		targetBuffer = renderer.CreateFramebuffer("raymarchFBO", texturesAPI);
+		targetBuffer = renderer.CreateFramebuffer("raymarchFBO", texturesAPI);*/
 
 		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuad"));
 	}
 
 	void OpenGLRaymarchingPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
+		if (!shaderPass) {
+			return;
+		}
+
 		/*glEnable(GL_BLEND);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);*/
 
 		shaderPass->Bind();
-		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), {4, 5, 6, 7});
+		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), texturesIdxs);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		GLuint programID{ 0 };

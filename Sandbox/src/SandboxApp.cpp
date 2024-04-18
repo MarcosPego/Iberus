@@ -11,10 +11,7 @@ public:
 	}
 
 	void Boot() override {
-		if (true) {
-
 		Application::Boot();
-
 		auto& resourceManager = Iberus::Engine::Instance()->GetResourceManager();
 		auto* provider = &Iberus::Engine::Instance()->GetEngineProvider();
 		Iberus::Shader* shader = resourceManager.GetOrCreateResource<Iberus::Shader>("assets/shaders/baseLitShader", provider);
@@ -27,64 +24,67 @@ public:
 
 		currentScene->GetActiveCamera()->SetPosition(Vec3(0, 0, 10));
 
-		Iberus::Material* material1 = currentScene->GetOrCreateMaterial<Iberus::Material>("Material1");
-		Iberus::Material* material2 = currentScene->GetOrCreateMaterial<Iberus::Material>("Material2");
-		Iberus::Material* material3 = currentScene->GetOrCreateMaterial<Iberus::Material>("Material3");
 
-		material1->SetShader(shader);
-		material1->SetTexture("albedoTexture", texture1);
-
-		material2->SetShader(shader);
-		//material2->albedoColor = Vec4(1.0f, 0.3f, 0.3f, 1.0f);
-		material2->SetTexture("albedoTexture", texture2);
-
-		material3->SetShader(shader);
-		//material3->albedoColor = Vec4(0.0f, 0.3f, 0.45f, 0.5f);
-		//material3->SetTexture("albedoTexture", texture3);
-
-		Iberus::Entity* entity = currentScene->CreateEntity<Iberus::Entity>("Teste");
-		Iberus::Entity* entity2 = currentScene->CreateEntity<Iberus::Entity>("Teste2");
-		Iberus::Entity* entity3 = currentScene->CreateEntity<Iberus::Entity>("Teste3");
-		entity->SetMesh(mesh);
-		entity->SetMaterial(material3);
-
-		entity2->SetMesh(mesh);
-		entity2->SetMaterial(material2);
-
-
-
-		entity->SetPosition(Vec3(0, 0, 30));
-		entity2->SetPosition(Vec3(8, 0, 30));
-		entity3->SetPosition(Vec3(0, 0, 30));
-
-		entity->SetRotation(Vec3(0, 120, 0));
-		entity->SetScale(Vec3(1.01f, 1.01f, 1));
-
-		entity2->SetRotation(Vec3(0, 45, 45));
-		entity2->SetScale(Vec3(1, 1, 1));
-
-		entity3->SetRotation(Vec3(0, 0, 0));
-		entity3->SetScale(Vec3(20, 20, 1));
-
-		
-		auto sample = Math::Noise::Instance()->GetNoise({ 0,0,0 }, { 1024 , 1024 , 1 }, 1337, 0.05f, 4);
-		//auto buffer = Math::Noise::Instance()->SampleToTextureBuffer(sample);
-		Iberus::Texture* noiseTexture = resourceManager.CreateResource<Iberus::Texture>("noiseTest", std::move(Math::Noise::Instance()->SampleToTextureBuffer(sample)), 1024, 1024, 4);
-		//auto* quadMesh = Iberus::MeshFactory::CreateQuad("noiseQuad", resourceManager, 128, 128);
-		//entity->SetMesh(quadMesh);
-		material3->SetTexture("albedoTexture", noiseTexture);
-		entity3->SetMesh(mesh);
-		entity3->SetMaterial(material3);
-		
-		
-		//currentScene->AddEntity("Teste", entity);
-		//currentScene->AddEntity("Teste2", entity2);
-		currentScene->AddEntity("Teste3", entity3);
-
-
-
-		/// Add SDF entities
 		if (false) {
+			Iberus::Material* material1 = currentScene->GetOrCreateMaterial<Iberus::Material>("Material1");
+			Iberus::Material* material2 = currentScene->GetOrCreateMaterial<Iberus::Material>("Material2");
+			Iberus::Material* material3 = currentScene->GetOrCreateMaterial<Iberus::Material>("Material3");
+
+			material1->SetShader(shader);
+			material1->SetTexture("albedoTexture", texture1);
+
+			material2->SetShader(shader);
+			//material2->albedoColor = Vec4(1.0f, 0.3f, 0.3f, 1.0f);
+			material2->SetTexture("albedoTexture", texture2);
+
+			material3->SetShader(shader);
+			//material3->albedoColor = Vec4(0.0f, 0.3f, 0.45f, 0.5f);
+			//material3->SetTexture("albedoTexture", texture3);
+
+			Iberus::Entity* entity = currentScene->CreateEntity<Iberus::Entity>("Teste");
+			Iberus::Entity* entity2 = currentScene->CreateEntity<Iberus::Entity>("Teste2");
+			Iberus::Entity* entity3 = currentScene->CreateEntity<Iberus::Entity>("Teste3");
+			entity->SetMesh(mesh);
+			entity->SetMaterial(material3);
+
+			entity2->SetMesh(mesh);
+			entity2->SetMaterial(material2);
+
+			entity->SetPosition(Vec3(10, -10, 15));
+			entity2->SetPosition(Vec3(15, -15, 15));
+			entity3->SetPosition(Vec3(20, -10, 15));
+
+			entity->SetRotation(Vec3(65.0f, 0, 0));
+			entity->SetScale(Vec3(1.0f, 1.0f, 1));
+
+			entity2->SetRotation(Vec3(45.0f, 0, 0));
+			entity2->SetScale(Vec3(1, 1, 1));
+
+			entity3->SetRotation(Vec3(15.0f, 0, 0));
+			entity3->SetScale(Vec3(1.0f, 0.0f, 1.0f));
+
+			auto sample = Math::Noise::Instance()->GetNoise({ 0,0,0 }, { 32 , 32 , 1 }, 1337, 0.05f, 4);
+			Iberus::Texture* noiseTexture = resourceManager.CreateResource<Iberus::Texture>("noiseTest", std::move(Math::Noise::Instance()->SampleToTextureBuffer(sample)), 32, 32, 4);
+			material3->SetTexture("albedoTexture", texture3);
+
+			std::vector<float> vec(sample.noiseFloatBuffer.GetSize());
+			std::memcpy(vec.data(), sample.noiseFloatBuffer.GetData(), sample.noiseFloatBuffer.GetSize());
+
+			auto* planeMesh = Iberus::MeshFactory::CreatePlane("planeMesh", resourceManager, 32, 32, vec);
+			entity3->SetMesh(planeMesh);
+			entity3->SetMaterial(material3);
+
+			entity2->SetMesh(planeMesh);
+			entity2->SetMaterial(material3);
+
+			entity->SetMesh(planeMesh);
+			entity->SetMaterial(material3);
+
+			currentScene->AddEntity("Teste", entity);
+			currentScene->AddEntity("Teste2", entity2);
+			currentScene->AddEntity("Teste3", entity3);
+
+		} else if (true) {
 			auto* sdfentity1 = currentScene->CreateEntity<Iberus::SDFEntity>("SDFteste1");
 			//auto* sdfentity2 = currentScene->CreateEntity<Iberus::SDFEntity>("SDFteste2");
 			//auto* sdfentity3 = currentScene->CreateEntity<Iberus::SDFEntity>("SDFteste3");
@@ -118,19 +118,7 @@ public:
 			currentScene->AddEntity("SDFteste1", sdfentity1);
 			//currentScene->AddEntity("SDFteste2", sdfentity2);
 			//currentScene->AddEntity("SDFteste3", sdfentity3);
-		}
-		
-		}
-		else if (false) {
-			Application::Boot();
-
-			auto& resourceManager = Iberus::Engine::Instance()->GetResourceManager();
-			auto* provider = &Iberus::Engine::Instance()->GetEngineProvider();
-			Iberus::Shader* shader = resourceManager.GetOrCreateResource<Iberus::Shader>("assets/shaders/baseLitShader", provider);
-
-			auto* currentScene = Iberus::Engine::Instance()->GetSceneManager().CreateScene("TestScene", true);
-
-			currentScene->GetActiveCamera()->SetPosition(Vec3(0, 0, 10));
+			
 		}
 	}
 

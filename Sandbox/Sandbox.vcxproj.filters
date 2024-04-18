@@ -26,6 +26,17 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\SandboxBehaviour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SandboxBehaviour2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\baseHDRShader.frag" />
+    <None Include="assets\shaders\baseHDRShader.vert" />
+    <None Include="assets\shaders\baseShader.vert" />
     <None Include="assets\shaders\baseDeferredLightShader.frag" />
     <None Include="assets\shaders\baseDeferredLightShader.vert" />
     <None Include="assets\shaders\baseGeometryShader.frag" />
@@ -35,14 +46,5 @@
     <None Include="assets\shaders\baseRaymarchingShader.frag" />
     <None Include="assets\shaders\baseRaymarchingShader.vert" />
     <None Include="assets\shaders\baseShader.frag" />
-    <None Include="assets\shaders\baseShader.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\SandboxBehaviour.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SandboxBehaviour2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

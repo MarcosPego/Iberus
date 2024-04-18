@@ -85,6 +85,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\BuiltInBehaviors">
+      <UniqueIdentifier>{5670CF14-42FF-58DE-EB1D-6DD9D78B6984}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Core">
       <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
     </Filter>
@@ -108,6 +111,9 @@
     </Filter>
     <Filter Include="src\Renderer\OpenGLRenderer">
       <UniqueIdentifier>{BED6BA1F-2AE4-E805-B3CA-E4F01FD7B4BC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer\OpenGLRenderer\OpenGLPasses">
+      <UniqueIdentifier>{211DD6D5-0D9A-C918-3617-CA2C22F365AC}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Renderer\Platform">
       <UniqueIdentifier>{275FA817-93CB-6312-5CBF-FB6FC8EA857A}</UniqueIdentifier>
@@ -315,6 +321,9 @@
     <ClInclude Include="dependencies\stb_image\stb_image.h">
       <Filter>dependencies\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\BuiltInBehaviors\CameraController.h">
+      <Filter>src\BuiltInBehaviors</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Application.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -328,6 +337,9 @@
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\EntryPoint.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\InputManager.h">
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Layer.h">
@@ -384,26 +396,26 @@
     <ClInclude Include="src\Renderer\MeshApi.h">
       <Filter>src\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.h">
-      <Filter>src\Renderer\OpenGLRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.h">
-      <Filter>src\Renderer\OpenGLRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.h">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.h">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.h">
-      <Filter>src\Renderer\OpenGLRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLMesh.h">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.h">
-      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLDeferredLightPass.h">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.h">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.h">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.h">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
@@ -504,8 +516,12 @@
     <ClInclude Include="src\Tools\Editor.h">
       <Filter>src\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BuiltInBehaviors\CameraController.cpp">
+      <Filter>src\BuiltInBehaviors</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\Application.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
@@ -513,6 +529,9 @@
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Enginepch.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\InputManager.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Layer.cpp">
@@ -566,26 +585,26 @@
     <ClCompile Include="src\Renderer\MeshApi.cpp">
       <Filter>src\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredLightPass.cpp">
-      <Filter>src\Renderer\OpenGLRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.cpp">
-      <Filter>src\Renderer\OpenGLRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLForwardPass.cpp">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLFramebuffer.cpp">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLGeometryPass.cpp">
-      <Filter>src\Renderer\OpenGLRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLMesh.cpp">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRaymarchingPass.cpp">
-      <Filter>src\Renderer\OpenGLRenderer</Filter>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLDeferredLightPass.cpp">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.cpp">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.cpp">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.cpp">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp">
       <Filter>src\Renderer\OpenGLRenderer</Filter>
@@ -683,5 +702,6 @@
     <ClCompile Include="src\Tools\Editor.cpp">
       <Filter>src\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.cpp" />
   </ItemGroup>
 </Project>

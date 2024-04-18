@@ -4,16 +4,16 @@
 
 namespace Iberus {
 	class MeshApi;
-	class Framebuffer;
 
 	class OpenGLDeferredLightPass : public RenderPass {
 	public:
-		OpenGLDeferredLightPass();
+		OpenGLDeferredLightPass(Framebuffer* inSourceFBO = nullptr, Framebuffer* inTargetFBO = nullptr);
 
 		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
 	private:
-		Framebuffer* frameBuffer{ nullptr };
 		MeshApi* quadMesh{ nullptr };
+		
+		std::vector<int> texturesIdxs{ 4, 5, 6, 7 };
 	};
 
 }

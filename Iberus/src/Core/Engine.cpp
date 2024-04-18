@@ -58,6 +58,7 @@ namespace Iberus {
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseDeferredLightShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseRaymarchingShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseHDRShader", engineProvider.get());
 		
 		/// Textures reserved for passes 1
 		resourceManager->CreateResource<Texture>("worldPosOut_1", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
@@ -72,11 +73,11 @@ namespace Iberus {
 		resourceManager->CreateResource<Texture>("uvsOut_2", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);
 
 		/// Warning! This does nothing for now
-		renderer->PushRenderCmd(new ShaderRenderCmd("assets/shaders/baseDeferredLightShader"));
+		/*renderer->PushRenderCmd(new ShaderRenderCmd("assets/shaders/baseDeferredLightShader"));
 		renderer->PushRenderCmd(new UniformRenderCmd("worldPosOut", 0, UniformType::INT));
 		renderer->PushRenderCmd(new UniformRenderCmd("diffuseOut", 1, UniformType::INT));
 		renderer->PushRenderCmd(new UniformRenderCmd("normalOut", 2, UniformType::INT));
-		renderer->PushRenderCmd(new UniformRenderCmd("uvsOut", 3, UniformType::INT));
+		renderer->PushRenderCmd(new UniformRenderCmd("uvsOut", 3, UniformType::INT));*/
 
 		MeshFactory::CreateQuad("renderQuad", *resourceManager, currentWindow->GetWidth(), currentWindow->GetHeight());
 

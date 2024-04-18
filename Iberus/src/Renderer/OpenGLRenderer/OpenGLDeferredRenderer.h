@@ -15,7 +15,8 @@ namespace Iberus {
 		void RenderFrame(Frame& frame) override;
 
 	private:
-	
+		Framebuffer* sourceFBO{ nullptr };
+		Framebuffer* targetFBO{ nullptr };
 	};
 
 }

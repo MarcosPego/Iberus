@@ -4,16 +4,12 @@
 
 namespace Iberus {
 	class ShaderApi;
-	class Framebuffer;
 
 	class OpenGLGeometryPass : public RenderPass {
 	public:
-		OpenGLGeometryPass();
+		OpenGLGeometryPass(Framebuffer* inSourceFBO = nullptr, Framebuffer* inTargetFBO = nullptr);
 
 		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
-	private:
-		Framebuffer* frameBuffer{ nullptr };
-		std::vector<std::string> textures;
 	};
 
 }

@@ -22,6 +22,8 @@ project "Iberus"
 	pchsource "Iberus/src/Core/Enginepch.cpp"
 
 	files {
+		"%{prj.name}/src/**/**/**/**.h",
+		"%{prj.name}/src/**/**/**/**.cpp",
 		"%{prj.name}/src/**/**/**.h",
 		"%{prj.name}/src/**/**/**.cpp",
 		"%{prj.name}/src/**/**.h",
@@ -37,6 +39,7 @@ project "Iberus"
 	}
 
 	includedirs {
+		"%{prj.name}/src/**/**/**/**",
 		"%{prj.name}/src/**/**/**",
 		"%{prj.name}/src/**/**",
 		"%{prj.name}/src/**",

@@ -11,7 +11,12 @@ uniform sampler2D uvsIn;
 //uniform sampler2D normalTexture;
 //uniform sampler2D metallicTexture;
 
-layout (location = 0) out vec4 fragColor;    
+//layout (location = 0) out vec4 fragColor;    
+
+layout (location = 0) out vec3 worldPosOut;   
+layout (location = 1) out vec3 diffuseOut;     
+layout (location = 2) out vec3 normalOut;     
+layout (location = 3) out vec3 uvsOut;  
 
 struct Light {
 	// 1 = PointLight, 2 = SpotLight, 3 = DirLight, 4 = AreaLight
@@ -67,7 +72,13 @@ void main(void)
 	vec3 lightColor = (ambient + diffuse);
 
 	vec3 color = texture(diffuseIn, uvCoord).xyz;
-	fragColor = vec4(lightColor, 1.0) * vec4(color, 1.0);
+	vec3 fragColor = lightColor * color;
+
+	worldPosOut     = texture(worldPosIn, uvCoord).xyz;				
+	diffuseOut      = fragColor;	
+	normalOut       = texture(normalIn, uvCoord).xyz;					
+	uvsOut			= texture(uvsIn, uvCoord).xyz;	
+
 	//fragColor = vec4(color, 1.0);	
 	//fragColor = vec4(texture(normalIn, uvCoord).xyz, 1);
 }

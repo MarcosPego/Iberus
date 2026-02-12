@@ -26,19 +26,19 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -80,21 +80,25 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>dependencies\glfw\lib-vc2019;dependencies\glew\lib\Release\x64;dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Debug-windows-x86_64\Iberus\Iberus.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Iberus\Iberus.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Iberus\Iberus.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Iberus\Iberus.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>if not exist "$(SolutionDir)bin\Debug-windows-x86_64\Sandbox" mkdir "$(SolutionDir)bin\Debug-windows-x86_64\Sandbox"
+copy /Y "$(TargetPath)" "$(SolutionDir)bin\Debug-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)bin\Debug-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)bin\Debug-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" "$(SolutionDir)bin\Debug-windows-x86_64\Sandbox\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -103,25 +107,30 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>dependencies\glfw\lib-vc2019;dependencies\glew\lib\Release\x64;dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release-windows-x86_64\Iberus\Iberus.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-x86_64\Iberus\Iberus.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Iberus\Iberus.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Iberus\Iberus.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>if not exist "$(SolutionDir)bin\Release-windows-x86_64\Sandbox" mkdir "$(SolutionDir)bin\Release-windows-x86_64\Sandbox"
+copy /Y "$(TargetPath)" "$(SolutionDir)bin\Release-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)bin\Release-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)bin\Release-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)bin\Release-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)bin\Release-windows-x86_64\Sandbox\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -130,37 +139,41 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>dependencies\glfw\lib-vc2019;dependencies\glew\lib\Release\x64;dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Dist-windows-x86_64\Iberus\Iberus.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist-windows-x86_64\Iberus\Iberus.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\Iberus\Iberus.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\Iberus\Iberus.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>if not exist "$(SolutionDir)bin\Dist-windows-x86_64\Sandbox" mkdir "$(SolutionDir)bin\Dist-windows-x86_64\Sandbox"
+copy /Y "$(TargetPath)" "$(SolutionDir)bin\Dist-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)bin\Dist-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)bin\Dist-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)bin\Dist-windows-x86_64\Sandbox\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)bin\Dist-windows-x86_64\Sandbox\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_C.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_Config.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_Export.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\BasicGenerators.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Blends.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Cellular.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarp.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarpFractal.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarpSimplex.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Fractal.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Generator.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Modifiers.h" />
@@ -168,55 +181,22 @@
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Simplex.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Value.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Metadata.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\SmartNode.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_Config.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_Export.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FunctionList.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\InlInclude.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\SIMDTypeList.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Utility\Config.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Utility\Export.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Utility\SmartNode.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\DispatchClass.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_FastNoise_config.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\ArchDetect.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\Export.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\FeatureEnums.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\FeatureSetList.h" />
     <ClInclude Include="dependencies\glew\include\GL\eglew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glxew.h" />
     <ClInclude Include="dependencies\glew\include\GL\wglew.h" />
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3.h" />
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3native.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_allegro5.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_android.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx10.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx11.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx12.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_dx9.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_glfw.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_glut.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_metal.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl2.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_osx.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdl2.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdl3.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlrenderer2.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlrenderer3.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_vulkan.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_wgpu.h" />
-    <ClInclude Include="dependencies\imgui\backends\imgui_impl_win32.h" />
-    <ClInclude Include="dependencies\imgui\examples\example_allegro5\imconfig_allegro5.h" />
-    <ClInclude Include="dependencies\imgui\examples\libs\emscripten\emscripten_mainloop_stub.h" />
-    <ClInclude Include="dependencies\imgui\examples\libs\glfw\include\GLFW\glfw3.h" />
-    <ClInclude Include="dependencies\imgui\examples\libs\glfw\include\GLFW\glfw3native.h" />
-    <ClInclude Include="dependencies\imgui\examples\libs\usynergy\uSynergy.h" />
-    <ClInclude Include="dependencies\imgui\imconfig.h" />
-    <ClInclude Include="dependencies\imgui\imgui.h" />
-    <ClInclude Include="dependencies\imgui\imgui_internal.h" />
-    <ClInclude Include="dependencies\imgui\imstb_rectpack.h" />
-    <ClInclude Include="dependencies\imgui\imstb_textedit.h" />
-    <ClInclude Include="dependencies\imgui\imstb_truetype.h" />
-    <ClInclude Include="dependencies\imgui\misc\cpp\imgui_stdlib.h" />
-    <ClInclude Include="dependencies\imgui\misc\freetype\imgui_freetype.h" />
-    <ClInclude Include="dependencies\imgui\misc\single_file\imgui_single_file.h" />
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.h" />
     <ClInclude Include="src\BuiltInBehaviors\CameraController.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Core.h" />
@@ -248,6 +228,7 @@
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLDeferredLightPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
@@ -284,7 +265,6 @@
     <ClInclude Include="src\Tools\Editor.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.cpp" />
     <ClCompile Include="src\BuiltInBehaviors\CameraController.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
@@ -315,6 +295,7 @@
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLDeferredLightPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />

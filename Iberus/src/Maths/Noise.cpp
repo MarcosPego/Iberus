@@ -40,7 +40,10 @@ namespace Math {
 		auto noiseSet = noiseAPI->GetSampledNoiseSet(start.x, start.y, start.z, offset.x, offset.y, offset.z, 1.0f);*/
 
 		sample.noiseFloatBuffer = Iberus::FloatBuffer(size);
-		fnFractal->GenUniformGrid3D(sample.noiseFloatBuffer.GetData(), start.x, start.y, start.z, offset.x, offset.y, offset.z, frequency, seed);
+		int xCount = static_cast<int>(offset.x - start.x);
+		int yCount = static_cast<int>(offset.y - start.y);
+		int zCount = static_cast<int>(offset.z - start.z);
+		fnFractal->GenUniformGrid3D(sample.noiseFloatBuffer.GetData(), start.x, start.y, start.z, xCount, yCount, zCount, frequency, frequency, frequency, seed);
 	
 		sample.start = start;
 		sample.offset = offset;

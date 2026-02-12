@@ -62,14 +62,12 @@ project "Iberus"
 	links {
 		"glew32",
 		"opengl32",
-		"glfw3_mt",
-		"FastNoise",
-		"FastNoiseD"
+		"glfw3_mt"
 	}
 
 	filter "system:windows"
 		cppdialect "C++20"
-		staticruntime "On"
+		staticruntime "Off"
 		systemversion "latest"
 
 		defines {
@@ -79,20 +77,53 @@ project "Iberus"
 		}
 
 		postbuildcommands {
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+			("if not exist \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\" mkdir \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\"")
+		}
+		postbuildcommands {
+			("copy /Y \"$(TargetPath)\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
 		}
 
 	filter "configurations:Debug"
 		defines "IB_DEBUG"
 		symbols "On"
+		links {
+			"FastNoiseD"
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+		}
 
 	filter "configurations:Release"
 		defines "IB_RELEASE"
 		optimize "On"
+		links {
+			"FastNoise"
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+		}
 	
 	filter "configurations:Dist"
 		defines "IB_DIST" 
 		optimize "On"
+		links {
+			"FastNoise"
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+		}
 
 project "Sandbox"
 	location "Sandbox"
@@ -128,13 +159,12 @@ project "Sandbox"
 		"glew32",
 		"opengl32",
 		"glfw3_mt",
-		"FastNoise",
 		"Iberus"
 	}
 
 	filter "system:windows"
 		cppdialect "C++20"
-		staticruntime "On"
+		staticruntime "Off"
 		systemversion "latest"
 
 		defines {
@@ -142,14 +172,48 @@ project "Sandbox"
 			"IB_DYNAMIC_LINK"
 		}
 
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(TargetDir)\"")
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)\"")
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Sandbox\\assets\" xcopy /E /I /Y \"$(SolutionDir)Sandbox\\assets\" \"$(TargetDir)assets\\\"")
+		}
+
 	filter "configurations:Debug"
 		defines "IB_DEBUG"
 		symbols "On"
+		links {
+			"FastNoiseD"
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(TargetDir)\"")
+		}
 
 	filter "configurations:Release"
 		defines "IB_RELEASE"
 		optimize "On"
+		links {
+			"FastNoise"
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(TargetDir)\"")
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)\"")
+		}
 	
 	filter "configurations:Dist"
 		defines "IB_DIST"
 		optimize "On"
+		links {
+			"FastNoise"
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(TargetDir)\"")
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)\"")
+		}

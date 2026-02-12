@@ -16,6 +16,7 @@ namespace Iberus {
 		void Unbind() const override;
 
 		GLuint GetFBO() const override { return fbo; }
+		void ResizeAttachments(int width, int height) override;
 
 	private:
 		GLuint fbo{ 0 };

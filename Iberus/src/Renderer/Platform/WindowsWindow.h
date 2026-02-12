@@ -36,6 +36,7 @@ namespace Iberus {
 			bool vsync{ true };
 
 			EventCallbackFn EventCallback;
+			WindowsWindow* owner{ nullptr };
 		};
 
 		WindowData windowData;

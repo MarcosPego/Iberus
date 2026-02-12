@@ -28,8 +28,14 @@ namespace Iberus {
 	void Application::OnEvent(Event& event) {
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_FN(Application::OnWindowResize));
 
 		//IB_CORE_TRACE("{}", event.ToString());
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& event) {
+		engine->OnWindowResize(event.GetWidth(), event.GetHeight());
+		return false;
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& event) {

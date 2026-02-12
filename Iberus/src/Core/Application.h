@@ -25,6 +25,7 @@ namespace Iberus {
 		void Run();
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
+		bool OnWindowResize(WindowResizeEvent& event);
 
 		Engine* engine{ nullptr };
 		std::unique_ptr<Window> window;

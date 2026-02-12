@@ -52,7 +52,17 @@ namespace Iberus {
 		/// Blit the final target fbo to the default frame buffer
 		auto* window = Engine::Instance()->GetCurrentWindow();
 		auto width = window->GetWidth();
-		auto height = window->GetWidth();
+		auto height = window->GetHeight();
 		glBlitNamedFramebuffer(targetFBO->GetFBO(), 0, 0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);	
+	}
+
+	void OpenGLDeferredRenderer::Resize(int width, int height) {
+		glViewport(0, 0, width, height);
+		if (sourceFBO) {
+			sourceFBO->ResizeAttachments(width, height);
+		}
+		if (targetFBO) {
+			targetFBO->ResizeAttachments(width, height);
+		}
 	}
 }

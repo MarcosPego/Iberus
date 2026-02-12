@@ -104,6 +104,7 @@ namespace Iberus {
 
 		window = win;
 		glfwMakeContextCurrent(window);
+		windowData.owner = this;
 		glfwSetWindowUserPointer(window, &windowData);
 		SetVSync(true);
 
@@ -112,8 +113,12 @@ namespace Iberus {
 		/// Set Callbacks
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* glfwWindow, int width, int height) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
-			data.resolution.x = width;
-			data.resolution.y = height;
+			data.resolution.x = static_cast<float>(width);
+			data.resolution.y = static_cast<float>(height);
+			if (data.owner) {
+				data.owner->windowProps.resolution.x = static_cast<float>(width);
+				data.owner->windowProps.resolution.y = static_cast<float>(height);
+			}
 
 			WindowResizeEvent event({ (uint32_t)width, (uint32_t)height });
 			data.EventCallback(event);

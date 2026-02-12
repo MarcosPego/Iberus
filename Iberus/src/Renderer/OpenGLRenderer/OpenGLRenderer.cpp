@@ -127,15 +127,16 @@ namespace Iberus {
 
 			const auto& renderCmds = renderBatch.GetRenderCmds();
 			for (const auto& renderCmd : renderCmds) {
+				auto* cmdPtr = renderCmd.get();
 
-				switch (renderCmd->GetRenderCmdType()) {
+				switch (cmdPtr->GetRenderCmdType()) {
 				case RenderCmdType::PUSH_CAMERA: {
-					auto* cameraCmd = dynamic_cast<CameraRenderCmd*>(renderCmd);
+					auto* cameraCmd = dynamic_cast<CameraRenderCmd*>(cmdPtr);
 					projectionMatrix = cameraCmd->projectionMatrix;
 					viewMatrix = cameraCmd->viewMatrix;
 				}	break;
 				case RenderCmdType::PUSH_SHADER: {
-					auto* shaderCmd = dynamic_cast<ShaderRenderCmd*>(renderCmd);
+					auto* shaderCmd = dynamic_cast<ShaderRenderCmd*>(cmdPtr);
 					auto* shader = dynamic_cast<ShaderApi*>(renderObjects[shaderCmd->ID].get());
 
 					if (shader == shaderInUse || globalShader) {
@@ -163,7 +164,7 @@ namespace Iberus {
 					}
 				}	break;
 				case RenderCmdType::PUSH_MESH: {
-					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(renderCmd);
+					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(cmdPtr);
 					auto* mesh = dynamic_cast<MeshApi*>(renderObjects[meshCmd->ID].get());
 
 					if (mesh != boundMesh) {
@@ -183,7 +184,7 @@ namespace Iberus {
 				}	break;
 
 				case RenderCmdType::PUSH_TEXTURE: {
-					auto* textureCmd = dynamic_cast<TextureRenderCmd*>(renderCmd);
+					auto* textureCmd = dynamic_cast<TextureRenderCmd*>(cmdPtr);
 					auto* texture = static_cast<TextureApi*>(renderObjects[textureCmd->ID].get());
 
 					if (texture != boundTexture) {
@@ -214,7 +215,7 @@ namespace Iberus {
 					if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderInUse); openGLShader) {
 						programID = openGLShader->GetProgramID();
 					}
-					PushUniform(renderCmd, programID);
+					PushUniform(cmdPtr, programID);
 				}	break;
 				default:
 					break;

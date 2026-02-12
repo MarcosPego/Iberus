@@ -17,6 +17,7 @@ namespace Iberus {
 		//virtual void BindTextures(std::vector<int> targetIdx) = 0; See if I still need this
 
 		virtual GLuint GetFBO() const = 0;
+		virtual void ResizeAttachments(int width, int height) = 0;
 	};
 }
 

@@ -29,19 +29,19 @@ namespace Iberus {
 
 	void Material::BindTextures(RenderBatch& renderBatch) {
 		for (const auto& entry : texturesBindings) {
-			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(entry.first, entry.second, UniformType::INT));
+			renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<int>>(entry.first, entry.second, UniformType::INT));
 		}
 	}
 
 	void Material::PushDraw(RenderBatch& renderBatch) {
-		renderBatch.PushRenderCmdToQueue(new ShaderRenderCmd(shader->GetID()));
+		renderBatch.PushRenderCmdToQueue(std::make_unique<ShaderRenderCmd>(shader->GetID()));
 		BindTextures(renderBatch);
 
 		//TODO(MPP) render color!
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd("albedoColor", albedoColor, UniformType::VEC4));
+		renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<Vec4>>("albedoColor", albedoColor, UniformType::VEC4));
 
 		for (const auto& texture : textures) {
-			renderBatch.PushRenderCmdToQueue(new TextureRenderCmd(texture.second->GetID(), texture.first, texturesBindings[texture.first]));
+			renderBatch.PushRenderCmdToQueue(std::make_unique<TextureRenderCmd>(texture.second->GetID(), texture.first, texturesBindings[texture.first]));
 		}
 	}
 }

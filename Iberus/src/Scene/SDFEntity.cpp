@@ -21,22 +21,22 @@ namespace Iberus {
 		}
 
 		const std::string sdfMesh = std::format("sdfMeshes[{0}]", sdfSlot);
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfMesh + ".size", (int)sdfParts.size(), UniformType::INT), CMDQueue::SDF);
+		renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<int>>(sdfMesh + ".size", (int)sdfParts.size(), UniformType::INT), CMDQueue::SDF);
 		int count = 0;
 		for (const auto& part : sdfParts) {
 			auto _center = GetPosition() + part.transform.Position;
 
 			std::string sdfPart = std::format("{0}.sdfParts[{1}]", sdfMesh, count);
-			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".type", part.type, UniformType::INT), CMDQueue::SDF);
-			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".radius", part.radius, UniformType::FLOAT), CMDQueue::SDF);
-			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".center", _center, UniformType::VEC3), CMDQueue::SDF);
+			renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<int>>(sdfPart + ".type", part.type, UniformType::INT), CMDQueue::SDF);
+			renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<float>>(sdfPart + ".radius", part.radius, UniformType::FLOAT), CMDQueue::SDF);
+			renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<Vec3>>(sdfPart + ".center", _center, UniformType::VEC3), CMDQueue::SDF);
 
 			auto* material = GetMaterial();
 			if (part.material) {
-				renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".color", part.material->albedoColor, UniformType::VEC4), CMDQueue::SDF);
+				renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<Vec4>>(sdfPart + ".color", part.material->albedoColor, UniformType::VEC4), CMDQueue::SDF);
 			}
 			else if (material) {
-				renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(sdfPart + ".color", material->albedoColor, UniformType::VEC4), CMDQueue::SDF);
+				renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<Vec4>>(sdfPart + ".color", material->albedoColor, UniformType::VEC4), CMDQueue::SDF);
 			}
 			count++;
 		}

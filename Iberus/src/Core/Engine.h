@@ -19,6 +19,8 @@ namespace Iberus {
 
 		void Update();
 
+		void OnWindowResize(uint32_t width, uint32_t height);
+
 		Renderer& GetRenderer() { return *renderer.get(); }
 
 		ResourceManager& GetResourceManager() { return *resourceManager.get(); }

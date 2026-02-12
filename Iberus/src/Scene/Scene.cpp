@@ -38,9 +38,8 @@ namespace Iberus {
 		auto& renderBatch = frame.PushBatch();
 
 		if (activeCamera) {
-			renderBatch.PushRenderCmdToQueue(new CameraRenderCmd(activeCamera->GetViewMatrix(), activeCamera->GetProjectionMatrix(), activeCamera->GetPosition(),
-				activeCamera->GetCameraToWorld()			
-			), CMDQueue::Camera);
+			renderBatch.PushRenderCmdToQueue(std::make_unique<CameraRenderCmd>(activeCamera->GetViewMatrix(), activeCamera->GetProjectionMatrix(), activeCamera->GetPosition(),
+				activeCamera->GetCameraToWorld()), CMDQueue::Camera);
 		}
 		
 		if (sceneRoot) {

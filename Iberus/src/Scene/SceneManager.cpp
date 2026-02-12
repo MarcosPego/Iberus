@@ -4,7 +4,7 @@
 namespace Iberus {
 
 	Scene* SceneManager::CreateScene(const std::string& sceneID, bool setActive) {
-		scenes.emplace(sceneID, new Scene(sceneID));
+		scenes.emplace(sceneID, std::make_unique<Scene>(sceneID));
 		auto* scene = scenes[sceneID].get();
 
 		if (setActive) {
@@ -16,7 +16,7 @@ namespace Iberus {
 
 	Scene* SceneManager::GetScene(const std::string& sceneID) const {
 		if (scenes.find(sceneID) != scenes.end()) {
-			scenes.at(sceneID).get();
+			return scenes.at(sceneID).get();
 		}
 
 		IB_CORE_WARN("No scene was found with ID ({})", sceneID);

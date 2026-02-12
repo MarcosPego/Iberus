@@ -9,6 +9,8 @@
 
 #include "MeshFactory.h"
 
+#include <chrono>
+
 #define USE_DEFERRED 1
 
 namespace Iberus {
@@ -37,9 +39,16 @@ namespace Iberus {
 	}
 
 	void Engine::Update() {
+		using Clock = std::chrono::high_resolution_clock;
+		static auto lastFrameTime = Clock::now();
+
+		auto now = Clock::now();
+		double deltaTime = std::chrono::duration<double>(now - lastFrameTime).count();
+		lastFrameTime = now;
+
 		auto frame = Frame();
 		auto* scene = sceneManager->GetActiveScene();
-		scene->Update(0);
+		scene->Update(deltaTime);
 		scene->PushDraw(frame);
 		scene->PushDrawSDF(frame);
 		renderer->RenderFrame(frame);
@@ -47,6 +56,12 @@ namespace Iberus {
 
 	void Engine::SetCurrentWindow(Window* window) {
 		currentWindow = window;
+	}
+
+	void Engine::OnWindowResize(uint32_t width, uint32_t height) {
+		if (renderer) {
+			renderer->Resize(static_cast<int>(width), static_cast<int>(height));
+		}
 	}
 
 	Window* Engine::GetCurrentWindow() const  {

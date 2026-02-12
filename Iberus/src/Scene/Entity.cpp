@@ -44,11 +44,11 @@ namespace Iberus {
 			material->PushDraw(renderBatch);
 
 			// Push uniforms here;
-			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd("ModelMatrix", GetModelMatrix(), UniformType::MAT4));
+			renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<Mat4>>("ModelMatrix", GetModelMatrix(), UniformType::MAT4));
 		}
 
 		if (mesh) {
-			renderBatch.PushRenderCmdToQueue(new MeshRenderCmd(mesh->GetID()));
+			renderBatch.PushRenderCmdToQueue(std::make_unique<MeshRenderCmd>(mesh->GetID()));
 		}
 
 		for (const auto& child : childMap) {

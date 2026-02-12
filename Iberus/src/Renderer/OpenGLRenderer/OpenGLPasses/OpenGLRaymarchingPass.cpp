@@ -78,7 +78,7 @@ namespace Iberus {
 			}
 
 			for (const auto& renderCmd : renderBatch.GetSDFRenderCmds()) {
-				renderer.PushUniform(renderCmd, programID);
+				renderer.PushUniform(renderCmd.get(), programID);
 			}		
 		}
 

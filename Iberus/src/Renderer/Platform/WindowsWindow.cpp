@@ -1,5 +1,6 @@
 #include "Enginepch.h"
 #include "WindowsWindow.h"
+#include "Platform/GLFW/InputTranslationGLFW.h"
 
 namespace Iberus {
 	static void GLFWErrorCallback(int error, const char* description) {
@@ -133,18 +134,20 @@ namespace Iberus {
 
 		glfwSetKeyCallback(window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+			auto keyCode = InputTranslationGLFW::FromGLFWKey(key);
+			auto modifiers = InputTranslationGLFW::FromGLFWMods(mods);
 
 			switch (action) {
 				case GLFW_PRESS: {
-					KeyPressedEvent event(key, 0);
+					KeyPressedEvent event(keyCode, 0, modifiers);
 					data.EventCallback(event);
 				} break;
 				case GLFW_RELEASE: {
-					KeyReleasedEvent event(key);
+					KeyReleasedEvent event(keyCode, modifiers);
 					data.EventCallback(event);
 				} break;
 				case GLFW_REPEAT: {
-					KeyPressedEvent event(key, 1);
+					KeyPressedEvent event(keyCode, 1, modifiers);
 					data.EventCallback(event);
 				} break;
 				default:
@@ -154,18 +157,19 @@ namespace Iberus {
 
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* glfwWindow, int button, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+			auto mouseCode = InputTranslationGLFW::FromGLFWMouseButton(button);
 
 			switch (action) {
 				case GLFW_PRESS: {
-					MouseButtonPressedEvent event(button);
+					MouseButtonPressedEvent event(mouseCode);
 					data.EventCallback(event);
 				} break;
 				case GLFW_RELEASE: {
-					MouseButtonReleasedEvent event(button);
+					MouseButtonReleasedEvent event(mouseCode);
 					data.EventCallback(event);
 				} break;
 				case GLFW_REPEAT: {
-					MouseButtonPressedEvent event(button);
+					MouseButtonPressedEvent event(mouseCode);
 					data.EventCallback(event);
 				} break;
 				default:

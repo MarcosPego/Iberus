@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Event.h"
-
-#include "Enginepch.h"
+#include "Core/Input/MouseCode.h"
 #include "MathUtils.h"
 
 using namespace Math;
@@ -32,6 +31,8 @@ namespace Iberus {
 	public:
 		MouseScrolledEvent(const Vec2& scrollOffset) : scrollOffset(scrollOffset) {}
 
+		inline Vec2 GetScrollOffset() const { return scrollOffset; }
+
 		std::string ToString() const override {
 			std::stringstream ss;
 			ss << "MouseScrolledEvent: " << scrollOffset.x << ", " << scrollOffset.y;
@@ -46,28 +47,27 @@ namespace Iberus {
 
 	class IBERUS_API MouseButtonEvent : public Event {
 	public:
-		inline int GetMouseButton() const { return button; }
+		inline MouseCode GetMouseButton() const { return button; }
 
 		std::string ToString() const override {
 			std::stringstream ss;
-			ss << "MouseScrolledEvent: " << button;
+			ss << "MouseButtonEvent: " << static_cast<int>(button);
 			return ss.str();
 		}
 
-		//EVENT_CLASS_TYPE(MouseScrolled)
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:
-		MouseButtonEvent(int button) : button(button) {}
-		int button;
+		MouseButtonEvent(MouseCode btn) : button(btn) {}
+		MouseCode button;
 	};
 
 	class IBERUS_API MouseButtonPressedEvent final : public MouseButtonEvent {
 	public:
-		MouseButtonPressedEvent(int button) : MouseButtonEvent(button) {}
+		MouseButtonPressedEvent(MouseCode btn) : MouseButtonEvent(btn) {}
 
 		std::string ToString() const override {
 			std::stringstream ss;
-			ss << "MouseButtonPressedEvent: " << button;
+			ss << "MouseButtonPressedEvent: " << static_cast<int>(button);
 			return ss.str();
 		}
 
@@ -76,11 +76,11 @@ namespace Iberus {
 
 	class IBERUS_API MouseButtonReleasedEvent final : public MouseButtonEvent {
 	public:
-		MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
+		MouseButtonReleasedEvent(MouseCode btn) : MouseButtonEvent(btn) {}
 
 		std::string ToString() const override {
 			std::stringstream ss;
-			ss << "MouseButtonReleasedEvent: " << button;
+			ss << "MouseButtonReleasedEvent: " << static_cast<int>(button);
 			return ss.str();
 		}
 

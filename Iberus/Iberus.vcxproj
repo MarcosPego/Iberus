@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -203,7 +203,11 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Core\Enginepch.h" />
     <ClInclude Include="src\Core\EntryPoint.h" />
+    <ClInclude Include="src\Core\Input\KeyCode.h" />
+    <ClInclude Include="src\Core\Input\ModifierFlags.h" />
+    <ClInclude Include="src\Core\Input\MouseCode.h" />
     <ClInclude Include="src\Core\InputManager.h" />
+    <ClInclude Include="src\Platform\GLFW\InputTranslationGLFW.h" />
     <ClInclude Include="src\Core\Layer.h" />
     <ClInclude Include="src\Core\LayerStack.h" />
     <ClInclude Include="src\Core\Types\Color.h" />
@@ -272,6 +276,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Core\InputManager.cpp" />
+    <ClCompile Include="src\Platform\GLFW\InputTranslationGLFW.cpp" />
     <ClCompile Include="src\Core\Layer.cpp" />
     <ClCompile Include="src\Core\LayerStack.cpp" />
     <ClCompile Include="src\Core\Types\Color.cpp" />

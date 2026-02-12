@@ -26,6 +26,8 @@ namespace Iberus {
 	}
 
 	void Application::OnEvent(Event& event) {
+		engine->GetInputManager().OnEvent(event);
+
 		EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_FN(Application::OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_FN(Application::OnWindowResize));

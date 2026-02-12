@@ -23,6 +23,7 @@ namespace Iberus {
 	void Engine::Boot() {
 		resourceManager = std::make_unique<ResourceManager>();
 		sceneManager = std::make_unique<SceneManager>();
+		inputManager = std::make_unique<InputManager>();
 		engineProvider = std::make_unique<FileSystemProvider>();
 		engineProvider->SetWorkingDir(FileSystem::GetWorkingDir());
 
@@ -52,6 +53,7 @@ namespace Iberus {
 		scene->PushDraw(frame);
 		scene->PushDrawSDF(frame);
 		renderer->RenderFrame(frame);
+		inputManager->OnFrameEnd();
 	}
 
 	void Engine::SetCurrentWindow(Window* window) {

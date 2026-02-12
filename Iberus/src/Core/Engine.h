@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
+#include "InputManager.h"
 
 #include "FileSystemProvider.h"
 
@@ -27,6 +28,8 @@ namespace Iberus {
 
 		SceneManager& GetSceneManager() { return *sceneManager.get(); }
 
+		InputManager& GetInputManager() { return *inputManager.get(); }
+
 		FileSystemProvider& GetEngineProvider() { return *engineProvider.get(); }
 
 		void SetCurrentWindow(Window* window);
@@ -41,6 +44,7 @@ namespace Iberus {
 		std::unique_ptr<Renderer> renderer;
 		std::unique_ptr<ResourceManager> resourceManager;
 		std::unique_ptr<SceneManager> sceneManager;
+		std::unique_ptr<InputManager> inputManager;
 
 		std::unique_ptr<FileSystemProvider> engineProvider;
 	};

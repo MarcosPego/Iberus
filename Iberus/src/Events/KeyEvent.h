@@ -1,49 +1,55 @@
 #pragma once
 
 #include "Event.h"
+#include "Core/Input/KeyCode.h"
+#include "Core/Input/ModifierFlags.h"
 #include <sstream>
 
-
 namespace Iberus {
-	class IBERUS_API KeyEvent :  public Event {
-	public: 
-		inline int GetKeyCode() const { return currentKeyCode; }
-	
-		EVENT_CLASS_CATEGORY(EventCategoryKeyboard, EventCategoryInput)
+
+	class IBERUS_API KeyEvent : public Event {
+	public:
+		inline KeyCode GetKeyCode() const { return keyCode; }
+		inline ModifierFlags GetModifiers() const { return modifiers; }
+
+		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	protected:
-		KeyEvent(int keycode) : currentKeyCode(keycode) {
+		KeyEvent(KeyCode code, ModifierFlags mods) : keyCode(code), modifiers(mods) {}
 
-		}
-
-		int currentKeyCode;
+		KeyCode keyCode;
+		ModifierFlags modifiers;
 	};
 
 	class IBERUS_API KeyPressedEvent : public KeyEvent {
 	public:
-		KeyPressedEvent(int keycode, int repeatCount) : KeyEvent(keycode), currentRepeatCount(repeatCount) {}
+		KeyPressedEvent(KeyCode code, int repeatCount, ModifierFlags mods = ModifierFlags::NoModifiers)
+			: KeyEvent(code, mods), repeatCount(repeatCount) {}
 
-		std::string ToString() {
+		inline int GetRepeatCount() const { return repeatCount; }
+
+		std::string ToString() const override {
 			std::stringstream ss;
-			ss << "KeyPressedEvent: " << currentKeyCode << " (" << currentRepeatCount << " repeats)";
+			ss << "KeyPressedEvent: " << static_cast<int>(keyCode) << " (" << repeatCount << " repeats)";
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyPressed)
-
 	private:
-			int currentRepeatCount;
+		int repeatCount;
 	};
 
 	class IBERUS_API KeyReleasedEvent : public KeyEvent {
 	public:
-		KeyReleasedEvent(int keycode) : KeyEvent(keycode) {}
+		KeyReleasedEvent(KeyCode code, ModifierFlags mods = ModifierFlags::NoModifiers)
+			: KeyEvent(code, mods) {}
 
-		std::string ToString() {
+		std::string ToString() const override {
 			std::stringstream ss;
-			ss << "KeyReleasedEvent: " << currentKeyCode;
+			ss << "KeyReleasedEvent: " << static_cast<int>(keyCode);
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyReleased)
 	};
+
 }

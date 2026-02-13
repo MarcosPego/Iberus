@@ -35,6 +35,9 @@ namespace Iberus {
 		void SetCurrentWindow(Window* window);
 		Window* GetCurrentWindow() const;
 
+		void SetEditorRenderTarget(unsigned int fboId, int width, int height);
+		void ClearEditorRenderTarget();
+
 	private:
 		void SetupDeferredRenderer();
 		void SetupForwardRenderer();
@@ -47,6 +50,13 @@ namespace Iberus {
 		std::unique_ptr<InputManager> inputManager;
 
 		std::unique_ptr<FileSystemProvider> engineProvider;
+
+		unsigned int editorRenderTargetFBO{ 0 };
+		int editorRenderTargetWidth{ 0 };
+		int editorRenderTargetHeight{ 0 };
+		bool editorRenderTargetPendingResize{ false };
+		int pendingResizeWidth{ 0 };
+		int pendingResizeHeight{ 0 };
 	};
 }
 

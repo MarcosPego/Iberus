@@ -22,6 +22,10 @@ namespace Iberus {
 		void Text(const char* text) override;
 		bool Button(const char* label) override;
 
+		void BeginDockSpace() override;
+		void EndDockSpace() override;
+		void Image(void* textureId, float w, float h) override;
+
 	private:
 		bool initialized{ false };
 	};

@@ -22,7 +22,10 @@ namespace Iberus {
 		openGLTexBindings[8] = GL_TEXTURE8;
 	}
 
-	void OpenGLRenderer::RenderFrame(Frame& frame) {
+	void OpenGLRenderer::RenderFrame(Frame& frame, unsigned int outputFBO, int outputWidth, int outputHeight) {
+		(void)outputFBO;
+		(void)outputWidth;
+		(void)outputHeight;
 		ExecuteAndFlushCmdQueue();
 
 		auto _renderBatchCommands = [&](Frame& frame, ShaderApi* globalShader) {

@@ -29,6 +29,9 @@ namespace Iberus {
 		static Application* Get() { return s_Instance; }
 		IGUIContext* GetGUIContext();
 
+		bool IsEditorMode() const { return editorMode; }
+		void SetEditorMode(bool value) { editorMode = value; }
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
@@ -40,6 +43,7 @@ namespace Iberus {
 		LayerStack layerStack;
 
 		bool running{ true };
+		bool editorMode{ true };
 	};
 
 	Application* CreateApplication();

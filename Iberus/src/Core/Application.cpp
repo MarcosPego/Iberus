@@ -81,11 +81,17 @@ namespace Iberus {
 			double deltaTime = std::chrono::duration<double>(now - lastFrameTime).count();
 			lastFrameTime = now;
 
-			guiContext->BeginFrame();
-			layerStack.ForEachLayer([deltaTime](Layer* layer) {
-				layer->OnUpdate(deltaTime);
-			});
-			guiContext->EndFrame();
+			if (editorMode) {
+				guiContext->BeginFrame();
+				layerStack.ForEachLayerOverlaysFirst([deltaTime](Layer* layer) {
+					layer->OnUpdate(deltaTime);
+				});
+				guiContext->EndFrame();
+			} else {
+				layerStack.ForEachLayer([deltaTime](Layer* layer) {
+					layer->OnUpdate(deltaTime);
+				});
+			}
 
 			Update();
 			window->Update();

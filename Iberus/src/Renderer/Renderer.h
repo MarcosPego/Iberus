@@ -48,7 +48,7 @@ namespace Iberus {
 		virtual void Init() = 0;
 
 		virtual void PushRenderCmd(RenderCmd* renderCmd);
-		virtual void RenderFrame(Frame& frame) = 0;
+		virtual void RenderFrame(Frame& frame, unsigned int outputFBO = 0, int outputWidth = 0, int outputHeight = 0) = 0;
 		virtual void ExecuteAndFlushCmdQueue();
 
 		virtual void Resize(int width, int height) {}

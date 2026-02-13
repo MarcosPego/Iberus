@@ -5,10 +5,10 @@
 namespace Iberus {
 
 	void EditorLayer::OnUpdate(double deltaTime) {
-		IGUIContext* gui = Application::Get()->GetGUIContext();
-		if (gui) {
-			editor.OnUpdate(deltaTime, gui);
-		}
+		Application* app = Application::Get();
+		IGUIContext* gui = app->GetGUIContext();
+		editor.OnUpdate(deltaTime, gui);
+		app->SetEditorMode(editor.GetMode() == EditorMode::Editor);
 	}
 
 }

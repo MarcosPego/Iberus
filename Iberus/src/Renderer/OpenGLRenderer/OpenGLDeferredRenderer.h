@@ -12,13 +12,15 @@ namespace Iberus {
 
 		void Init() override;
 
-		void RenderFrame(Frame& frame) override;
+		void RenderFrame(Frame& frame, unsigned int outputFBO = 0, int outputWidth = 0, int outputHeight = 0) override;
 
 		void Resize(int width, int height) override;
 
 	private:
 		Framebuffer* sourceFBO{ nullptr };
 		Framebuffer* targetFBO{ nullptr };
+		int currentWidth{ 0 };
+		int currentHeight{ 0 };
 	};
 
 }

@@ -18,6 +18,7 @@ namespace Iberus {
 		void PopLayer(Layer* layer);
 
 		void ForEachLayer(const std::function<void(Layer*)>& fn) const;
+		void ForEachLayerOverlaysFirst(const std::function<void(Layer*)>& fn) const;
 
 	private:
 		std::vector<Layer*> layers;

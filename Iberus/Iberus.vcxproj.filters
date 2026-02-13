@@ -576,6 +576,18 @@
     <ClInclude Include="src\Tools\Editor\EditorLayer.h">
       <Filter>src\Tools\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneTreePanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewFBO.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
     <ClInclude Include="src\Tools\Editor\EditorPanels\WelcomePanel.h">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClInclude>
@@ -802,6 +814,18 @@
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorLayer.cpp">
       <Filter>src\Tools\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneTreePanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewFBO.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorPanels\WelcomePanel.cpp">
       <Filter>src\Tools\Editor\EditorPanels</Filter>

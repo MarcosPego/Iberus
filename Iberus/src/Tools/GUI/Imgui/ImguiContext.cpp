@@ -22,6 +22,7 @@ namespace Iberus {
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 		GLFWwindow* window = static_cast<GLFWwindow*>(nativeWindow);
 		if (!ImGui_ImplGlfw_InitForOpenGL(window, true)) {
@@ -87,6 +88,17 @@ namespace Iberus {
 
 	bool ImguiContext::Button(const char* label) {
 		return ImGui::Button(label);
+	}
+
+	void ImguiContext::BeginDockSpace() {
+		ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+	}
+
+	void ImguiContext::EndDockSpace() {
+	}
+
+	void ImguiContext::Image(void* textureId, float w, float h) {
+		ImGui::Image(reinterpret_cast<ImTextureID>(textureId), ImVec2(w, h));
 	}
 
 }

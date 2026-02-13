@@ -306,6 +306,10 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\SceneInclude.h" />
     <ClInclude Include="src\Tools\Editor\Editor.h" />
     <ClInclude Include="src\Tools\Editor\EditorLayer.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneTreePanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewFBO.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\WelcomePanel.h" />
     <ClInclude Include="src\Tools\GUI\IGUIContext.h" />
     <ClInclude Include="src\Tools\GUI\Imgui\ImguiContext.h" />
@@ -399,6 +403,10 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Tools\Editor\Editor.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorLayer.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneTreePanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewFBO.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\WelcomePanel.cpp" />
     <ClCompile Include="src\Tools\GUI\Imgui\ImguiContext.cpp" />
   </ItemGroup>

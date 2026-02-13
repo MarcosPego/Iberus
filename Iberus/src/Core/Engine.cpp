@@ -52,8 +52,34 @@ namespace Iberus {
 		scene->Update(deltaTime);
 		scene->PushDraw(frame);
 		scene->PushDrawSDF(frame);
-		renderer->RenderFrame(frame);
+
+		int renderWidth = currentWindow->GetWidth();
+		int renderHeight = currentWindow->GetHeight();
+		unsigned int outputFBO = 0;
+		if (editorRenderTargetFBO != 0 && editorRenderTargetWidth > 0 && editorRenderTargetHeight > 0) {
+			renderWidth = editorRenderTargetWidth;
+			renderHeight = editorRenderTargetHeight;
+			outputFBO = editorRenderTargetFBO;
+		}
+		renderer->RenderFrame(frame, outputFBO, renderWidth, renderHeight);
 		inputManager->OnFrameEnd();
+	}
+
+	void Engine::SetEditorRenderTarget(unsigned int fboId, int width, int height) {
+		editorRenderTargetFBO = fboId;
+		if (width != editorRenderTargetWidth || height != editorRenderTargetHeight) {
+			pendingResizeWidth = width;
+			pendingResizeHeight = height;
+			editorRenderTargetPendingResize = true;
+		}
+		editorRenderTargetWidth = width;
+		editorRenderTargetHeight = height;
+	}
+
+	void Engine::ClearEditorRenderTarget() {
+		editorRenderTargetFBO = 0;
+		editorRenderTargetWidth = 0;
+		editorRenderTargetHeight = 0;
 	}
 
 	void Engine::SetCurrentWindow(Window* window) {

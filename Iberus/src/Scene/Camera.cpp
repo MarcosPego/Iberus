@@ -65,17 +65,29 @@ namespace Iberus {
 	}
 
 	void Camera::SetRotation(const Vec3& rotation) {
-		Camera::SetRotation(rotation);
+		Entity::SetRotation(rotation);
 		UpdateViewMatrix();
 	}
 
 	void Camera::UpdateViewMatrix() {
-		// TODO(MPP) look at!
-		//forward = Vec3(0, 0, -5);
-		//up = Vec3(0, 1, 0);
+		const Vec3& pos = GetPosition();
+		const Vec3& rot = GetRotation(); // pitch (x), yaw (y), roll (z) in degrees
 
-		//viewMatrix = MatrixFactory::CreateViewMat4(forward, GetPosition(), up);
-		//cameraToWorld = inverse(viewMatrix);
+		float pitchRad = Deg2Rad(rot.x);
+		float yawRad = Deg2Rad(rot.y);
+
+		float cosPitch = cosf(pitchRad);
+		float sinPitch = sinf(pitchRad);
+		float cosYaw = cosf(yawRad);
+		float sinYaw = sinf(yawRad);
+
+		forward = Vec3(sinYaw * cosPitch, -sinPitch, -cosYaw * cosPitch);
+		forward = normalize(forward);
+		up = Vec3(0, 1, 0);
+
+		Vec3 center = pos + forward;
+		viewMatrix = MatrixFactory::CreateViewMat4(pos, center, up);
+		cameraToWorld = inverse(viewMatrix);
 	}
 
 	Mat4 Camera::CalculateViewMatrix() {

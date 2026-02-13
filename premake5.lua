@@ -146,7 +146,9 @@ project "Sandbox"
 		"Iberus/dependencies/imgui",
 		"Iberus/dependencies/FastNoise2/include",
 		"Iberus/src/**",
-		"Iberus/src"
+		"Iberus/src",
+		"%{prj.name}/src/**",
+		"%{prj.name}/src"
 	}
 
 	libdirs {

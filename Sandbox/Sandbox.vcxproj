@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Tools;..\Iberus\src\Core\Types;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\Resources;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -103,7 +103,7 @@ if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" copy 
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Tools;..\Iberus\src\Core\Types;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\Resources;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -132,7 +132,7 @@ if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Tools;..\Iberus\src\Core\Types;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\Resources;..\Iberus\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\Resources;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -157,10 +157,14 @@ if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\CustomSceneCreator.h" />
+    <ClInclude Include="src\Core\SceneViewerCameraBehaviour.h" />
     <ClInclude Include="src\SandboxBehaviour.h" />
     <ClInclude Include="src\SandboxBehaviour2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\CustomSceneCreator.cpp" />
+    <ClCompile Include="src\Core\SceneViewerCameraBehaviour.cpp" />
     <ClCompile Include="src\SandboxApp.cpp" />
     <ClCompile Include="src\SandboxBehaviour.cpp" />
     <ClCompile Include="src\SandboxBehaviour2.cpp" />

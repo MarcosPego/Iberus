@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Renderer;src\Scene;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -107,7 +107,7 @@ if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(Pr
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Renderer;src\Scene;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -139,7 +139,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Renderer;src\Scene;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -207,7 +207,6 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Core\Input\ModifierFlags.h" />
     <ClInclude Include="src\Core\Input\MouseCode.h" />
     <ClInclude Include="src\Core\InputManager.h" />
-    <ClInclude Include="src\Platform\GLFW\InputTranslationGLFW.h" />
     <ClInclude Include="src\Core\Layer.h" />
     <ClInclude Include="src\Core\LayerStack.h" />
     <ClInclude Include="src\Core\Types\Color.h" />
@@ -224,6 +223,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Maths\Noise.h" />
     <ClInclude Include="src\Maths\Quaternions.h" />
     <ClInclude Include="src\Maths\Vector.h" />
+    <ClInclude Include="src\Platform\GLFW\InputTranslationGLFW.h" />
     <ClInclude Include="src\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Renderer\MeshApi.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.h" />
@@ -276,7 +276,6 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Core\InputManager.cpp" />
-    <ClCompile Include="src\Platform\GLFW\InputTranslationGLFW.cpp" />
     <ClCompile Include="src\Core\Layer.cpp" />
     <ClCompile Include="src\Core\LayerStack.cpp" />
     <ClCompile Include="src\Core\Types\Color.cpp" />
@@ -292,6 +291,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Maths\Vec2.cpp" />
     <ClCompile Include="src\Maths\Vec3.cpp" />
     <ClCompile Include="src\Maths\Vec4.cpp" />
+    <ClCompile Include="src\Platform\GLFW\InputTranslationGLFW.cpp" />
     <ClCompile Include="src\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Renderer\MeshApi.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.cpp" />

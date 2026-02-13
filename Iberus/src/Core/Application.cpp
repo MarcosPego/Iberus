@@ -1,16 +1,22 @@
 #include "Enginepch.h"
 #include "Application.h"
+#include "Layer.h"
 
 #include "RenderCmd.h"
-
 #include "Renderer.h"
 #include "Engine.h"
+#include "ImguiContext.h"
+
+#include <chrono>
 
 namespace Iberus {
 
 #define BIND_FN(x) std::bind(&x, this, std::placeholders::_1)
 
+	Application* Application::s_Instance = nullptr;
+
 	Application::Application() {
+		s_Instance = this;
 		static WindowProps winProps{};
 		window = std::unique_ptr<Window>(Window::Create(winProps));
 		window->SetEventCallback(BIND_FN(Application::OnEvent));
@@ -19,10 +25,14 @@ namespace Iberus {
 	}
 
 	Application::~Application() {
+		s_Instance = nullptr;
 	}
 
 	void Application::Boot() {
 		engine->Boot();
+
+		guiContext = std::make_unique<ImguiContext>();
+		guiContext->Init(window->GetNativeWindow());
 	}
 
 	void Application::OnEvent(Event& event) {
@@ -50,15 +60,33 @@ namespace Iberus {
 
 	void Application::PushLayer(Layer* layer) {
 		layerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer) {
 		layerStack.PushOverlay(layer);
+		layer->OnAttach();
+	}
+
+	IGUIContext* Application::GetGUIContext() {
+		return guiContext.get();
 	}
 
 	void Application::Run() {
+		using Clock = std::chrono::high_resolution_clock;
+		auto lastFrameTime = Clock::now();
+
 		while (running) {
-			engine->Update();		
+			auto now = Clock::now();
+			double deltaTime = std::chrono::duration<double>(now - lastFrameTime).count();
+			lastFrameTime = now;
+
+			guiContext->BeginFrame();
+			layerStack.ForEachLayer([deltaTime](Layer* layer) {
+				layer->OnUpdate(deltaTime);
+			});
+			guiContext->EndFrame();
+
 			Update();
 			window->Update();
 		}

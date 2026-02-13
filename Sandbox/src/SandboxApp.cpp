@@ -1,5 +1,7 @@
 #include <Iberus.h>
 
+#include "GameLayer.h"
+#include "EditorLayer.h"
 #include "CustomSceneCreator.h"
 
 class Sandbox : public Iberus::Application {
@@ -9,6 +11,8 @@ public:
 
 	void Boot() override {
 		Application::Boot();
+		PushLayer(new Iberus::GameLayer());
+		PushOverlay(new Iberus::EditorLayer());
 		Iberus::CustomSceneCreator::Create();
 	}
 

@@ -34,6 +34,9 @@ project "Iberus"
 		"%{prj.name}/dependencies/glew/include/GL/**.h",
 		"%{prj.name}/dependencies/stb_image/**.h",
 		"%{prj.name}/dependencies/imgui/**.h",
+		"%{prj.name}/dependencies/imgui/*.cpp",
+		"%{prj.name}/dependencies/imgui/backends/imgui_impl_glfw*.cpp",
+		"%{prj.name}/dependencies/imgui/backends/imgui_impl_opengl3*.cpp",
 		"%{prj.name}/dependencies/FastNoise2/include/**",
 		"%{prj.name}/dependencies/FastNoise2/include/**/**.h"
 	}
@@ -45,10 +48,12 @@ project "Iberus"
 		"%{prj.name}/src/**",
 		"%{prj.name}/src",
 		"%{prj.name}/dependencies/spdlog/include",
+		"%{prj.name}/dependencies/glfw/include",
 		"%{prj.name}/dependencies/glfw/include/GLFW",
 		"%{prj.name}/dependencies/glew/include/GL",
 		"%{prj.name}/dependencies/stb_image",
 		"%{prj.name}/dependencies/imgui",
+		"%{prj.name}/dependencies/imgui/backends",
 		"%{prj.name}/dependencies/FastNoise2/include/",
 		"%{prj.name}/dependencies/FastNoise2/include/**"
 	}
@@ -64,6 +69,10 @@ project "Iberus"
 		"opengl32",
 		"glfw3_mt"
 	}
+
+	-- ImGui sources must not use precompiled header
+	filter "files:**/dependencies/imgui/**.cpp"
+		flags { "NoPCH" }
 
 	filter "system:windows"
 		cppdialect "C++20"

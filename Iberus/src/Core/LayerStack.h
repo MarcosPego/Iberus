@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 namespace Iberus {
 
 	class Layer;
@@ -11,9 +13,11 @@ namespace Iberus {
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
-		
+
 		void PopOverlay(Layer* layer);
 		void PopLayer(Layer* layer);
+
+		void ForEachLayer(const std::function<void(Layer*)>& fn) const;
 
 	private:
 		std::vector<Layer*> layers;

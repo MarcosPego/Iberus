@@ -5,9 +5,11 @@
 #include "Renderer.h"
 #include "EventImport.h"
 #include "LayerStack.h"
+#include "IGUIContext.h"
 
 namespace Iberus {
 	class Engine;
+	class ImguiContext;
 
 	class IBERUS_API Application {
 	public:
@@ -23,18 +25,23 @@ namespace Iberus {
 		void PushOverlay(Layer* layer);
 
 		void Run();
+
+		static Application* Get() { return s_Instance; }
+		IGUIContext* GetGUIContext();
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
 
+		static Application* s_Instance;
 		Engine* engine{ nullptr };
 		std::unique_ptr<Window> window;
+		std::unique_ptr<ImguiContext> guiContext;
 		LayerStack layerStack;
 
-		bool running{true};
+		bool running{ true };
 	};
 
-	//To be defined in client
 	Application* CreateApplication();
 }
 

@@ -53,7 +53,8 @@ namespace Iberus {
 		auto* window = Engine::Instance()->GetCurrentWindow();
 		auto width = window->GetWidth();
 		auto height = window->GetHeight();
-		glBlitNamedFramebuffer(targetFBO->GetFBO(), 0, 0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);	
+		glBlitNamedFramebuffer(targetFBO->GetFBO(), 0, 0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void OpenGLDeferredRenderer::Resize(int width, int height) {

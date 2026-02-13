@@ -21,6 +21,8 @@ namespace Iberus {
 
 		void SetEventCallback(const EventCallbackFn& eventCallback) override;
 
+		void* GetNativeWindow() const override { return window; }
+
 	private: // Window internal setup
 
 		virtual void SetupGraphicalContext();

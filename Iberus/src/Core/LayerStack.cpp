@@ -37,4 +37,13 @@ namespace Iberus {
 			layers.erase(it);
 		}
 	}
+
+	void LayerStack::ForEachLayer(const std::function<void(Layer*)>& fn) const {
+		for (Layer* layer : layers) {
+			fn(layer);
+		}
+		for (Layer* overlay : overlays) {
+			fn(overlay);
+		}
+	}
 }

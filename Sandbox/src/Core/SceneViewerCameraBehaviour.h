@@ -3,8 +3,8 @@
 #include <SceneInclude.h>
 #include <unordered_map>
 #include <variant>
-#include "Core/Input/KeyCode.h"
-#include "Core/Input/MouseCode.h"
+#include "KeyCode.h"
+#include "MouseCode.h"
 
 namespace Iberus {
 

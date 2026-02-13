@@ -1,7 +1,7 @@
 #include "SandboxBehaviour2.h"
 #include "Engine.h"
 #include "InputManager.h"
-#include "Core/Input/KeyCode.h"
+#include "KeyCode.h"
 
 void SandboxBehaviour2::Init() {
 	entity = dynamic_cast<Iberus::SDFEntity*>(root);

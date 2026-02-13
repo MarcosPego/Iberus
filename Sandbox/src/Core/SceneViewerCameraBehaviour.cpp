@@ -2,8 +2,8 @@
 #include "Camera.h"
 #include "Engine.h"
 #include "InputManager.h"
-#include "Core/Input/KeyCode.h"
-#include "Core/Input/MouseCode.h"
+#include "KeyCode.h"
+#include "MouseCode.h"
 
 using namespace Math;
 using namespace Iberus;

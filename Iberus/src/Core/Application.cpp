@@ -81,17 +81,22 @@ namespace Iberus {
 			double deltaTime = std::chrono::duration<double>(now - lastFrameTime).count();
 			lastFrameTime = now;
 
+			// Process deferred destroys at frame start so render state is consistent before any UI or rendering
+			if (auto* scene = engine->GetSceneManager().GetActiveScene()) {
+				scene->FlushPendingDestroys();
+			}
+
+			guiContext->BeginFrame();
 			if (editorMode) {
-				guiContext->BeginFrame();
 				layerStack.ForEachLayerOverlaysFirst([deltaTime](Layer* layer) {
 					layer->OnUpdate(deltaTime);
 				});
-				guiContext->EndFrame();
 			} else {
 				layerStack.ForEachLayer([deltaTime](Layer* layer) {
 					layer->OnUpdate(deltaTime);
 				});
 			}
+			guiContext->EndFrame(editorMode);
 
 			Update();
 			window->Update();

@@ -24,7 +24,8 @@ namespace Iberus {
 		Scene& operator= (const Scene&) = delete;
 
 		void Update(double deltaTime);
-		void PushDraw(Frame& frame);
+		/// Renders scene to the current frame. Camera may be provided by caller; if null, uses scene's active camera.
+		void PushDraw(Frame& frame, class CameraRenderCmd* camera = nullptr);
 		void PushDrawSDF(Frame& frame);
 
 		// --- ECS API ---
@@ -47,6 +48,22 @@ namespace Iberus {
 		bool HasComponent(EntityId entity) const { return world.HasComponent<T>(entity); }
 
 		void AddChildECS(EntityId parentId, EntityId childId, const std::string& childTagId);
+
+		/// Remove child from parent's hierarchy (does not destroy the child).
+		void RemoveChildFromParent(EntityId parentId, EntityId childId);
+
+		/// Destroy entity and all descendants. Removes from parent's hierarchy.
+		void DestroyEntityWithDescendants(EntityId entityId);
+
+		/// Queue entity for destruction at start of next frame (ensures consistent state before render).
+		void QueueDestroyEntity(EntityId entityId);
+		void FlushPendingDestroys();
+
+		/// Clone entity and all descendants. Returns new root entity. New entity is not parented.
+		EntityId CloneEntityWithDescendants(EntityId sourceId);
+
+		/// Generate a unique tag id from base (e.g. "Mesh" -> "Mesh_1" if "Mesh" exists).
+		std::string GenerateUniqueTagId(const std::string& base);
 
 		template<typename T = Material, typename... Args>
 		T* GetOrCreateMaterial(const std::string& ID, Args&&... args) {
@@ -93,6 +110,8 @@ namespace Iberus {
 
 		std::unordered_map<std::string, std::unique_ptr<Material>> materials;
 		std::map<std::string, std::vector<std::pair<EntityId, std::unique_ptr<Behaviour>>>> registeredBehaviours;
+
+		std::vector<EntityId> pendingDestroys;
 	};
 
  }

@@ -54,6 +54,7 @@ namespace Iberus {
 		}
 
 		for (auto [entityId, _] : *transformStorage) {
+			if (!world.IsAlive(entityId)) continue;
 			EntityId parentId = NullEntity;
 			if (hierarchyStorage) {
 				if (auto* hierarchy = hierarchyStorage->Get(entityId)) {

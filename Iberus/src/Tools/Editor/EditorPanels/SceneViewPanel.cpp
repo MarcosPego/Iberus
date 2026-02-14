@@ -12,8 +12,10 @@ namespace Iberus {
 
 	void SceneViewPanel::OnDraw(IGUIContext& gui) {
 		if (!gui.BeginWindow("Viewport")) {
+			editor.SetViewportFocused(false);
 			return;
 		}
+		editor.SetViewportFocused(ImGui::IsWindowHovered());
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		int w = static_cast<int>(size.x);
 		int h = static_cast<int>(size.y);

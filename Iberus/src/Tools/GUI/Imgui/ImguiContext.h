@@ -15,7 +15,7 @@ namespace Iberus {
 		void Shutdown();
 
 		void BeginFrame();
-		void EndFrame();
+		void EndFrame(bool render = true);
 
 		bool BeginWindow(const char* title) override;
 		void EndWindow() override;

@@ -36,7 +36,8 @@ namespace Iberus {
 			SetupForwardRenderer();
 			renderer->Init();
 #endif
-	
+
+		SyncRendererToOutput();
 	}
 
 	void Engine::Update() {
@@ -49,9 +50,11 @@ namespace Iberus {
 
 		auto frame = Frame();
 		auto* scene = sceneManager->GetActiveScene();
-		scene->Update(deltaTime);
-		scene->PushDraw(frame);
-		scene->PushDrawSDF(frame);
+		if (scene) {
+			scene->Update(deltaTime);
+			scene->PushDraw(frame, GetCameraOverride());
+			scene->PushDrawSDF(frame);
+		}
 
 		int renderWidth = currentWindow->GetWidth();
 		int renderHeight = currentWindow->GetHeight();
@@ -82,6 +85,23 @@ namespace Iberus {
 		editorRenderTargetHeight = 0;
 	}
 
+	void Engine::OnSwitchedToGameMode() {
+		ClearEditorRenderTarget();
+		SyncRendererToOutput();
+	}
+
+	void Engine::SyncRendererToOutput() {
+		int w = GetEffectiveRenderWidth();
+		int h = GetEffectiveRenderHeight();
+		if (renderer && w > 0 && h > 0) {
+			renderer->Resize(w, h);
+		}
+	}
+
+	void Engine::SetCameraOverride(std::unique_ptr<CameraRenderCmd> cmd) {
+		cameraOverride = std::move(cmd);
+	}
+
 	int Engine::GetEffectiveRenderWidth() const {
 		if (editorRenderTargetFBO != 0 && editorRenderTargetWidth > 0 && editorRenderTargetHeight > 0) {
 			return editorRenderTargetWidth;
@@ -110,9 +130,9 @@ namespace Iberus {
 	}
 
 	void Engine::OnWindowResize(uint32_t width, uint32_t height) {
-		if (renderer) {
-			renderer->Resize(static_cast<int>(width), static_cast<int>(height));
-		}
+		(void)width;
+		(void)height;
+		SyncRendererToOutput();
 	}
 
 	Window* Engine::GetCurrentWindow() const  {

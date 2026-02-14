@@ -57,20 +57,23 @@ namespace Iberus {
 		ImGui::NewFrame();
 	}
 
-	void ImguiContext::EndFrame() {
+	void ImguiContext::EndFrame(bool render) {
 		if (!initialized) {
 			return;
 		}
-		ImGui::Render();
-		ImDrawData* drawData = ImGui::GetDrawData();
-		if (drawData) {
-			int w = (int)(drawData->DisplaySize.x * drawData->FramebufferScale.x);
-			int h = (int)(drawData->DisplaySize.y * drawData->FramebufferScale.y);
-			if (w > 0 && h > 0) {
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				glViewport(0, 0, w, h);
+		ImGui::EndFrame();
+		if (render) {
+			ImGui::Render();
+			ImDrawData* drawData = ImGui::GetDrawData();
+			if (drawData) {
+				int w = (int)(drawData->DisplaySize.x * drawData->FramebufferScale.x);
+				int h = (int)(drawData->DisplaySize.y * drawData->FramebufferScale.y);
+				if (w > 0 && h > 0) {
+					glBindFramebuffer(GL_FRAMEBUFFER, 0);
+					glViewport(0, 0, w, h);
+				}
+				ImGui_ImplOpenGL3_RenderDrawData(drawData);
 			}
-			ImGui_ImplOpenGL3_RenderDrawData(drawData);
 		}
 	}
 

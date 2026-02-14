@@ -109,6 +109,13 @@ namespace Iberus {
 		glfwSetWindowUserPointer(window, &windowData);
 		SetVSync(true);
 
+		int fbWidth, fbHeight;
+		glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+		windowProps.resolution.x = static_cast<float>(fbWidth);
+		windowProps.resolution.y = static_cast<float>(fbHeight);
+		windowData.resolution.x = static_cast<float>(fbWidth);
+		windowData.resolution.y = static_cast<float>(fbHeight);
+
 		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 		/// Set Callbacks

@@ -10,6 +10,9 @@ using namespace Math;
 
 namespace Iberus {
 
+	// Must match sdfMeshBufferSize in baseRaymarchingShader.frag
+	constexpr int SDF_MESH_BUFFER_SIZE = 3;
+
 	void SDFRenderSystem::Execute(World& world, Scene& scene, RenderBatch& renderBatch) {
 		auto* sdfStorage = world.GetStorage<SDFComponent>();
 		auto* activeStorage = world.GetStorage<ActiveComponent>();
@@ -19,11 +22,12 @@ namespace Iberus {
 
 		int sdfSlot = 0;
 		for (auto [entityId, sdf] : *sdfStorage) {
+			if (!world.IsAlive(entityId)) continue;
 			if (activeStorage) {
 				auto* active = activeStorage->Get(entityId);
 				if (active && !active->Active) {
-				continue;
-			}
+					continue;
+				}
 			}
 			if (sdf.Parts.empty()) {
 				continue;
@@ -67,6 +71,14 @@ namespace Iberus {
 				count++;
 			}
 			sdfSlot++;
+		}
+
+		// Clear unused slots so deleted entities don't leave "ghosts" (stale GPU uniform data).
+		for (int slot = sdfSlot; slot < SDF_MESH_BUFFER_SIZE; ++slot) {
+			const std::string sdfMesh = std::format("sdfMeshes[{0}]", slot);
+			renderBatch.PushRenderCmdToQueue(
+				std::make_unique<UniformRenderCmd<int>>(sdfMesh + ".size", 0, UniformType::INT),
+				CMDQueue::SDF);
 		}
 	}
 

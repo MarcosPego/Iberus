@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "RenderCmd.h"
 
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -37,6 +38,14 @@ namespace Iberus {
 
 		void SetEditorRenderTarget(unsigned int fboId, int width, int height);
 		void ClearEditorRenderTarget();
+		void OnSwitchedToGameMode();
+
+		/// Sync renderer to current effective output size (viewport in Editor, window in Game).
+		void SyncRendererToOutput();
+
+		/// When set, render uses this camera instead of scene's active camera. Target and camera are set by the orchestration layer.
+		void SetCameraOverride(std::unique_ptr<CameraRenderCmd> cmd);
+		CameraRenderCmd* GetCameraOverride() { return cameraOverride.get(); }
 
 		/// Returns effective render dimensions (editor viewport when active, else main window).
 		int GetEffectiveRenderWidth() const;
@@ -62,6 +71,8 @@ namespace Iberus {
 		bool editorRenderTargetPendingResize{ false };
 		int pendingResizeWidth{ 0 };
 		int pendingResizeHeight{ 0 };
+
+		std::unique_ptr<CameraRenderCmd> cameraOverride;
 	};
 }
 

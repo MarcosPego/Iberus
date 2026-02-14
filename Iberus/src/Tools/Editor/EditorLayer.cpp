@@ -1,6 +1,8 @@
 #include "Enginepch.h"
 #include "EditorLayer.h"
+#include "Editor.h"
 #include "Application.h"
+#include "Engine.h"
 
 namespace Iberus {
 
@@ -9,6 +11,7 @@ namespace Iberus {
 		IGUIContext* gui = app->GetGUIContext();
 		editor.OnUpdate(deltaTime, gui);
 		app->SetEditorMode(editor.GetMode() == EditorMode::Editor);
+		Engine::Instance()->SetCameraOverride(editor.GetEditorCameraOverride());
 	}
 
 }

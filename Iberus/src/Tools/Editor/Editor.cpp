@@ -3,8 +3,12 @@
 #include "Engine.h"
 #include "SceneManager.h"
 #include "KeyCode.h"
+#include "MouseCode.h"
+#include "Matrix.h"
 
 #include "imgui.h"
+
+using namespace Math;
 
 namespace Iberus {
 
@@ -16,19 +20,98 @@ namespace Iberus {
 
 	Editor::~Editor() = default;
 
-	void Editor::OnUpdate(double deltaTime, IGUIContext* gui) {
-		bool f11Pressed = false;
-		if (editorMode == EditorMode::Editor) {
-			f11Pressed = ImGui::IsKeyPressed(ImGuiKey_F11);
-		} else {
-			bool f11Down = Engine::Instance()->GetInputManager().IsKeyPressed(KeyCode::F11);
-			f11Pressed = f11Down && !wasF11Down;
-			wasF11Down = f11Down;
+	void Editor::UpdateEditorCamera(double deltaTime) {
+		if (editorMode != EditorMode::Editor || !viewportFocused) return;
+
+		auto& input = Engine::Instance()->GetInputManager();
+		bool togglePressed = input.IsKeyPressed(KeyCode::C);
+
+		if (togglePressed && !editorCameraWasTogglePressed) {
+			editorCameraEnabled = !editorCameraEnabled;
 		}
+		editorCameraWasTogglePressed = togglePressed;
+
+		if (!editorCameraEnabled) return;
+
+		const float mouseSensitivity = 0.15f;
+		const float moveSpeed = 8.0f;
+
+		// Mouse rotation (right mouse)
+		if (input.IsMouseButtonPressed(MouseCode::Right)) {
+			Vec2 currentMouse = input.GetMousePosition();
+			if (!editorCameraDragging) {
+				editorCameraDragging = true;
+				editorCameraLastMouse = currentMouse;
+			} else {
+				Vec2 delta = currentMouse - editorCameraLastMouse;
+				editorCameraYaw -= delta.x * mouseSensitivity;
+				editorCameraPitch -= delta.y * mouseSensitivity;
+				const float maxPitch = 89.0f;
+				if (editorCameraPitch > maxPitch) editorCameraPitch = maxPitch;
+				if (editorCameraPitch < -maxPitch) editorCameraPitch = -maxPitch;
+				editorCamera.Rotation = Vec3(editorCameraPitch, editorCameraYaw, 0.0f);
+				editorCameraLastMouse = currentMouse;
+			}
+		} else {
+			editorCameraDragging = false;
+		}
+
+		// WASD movement
+		float yawRad = Deg2Rad(editorCameraYaw);
+		Vec3 forwardXY(sinf(yawRad), cosf(yawRad), 0.0f);
+		Vec3 rightXY(cosf(yawRad), -sinf(yawRad), 0.0f);
+
+		Vec3 movement(0, 0, 0);
+		if (input.IsKeyPressed(KeyCode::W)) movement += forwardXY;
+		if (input.IsKeyPressed(KeyCode::S)) movement -= forwardXY;
+		if (input.IsKeyPressed(KeyCode::A)) movement -= rightXY;
+		if (input.IsKeyPressed(KeyCode::D)) movement += rightXY;
+		if (input.IsKeyPressed(KeyCode::E)) movement.z += 1.0f;
+		if (input.IsKeyPressed(KeyCode::Q)) movement.z -= 1.0f;
+
+		if (movement.length() > 0) {
+			movement = normalize(movement);
+			editorCamera.Position = editorCamera.Position + movement * moveSpeed * static_cast<float>(deltaTime);
+		}
+	}
+
+	std::unique_ptr<CameraRenderCmd> Editor::GetEditorCameraOverride() const {
+		if (editorMode != EditorMode::Editor) return nullptr;
+
+		float aspect = Engine::Instance()->GetEffectiveRenderAspectRatio();
+		Vec3 pos = editorCamera.Position;
+		Vec3 rot = editorCamera.Rotation;
+
+		float pitchRad = Deg2Rad(rot.x);
+		float yawRad = Deg2Rad(rot.y);
+		float cosPitch = cosf(pitchRad);
+		float sinPitch = sinf(pitchRad);
+		float cosYaw = cosf(yawRad);
+		float sinYaw = sinf(yawRad);
+
+		Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
+		forward = normalize(forward);
+		Vec3 up(0, 1, 0);
+		Vec3 center = pos + forward;
+		Mat4 viewMatrix = MatrixFactory::CreateViewMat4(pos, center, up);
+		Mat4 projectionMatrix = MatrixFactory::CreatePerspectiveMat4(
+			editorCamera.Fovy, aspect, editorCamera.NearZ, editorCamera.FarZ);
+		Mat4 cameraToWorld = inverse(viewMatrix);
+
+		return std::make_unique<CameraRenderCmd>(viewMatrix, projectionMatrix, pos, cameraToWorld);
+	}
+
+	void Editor::OnUpdate(double deltaTime, IGUIContext* gui) {
+		UpdateEditorCamera(deltaTime);
+
+		auto& input = Engine::Instance()->GetInputManager();
+		bool f11Down = input.IsKeyPressed(KeyCode::F11);
+		bool f11Pressed = f11Down && !wasF11Down;
+		wasF11Down = f11Down;
 		if (f11Pressed) {
 			editorMode = (editorMode == EditorMode::Editor) ? EditorMode::Game : EditorMode::Editor;
 			if (editorMode == EditorMode::Game) {
-				Engine::Instance()->ClearEditorRenderTarget();
+				Engine::Instance()->OnSwitchedToGameMode();
 			}
 		}
 

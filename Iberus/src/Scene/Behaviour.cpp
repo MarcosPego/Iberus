@@ -1,20 +1,15 @@
 #include "Enginepch.h"
 #include "Behaviour.h"
-
-#include "Entity.h"
-#include "Scene.h"
+#include "World.h"
+#include "Components.h"
 
 namespace Iberus {
-	Behaviour::~Behaviour() {
-		if (scene) {
-			scene->UnbindBehaviour(this);
+
+	void Behaviour::BindBehaviour(EntityId entity, World& world) {
+		if (auto* tag = world.GetComponent<TagComponent>(entity)) {
+			ID = "Behaviour_" + tag->Id;
+		} else {
+			ID = "Behaviour_" + std::to_string(entity);
 		}
-	}
-
-	void Behaviour::BindBehaviour(Entity* inRoot, Scene* inScene) {
-		root = inRoot;
-		scene = inScene;
-
-		ID = "Behaviour_" + root->GetID();
 	}
 }

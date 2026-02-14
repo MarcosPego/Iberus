@@ -82,6 +82,29 @@ namespace Iberus {
 		editorRenderTargetHeight = 0;
 	}
 
+	int Engine::GetEffectiveRenderWidth() const {
+		if (editorRenderTargetFBO != 0 && editorRenderTargetWidth > 0 && editorRenderTargetHeight > 0) {
+			return editorRenderTargetWidth;
+		}
+		return currentWindow ? currentWindow->GetWidth() : 0;
+	}
+
+	int Engine::GetEffectiveRenderHeight() const {
+		if (editorRenderTargetFBO != 0 && editorRenderTargetWidth > 0 && editorRenderTargetHeight > 0) {
+			return editorRenderTargetHeight;
+		}
+		return currentWindow ? currentWindow->GetHeight() : 0;
+	}
+
+	float Engine::GetEffectiveRenderAspectRatio() const {
+		int w = GetEffectiveRenderWidth();
+		int h = GetEffectiveRenderHeight();
+		if (w <= 0 || h <= 0) {
+			return 16.0f / 9.0f;
+		}
+		return static_cast<float>(w) / static_cast<float>(h);
+	}
+
 	void Engine::SetCurrentWindow(Window* window) {
 		currentWindow = window;
 	}

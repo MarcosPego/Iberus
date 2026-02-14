@@ -1,6 +1,7 @@
 #include "Enginepch.h"
 #include "Editor.h"
 #include "Engine.h"
+#include "SceneManager.h"
 #include "KeyCode.h"
 
 #include "imgui.h"

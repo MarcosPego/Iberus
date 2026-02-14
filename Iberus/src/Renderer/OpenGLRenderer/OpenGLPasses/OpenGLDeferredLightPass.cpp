@@ -4,14 +4,35 @@
 #include "Engine.h"
 #include "Window.h"
 #include "Framebuffer.h"
+#include "Matrix.h"
 #include "ShaderBindings.h"
 #include "OpenGLShader.h"
+#include "RenderCmd.h"
 
 #include "ShaderApi.h"
 #include "TextureApi.h"
 #include "MeshApi.h"
 
+#include <sstream>
+
 namespace Iberus {
+
+	static void SetLightUniforms(GLuint programID, int index, const LightData& light) {
+		std::ostringstream prefix;
+		prefix << "lights[" << index << "].";
+		std::string p = prefix.str();
+		ShaderBindings::SetUniform<int>(programID, (p + "type").c_str(), light.Type);
+		ShaderBindings::SetUniform<Vec3>(programID, (p + "color").c_str(), light.Color);
+		ShaderBindings::SetUniform<float>(programID, (p + "intensity").c_str(), light.Intensity);
+		ShaderBindings::SetUniform<Vec3>(programID, (p + "position").c_str(), light.Position);
+		ShaderBindings::SetUniform<float>(programID, (p + "constant").c_str(), light.Constant);
+		ShaderBindings::SetUniform<float>(programID, (p + "linear").c_str(), light.Linear);
+		ShaderBindings::SetUniform<float>(programID, (p + "quadratic").c_str(), light.Quadratic);
+		ShaderBindings::SetUniform<float>(programID, (p + "angel").c_str(), light.Angel);
+		ShaderBindings::SetUniform<float>(programID, (p + "cutoffDiameter").c_str(), light.CutoffDiameter);
+		ShaderBindings::SetUniform<float>(programID, (p + "range").c_str(), light.Range);
+		ShaderBindings::SetUniform<Vec3>(programID, (p + "direction").c_str(), light.Direction);
+	}
 
 	OpenGLDeferredLightPass::OpenGLDeferredLightPass(Framebuffer* inSourceFBO, Framebuffer* inTargetFBO) : RenderPass(inSourceFBO, inTargetFBO) {
 		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
@@ -54,8 +75,10 @@ namespace Iberus {
 			programID = openGLShader->GetProgramID();
 		}
 
-		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
-		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(currentWindow->GetWidth(), currentWindow->GetHeight()));
+		auto* engine = Engine::Instance();
+		int effW = engine->GetEffectiveRenderWidth();
+		int effH = engine->GetEffectiveRenderHeight();
+		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(effW), static_cast<float>(effH)));
 
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
 			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
@@ -64,11 +87,27 @@ namespace Iberus {
 				ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", cameraRenderCmd->projectionMatrix);
 				ShaderBindings::SetUniform<Vec3>(programID, "cameraPos", cameraRenderCmd->cameraPos);
 			}
+
+			int lightCount = 0;
+			for (const auto& cmd : renderBatch.GetLightRenderCmd()) {
+				if (auto* lightsCmd = dynamic_cast<const LightsRenderCmd*>(cmd.get())) {
+					lightCount = static_cast<int>(lightsCmd->Lights.size());
+					ShaderBindings::SetUniform<int>(programID, "lightCount", lightCount);
+					for (int i = 0; i < lightCount; ++i) {
+						SetLightUniforms(programID, i, lightsCmd->Lights[i]);
+					}
+					break;
+				}
+			}
+			if (lightCount == 0) {
+				ShaderBindings::SetUniform<int>(programID, "lightCount", 0);
+			}
 		}
 
-		static const auto modelMatrix = MatrixFactory::CreateModelMatrix({ -currentWindow->GetWidth() * 0.5f, -currentWindow->GetHeight() * 0.5f, 0.0 }, { 0,0,0 }, { 1,1,1 });
-
-		// RenderQuad 
+		auto* window = engine->GetCurrentWindow();
+		float scaleX = (window && window->GetWidth() > 0) ? static_cast<float>(effW) / static_cast<float>(window->GetWidth()) : 1.0f;
+		float scaleY = (window && window->GetHeight() > 0) ? static_cast<float>(effH) / static_cast<float>(window->GetHeight()) : 1.0f;
+		auto modelMatrix = MatrixFactory::CreateModelMatrix({ -effW * 0.5f, -effH * 0.5f, 0.0f }, { 0, 0, 0 }, { scaleX, scaleY, 1.0f });
 		ShaderBindings::SetUniform<Mat4>(programID, "ModelMatrix", modelMatrix);
 		quadMesh->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)quadMesh->VertexSize());

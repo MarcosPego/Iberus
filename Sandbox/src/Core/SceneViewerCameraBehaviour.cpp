@@ -1,9 +1,9 @@
 #include "SceneViewerCameraBehaviour.h"
-#include "Camera.h"
 #include "Engine.h"
 #include "InputManager.h"
 #include "KeyCode.h"
 #include "MouseCode.h"
+#include "Components.h"
 
 using namespace Math;
 using namespace Iberus;
@@ -42,18 +42,18 @@ void SceneViewerCameraBehaviour::SetKeyBind(SceneViewerAction action, MouseCode 
 	keyBinds[action] = button;
 }
 
-void SceneViewerCameraBehaviour::Init() {
+void SceneViewerCameraBehaviour::Init(EntityId entity, World& world) {
 	enabled = false;
 	wasTogglePressedLastFrame = false;
 	lastMousePosition = Vec2(0, 0);
 	isDragging = false;
-	// Preserve initial camera rotation
-	Vec3 rot = root->GetRotation();
-	pitch = rot.x;
-	yaw = rot.y;
+	if (auto* transform = world.GetComponent<TransformComponent>(entity)) {
+		pitch = transform->Rotation.x;
+		yaw = transform->Rotation.y;
+	}
 }
 
-void SceneViewerCameraBehaviour::Update(double deltaTime) {
+void SceneViewerCameraBehaviour::Update(EntityId entity, World& world, double deltaTime) {
 	auto& input = Engine::Instance()->GetInputManager();
 	bool togglePressed = IsKeyBindPressed(keyBinds[SceneViewerAction::Toggle]);
 
@@ -84,7 +84,9 @@ void SceneViewerCameraBehaviour::Update(double deltaTime) {
 			if (pitch > maxPitch) pitch = maxPitch;
 			if (pitch < -maxPitch) pitch = -maxPitch;
 
-			root->SetRotation(Vec3(pitch, yaw, 0.0f));
+			if (auto* transform = world.GetComponent<TransformComponent>(entity)) {
+				transform->Rotation = Vec3(pitch, yaw, 0.0f);
+			}
 			lastMousePosition = currentMouse;
 		}
 	} else {
@@ -109,6 +111,8 @@ void SceneViewerCameraBehaviour::Update(double deltaTime) {
 
 	if (movement.length() > 0) {
 		movement = normalize(movement);
-		root->SetPosition(root->GetPosition() + movement * moveSpeed * static_cast<float>(deltaTime));
+		if (auto* transform = world.GetComponent<TransformComponent>(entity)) {
+			transform->Position = transform->Position + movement * moveSpeed * static_cast<float>(deltaTime);
+		}
 	}
 }

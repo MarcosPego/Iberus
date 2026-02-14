@@ -24,6 +24,7 @@ namespace Iberus {
 		PUSH_UNIFORM,
 		PUSH_SHADER,
 		PUSH_CAMERA,
+		PUSH_LIGHTS,
 		PUSH_TEXTURE,
 		DELETE_SHADER,
 		DELETE_MESH,
@@ -110,6 +111,28 @@ namespace Iberus {
 	private:
 		std::string name;
 		T value;
+	};
+
+	struct LightData {
+		int Type;
+		Vec3 Color;
+		float Intensity;
+		Vec3 Position;
+		float Constant;
+		float Linear;
+		float Quadratic;
+		float Angel;
+		float CutoffDiameter;
+		float Range;
+		Vec3 Direction;
+	};
+
+	class LightsRenderCmd : public RenderCmd {
+	public:
+		LightsRenderCmd() {
+			renderCmdType = RenderCmdType::PUSH_LIGHTS;
+		}
+		std::vector<LightData> Lights;
 	};
 
 	class CameraRenderCmd : public RenderCmd {

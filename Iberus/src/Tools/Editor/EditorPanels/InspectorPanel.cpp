@@ -1,7 +1,10 @@
 #include "Enginepch.h"
 #include "InspectorPanel.h"
 #include "Editor.h"
-#include "Entity.h"
+#include "Engine.h"
+#include "SceneManager.h"
+#include "Scene.h"
+#include "Components.h"
 #include "MathUtils.h"
 
 #include "imgui.h"
@@ -17,31 +20,47 @@ namespace Iberus {
 		if (!gui.BeginWindow("Inspector")) {
 			return;
 		}
-		Entity* entity = editor.GetSelectedEntity();
-		if (!entity) {
+		EntityId entityId = editor.GetSelectedEntityId();
+		if (entityId == NullEntity) {
 			gui.Text("Select an entity");
 			gui.EndWindow();
 			return;
 		}
+		auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene();
+		if (!scene || !scene->GetWorld().IsAlive(entityId)) {
+			gui.Text("Select an entity");
+			gui.EndWindow();
+			return;
+		}
+		World& world = scene->GetWorld();
+		auto* tag = world.GetComponent<TagComponent>(entityId);
 		char buf[256];
-		snprintf(buf, sizeof(buf), "%s", entity->GetID().c_str());
-		if (ImGui::InputText("ID", buf, sizeof(buf), ImGuiInputTextFlags_ReadOnly)) {
-		}
-		bool active = entity->GetActive();
+		snprintf(buf, sizeof(buf), "%s", tag ? tag->Id.c_str() : "?");
+		ImGui::InputText("ID", buf, sizeof(buf), ImGuiInputTextFlags_ReadOnly);
+
+		auto* activeComp = world.GetComponent<ActiveComponent>(entityId);
+		bool active = activeComp ? activeComp->Active : true;
 		if (ImGui::Checkbox("Active", &active)) {
-			entity->SetActive(active);
+			if (activeComp) activeComp->Active = active;
+			else scene->AddComponent<ActiveComponent>(entityId, active);
 		}
-		Vec3 pos = entity->GetPosition();
+
+		auto* transform = world.GetComponent<TransformComponent>(entityId);
+		if (!transform) {
+			gui.EndWindow();
+			return;
+		}
+		Vec3 pos = transform->Position;
 		if (ImGui::DragFloat3("Position", &pos.x, 0.1f)) {
-			entity->SetPosition(pos);
+			transform->Position = pos;
 		}
-		Vec3 rot = entity->GetRotation();
+		Vec3 rot = transform->Rotation;
 		if (ImGui::DragFloat3("Rotation", &rot.x, 1.0f)) {
-			entity->SetRotation(rot);
+			transform->Rotation = rot;
 		}
-		Vec3 scale = entity->GetScale();
+		Vec3 scale = transform->Scale;
 		if (ImGui::DragFloat3("Scale", &scale.x, 0.01f)) {
-			entity->SetScale(scale);
+			transform->Scale = scale;
 		}
 		gui.EndWindow();
 	}

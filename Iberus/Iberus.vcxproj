@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\GUI;src\Logging;src\Maths;src\Platform;src\Renderer;src\Scene;src\Tools;src\Core\Input;src\Core\Types;src\GUI\Imgui;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\GUI;src\Logging;src\Maths;src\Platform;src\Renderer;src\Scene;src\Tools;src\Core\Input;src\Core\Types;src\GUI\Imgui;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src\Scene\ECS;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -107,7 +107,7 @@ if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(Pr
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\GUI;src\Logging;src\Maths;src\Platform;src\Renderer;src\Scene;src\Tools;src\Core\Input;src\Core\Types;src\GUI\Imgui;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\GUI;src\Logging;src\Maths;src\Platform;src\Renderer;src\Scene;src\Tools;src\Core\Input;src\Core\Types;src\GUI\Imgui;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src\Scene\ECS;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -139,7 +139,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\GUI;src\Logging;src\Maths;src\Platform;src\Renderer;src\Scene;src\Tools;src\Core\Input;src\Core\Types;src\GUI\Imgui;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\GUI;src\Logging;src\Maths;src\Platform;src\Renderer;src\Scene;src\Tools;src\Core\Input;src\Core\Types;src\GUI\Imgui;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src\Scene\ECS;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -287,9 +287,6 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Renderer\TextureApi.h" />
     <ClInclude Include="src\Renderer\Window.h" />
     <ClInclude Include="src\Scene\Behaviour.h" />
-    <ClInclude Include="src\Scene\Camera.h" />
-    <ClInclude Include="src\Scene\Entity.h" />
-    <ClInclude Include="src\Scene\Light.h" />
     <ClInclude Include="src\Scene\Material.h" />
     <ClInclude Include="src\Scene\Resources\Buffer.h" />
     <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
@@ -300,8 +297,17 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Scene\Resources\ResourceManager.h" />
     <ClInclude Include="src\Scene\Resources\Shader.h" />
     <ClInclude Include="src\Scene\Resources\Texture.h" />
-    <ClInclude Include="src\Scene\SDFEntity.h" />
     <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scene\ECS\Components.h" />
+    <ClInclude Include="src\Scene\ECS\ComponentStorage.h" />
+    <ClInclude Include="src\Scene\ECS\EntityId.h" />
+    <ClInclude Include="src\Scene\ECS\World.h" />
+    <ClInclude Include="src\Scene\ECS\TransformSystem.h" />
+    <ClInclude Include="src\Scene\ECS\CameraSystem.h" />
+    <ClInclude Include="src\Scene\ECS\LightSystem.h" />
+    <ClInclude Include="src\Scene\ECS\MeshRenderSystem.h" />
+    <ClInclude Include="src\Scene\ECS\SDFRenderSystem.h" />
+    <ClInclude Include="src\Scene\ECS\BehaviourSystem.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\SceneInclude.h" />
     <ClInclude Include="src\Tools\Editor\Editor.h" />
@@ -385,9 +391,6 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Renderer\TextureApi.cpp" />
     <ClCompile Include="src\Renderer\Window.cpp" />
     <ClCompile Include="src\Scene\Behaviour.cpp" />
-    <ClCompile Include="src\Scene\Camera.cpp" />
-    <ClCompile Include="src\Scene\Entity.cpp" />
-    <ClCompile Include="src\Scene\Light.cpp" />
     <ClCompile Include="src\Scene\Material.cpp" />
     <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
     <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
@@ -398,8 +401,14 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Scene\Resources\ResourceManager.cpp" />
     <ClCompile Include="src\Scene\Resources\Shader.cpp" />
     <ClCompile Include="src\Scene\Resources\Texture.cpp" />
-    <ClCompile Include="src\Scene\SDFEntity.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\ECS\World.cpp" />
+    <ClCompile Include="src\Scene\ECS\TransformSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\CameraSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\LightSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\MeshRenderSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\SDFRenderSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\BehaviourSystem.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Tools\Editor\Editor.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorLayer.cpp" />

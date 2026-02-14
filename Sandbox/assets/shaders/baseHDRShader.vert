@@ -20,7 +20,7 @@ void main(void)
 	exUVs = inUVs;
 	exNormals = inNormals;
 
-	vec4 meshPosition = vec4(inVerticies, 1.0);
-	position = ProjectionMatrix * ViewMatrix * ModelMatrix * meshPosition;
-	gl_Position = position;
+	vec4 meshPosition = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(inVerticies, 1.0);
+	position = meshPosition;
+	gl_Position = meshPosition;
 }

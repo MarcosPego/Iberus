@@ -519,15 +519,6 @@
     <ClInclude Include="src\Scene\Behaviour.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Camera.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\Entity.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\Light.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scene\Material.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -557,9 +548,6 @@
     </ClInclude>
     <ClInclude Include="src\Scene\Resources\Texture.h">
       <Filter>src\Scene\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\SDFEntity.h">
-      <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
@@ -761,15 +749,6 @@
     <ClCompile Include="src\Scene\Behaviour.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Camera.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\Entity.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\Light.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\Scene\Material.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -799,9 +778,6 @@
     </ClCompile>
     <ClCompile Include="src\Scene\Resources\Texture.cpp">
       <Filter>src\Scene\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\SDFEntity.cpp">
-      <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>

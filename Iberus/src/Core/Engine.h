@@ -38,6 +38,11 @@ namespace Iberus {
 		void SetEditorRenderTarget(unsigned int fboId, int width, int height);
 		void ClearEditorRenderTarget();
 
+		/// Returns effective render dimensions (editor viewport when active, else main window).
+		int GetEffectiveRenderWidth() const;
+		int GetEffectiveRenderHeight() const;
+		float GetEffectiveRenderAspectRatio() const;
+
 	private:
 		void SetupDeferredRenderer();
 		void SetupForwardRenderer();

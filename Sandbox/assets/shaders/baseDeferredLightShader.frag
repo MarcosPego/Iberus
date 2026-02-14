@@ -42,6 +42,7 @@ struct Light {
 };
 
 uniform Light lights[32];
+uniform int lightCount;
 
 uniform vec2 screenSize;
 
@@ -49,7 +50,6 @@ uniform vec3 cameraPos;
 
 vec2 CalcUVCoord() {
     return gl_FragCoord.xy / screenSize;
-	//  return (gl_FragCoord.xy -.5 * screenSize.xy) / screenSize.y;
 }
 
 void main(void)
@@ -57,19 +57,17 @@ void main(void)
 	vec2 uvCoord = CalcUVCoord();
 
 	vec3 position = texture(worldPosIn, uvCoord).xyz;
-
-	vec3 lightBaseColor = vec3(1.0f, 1.0f, 1.0f);
-	vec3 lightPos = vec3(15.0f, 15.0f, 25.0f);
-
-	float ambientStrength = 1.0f;
-	vec3 ambient = ambientStrength * lightBaseColor;
-
 	vec3 normalizedNormal = normalize(texture(normalIn, uvCoord).xyz);
-	vec3 lightDir = normalize(lightPos - position);
-	float diff = max(dot(normalizedNormal, lightDir), 0.0);
-	vec3 diffuse = diff * lightBaseColor;
-	
-	vec3 lightColor = (ambient + diffuse);
+
+	float ambientStrength = 0.2;
+	vec3 lightColor = ambientStrength * vec3(1.0, 1.0, 1.0);
+
+	for (int i = 0; i < lightCount && i < 32; ++i) {
+		vec3 lightBaseColor = lights[i].color * lights[i].intensity;
+		vec3 lightDir = normalize(lights[i].position - position);
+		float diff = max(dot(normalizedNormal, lightDir), 0.0);
+		lightColor += diff * lightBaseColor;
+	}
 
 	vec3 color = texture(diffuseIn, uvCoord).xyz;
 	vec3 fragColor = lightColor * color;

@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "Window.h"
 #include "Framebuffer.h"
+#include "Matrix.h"
 #include "ShaderBindings.h"
 #include "OpenGLShader.h"
 
@@ -52,8 +53,10 @@ namespace Iberus {
 			programID = openGLShader->GetProgramID();
 		}
 
-		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
-		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(currentWindow->GetWidth(), currentWindow->GetHeight()));
+		auto* engine = Engine::Instance();
+		int effW = engine->GetEffectiveRenderWidth();
+		int effH = engine->GetEffectiveRenderHeight();
+		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(effW), static_cast<float>(effH)));
 
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
 			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
@@ -64,9 +67,10 @@ namespace Iberus {
 			}
 		}
 
-		static const auto modelMatrix = MatrixFactory::CreateModelMatrix({ -currentWindow->GetWidth() * 0.5f, -currentWindow->GetHeight() * 0.5f, 0.0 }, { 0,0,0 }, { 1,1,1 });
-
-		// RenderQuad 
+		auto* window = engine->GetCurrentWindow();
+		float scaleX = (window && window->GetWidth() > 0) ? static_cast<float>(effW) / static_cast<float>(window->GetWidth()) : 1.0f;
+		float scaleY = (window && window->GetHeight() > 0) ? static_cast<float>(effH) / static_cast<float>(window->GetHeight()) : 1.0f;
+		auto modelMatrix = MatrixFactory::CreateModelMatrix({ -effW * 0.5f, -effH * 0.5f, 0.0f }, { 0, 0, 0 }, { scaleX, scaleY, 1.0f });
 		ShaderBindings::SetUniform<Mat4>(programID, "ModelMatrix", modelMatrix);
 		quadMesh->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)quadMesh->VertexSize());

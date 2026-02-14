@@ -5,7 +5,9 @@
 namespace Iberus {
 
 	KeyCode InputTranslationGLFW::FromGLFWKey(int glfwKey) {
-		if (glfwKey == GLFW_KEY_UNKNOWN) return KeyCode::Unknown;
+		if (glfwKey == GLFW_KEY_UNKNOWN) {
+			return KeyCode::Unknown;
+		}
 		if (glfwKey >= 0 && glfwKey <= static_cast<int>(KeyCode::Menu)) {
 			return static_cast<KeyCode>(glfwKey);
 		}

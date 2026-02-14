@@ -4,10 +4,11 @@
 #include "SceneTreePanel.h"
 #include "SceneViewPanel.h"
 #include "InspectorPanel.h"
+#include "EntityId.h"
 
 namespace Iberus {
 
-	class Entity;
+	class Scene;
 
 	enum class EditorMode { Editor, Game };
 
@@ -21,8 +22,8 @@ namespace Iberus {
 		EditorMode GetMode() const { return editorMode; }
 		void SetMode(EditorMode mode) { editorMode = mode; }
 
-		Entity* GetSelectedEntity() const { return selectedEntity; }
-		void SetSelectedEntity(Entity* entity) { selectedEntity = entity; }
+		void SetSelectedEntity(EntityId entityId) { selectedEntityId = entityId; }
+		EntityId GetSelectedEntityId() const { return selectedEntityId; }
 
 	private:
 		std::unique_ptr<SceneTreePanel> sceneTreePanel;
@@ -30,7 +31,7 @@ namespace Iberus {
 		std::unique_ptr<InspectorPanel> inspectorPanel;
 		EditorMode editorMode{ EditorMode::Editor };
 		bool wasF11Down{ false };
-		Entity* selectedEntity{ nullptr };
+		EntityId selectedEntityId{ NullEntity };
 	};
 
 }

@@ -27,8 +27,8 @@ class SceneViewerCameraBehaviour : public Iberus::Behaviour {
 public:
 	SceneViewerCameraBehaviour() : keyBinds(CreateDefaultKeyBinds()) { type = "b_scene_viewer_camera"; }
 
-	void Init() override;
-	void Update(double deltaTime) override;
+	void Init(Iberus::EntityId entity, Iberus::World& world) override;
+	void Update(Iberus::EntityId entity, Iberus::World& world, double deltaTime) override;
 
 	void SetKeyBind(Iberus::SceneViewerAction action, Iberus::KeyCode key);
 	void SetKeyBind(Iberus::SceneViewerAction action, Iberus::MouseCode button);

@@ -2,21 +2,16 @@
 
 #include "Core.h"
 #include "MathUtils.h"
-#include "Entity.h"
 #include "Material.h"
-#include "Camera.h"
-#include "SDFEntity.h"
 #include "Behaviour.h"
+#include "World.h"
+#include "EntityId.h"
+#include "Components.h"
 
 using namespace Math;
 
 namespace Iberus {
 	struct Frame;
-
-	struct BehaviourPair {
-		Entity* entity{ nullptr };
-		Behaviour* behaviour{ nullptr };
-	};
 
 	class IBERUS_API Scene {
 	public:
@@ -32,12 +27,26 @@ namespace Iberus {
 		void PushDraw(Frame& frame);
 		void PushDrawSDF(Frame& frame);
 
-		template<typename T = Entity, typename... Args>
-		T* CreateEntity(const std::string& ID, Args&&... args) {
-			auto entity = std::unique_ptr<T>(new T(ID, this, std::forward<Args>(args)...));
-			entities.emplace_back(std::move(entity));
-			return dynamic_cast<T*>(entities.back().get());
+		// --- ECS API ---
+		World& GetWorld() { return world; }
+		const World& GetWorld() const { return world; }
+
+		EntityId CreateEntityECS(const std::string& id);
+		EntityId GetSceneRootId() const { return sceneRootId; }
+		EntityId GetActiveCameraId() const { return activeCameraId; }
+
+		template<typename T, typename... Args>
+		T* AddComponent(EntityId entity, Args&&... args) {
+			return world.AddComponent<T>(entity, std::forward<Args>(args)...);
 		}
+
+		template<typename T>
+		T* GetComponent(EntityId entity) { return world.GetComponent<T>(entity); }
+
+		template<typename T>
+		bool HasComponent(EntityId entity) const { return world.HasComponent<T>(entity); }
+
+		void AddChildECS(EntityId parentId, EntityId childId, const std::string& childTagId);
 
 		template<typename T = Material, typename... Args>
 		T* GetOrCreateMaterial(const std::string& ID, Args&&... args) {
@@ -48,80 +57,42 @@ namespace Iberus {
 			return dynamic_cast<T*>(materials.at(ID).get());
 		}
 
-		template<typename T = Behaviour>
-		bool PushBehaviour(T* behaviour, Entity* entity) {
-			if (!behaviour) {
+		template<typename T>
+		bool PushBehaviour(EntityId entityId, std::unique_ptr<T> behaviour) {
+			if (!behaviour || !world.IsAlive(entityId)) return false;
+			auto* b = behaviour.get();
+			behaviour->BindBehaviour(entityId, world);
+			std::string type = b->GetType();
+			std::string tagId;
+			if (auto* tag = world.GetComponent<TagComponent>(entityId)) tagId = tag->Id;
+			else tagId = std::to_string(entityId);
+			std::string bid = "Behaviour_" + tagId;
+			auto& list = registeredBehaviours[type];
+			if (std::find_if(list.begin(), list.end(), [&bid](const auto& p) { return p.second->GetID() == bid; }) != list.end()) {
 				return false;
 			}
-
-			auto behaviourCast = dynamic_cast<Behaviour*>(behaviour);
-
-			if (!behaviourCast) {
-				delete behaviour;
-				return false;
-			}
-			
-			//const auto index = std::type_index(typeid(T*));
-
-			if (registeredBehaviours.empty() || registeredBehaviours.find(behaviourCast->GetType()) == registeredBehaviours.end()) {
-				behaviourCast->BindBehaviour(entity, this);
-				registeredBehaviours[behaviourCast->GetType()].emplace_back(entity, behaviour);
-				return true;
-			}
-
-			auto& behaviours = registeredBehaviours.at(behaviourCast->GetType());
-
-			const auto& id = "Behaviour_" + entity->GetID();
-
-			if (std::find_if(behaviours.begin(), behaviours.end(), [id](const BehaviourPair& otherBehaviour) { return id == otherBehaviour.behaviour->GetID(); }) !=
-				behaviours.end()) {
-				delete behaviour;
-				return false;
-			}
-
-			behaviourCast->BindBehaviour(entity, this);
-			registeredBehaviours[behaviourCast->GetType()].emplace_back(entity, behaviour);
+			behaviour->Init(entityId, world);
+			list.emplace_back(entityId, std::move(behaviour));
 			return true;
 		}
 
-		template<typename T = Behaviour>
-		void UnbindBehaviour(T* behaviour) {
-			auto behaviourCast = dynamic_cast<Behaviour*>(behaviour);
-
-			if (!behaviourCast) {
-				return;
-			}
-
-			const auto index = behaviourCast->GetType();
-
-			if (registeredBehaviours.empty() || registeredBehaviours.find(index) == registeredBehaviours.end()) {
-				return;
-			}
-
-			auto& behaviours = registeredBehaviours.at(index);
-			const auto& id = behaviourCast->GetID();
-
-			behaviours.erase(std::remove_if(behaviours.begin(), behaviours.end(),
-				[id](const BehaviourPair& otherBehaviour) { return  id == otherBehaviour.behaviour->GetID(); }), behaviours.end());
+		template<typename T>
+		bool PushBehaviour(EntityId entityId, T* behaviour) {
+			return PushBehaviour(entityId, std::unique_ptr<T>(behaviour));
 		}
 
-		void AddEntity(const std::string& id, Entity* entity);
-
-		Camera* GetActiveCamera() { return activeCamera; }
-		Entity* GetSceneRoot() { return sceneRoot; }
+		std::map<std::string, std::vector<std::pair<EntityId, std::unique_ptr<Behaviour>>>>& GetRegisteredBehaviours() { return registeredBehaviours; }
+		const std::map<std::string, std::vector<std::pair<EntityId, std::unique_ptr<Behaviour>>>>& GetRegisteredBehaviours() const { return registeredBehaviours; }
 
 	private:
 		std::string ID;
 
-		Camera* activeCamera{ nullptr };
-		Entity* sceneRoot{ nullptr };
+		World world;
+		EntityId sceneRootId{ NullEntity };
+		EntityId activeCameraId{ NullEntity };
 
 		std::unordered_map<std::string, std::unique_ptr<Material>> materials;
-		std::vector<std::unique_ptr<Entity>> entities;
-
-		std::map<std::string, std::vector<BehaviourPair>> registeredBehaviours;
-
-		std::vector<SDFEntity*> sdfEntities;
+		std::map<std::string, std::vector<std::pair<EntityId, std::unique_ptr<Behaviour>>>> registeredBehaviours;
 	};
 
  }

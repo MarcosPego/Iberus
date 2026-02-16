@@ -12,13 +12,17 @@
 namespace Iberus {
 
 	static void DrawEntityContextMenu(Scene* scene, EntityId entityId, EntityId parentId, Editor& editor) {
-		if (!scene || entityId == NullEntity || !scene->GetWorld().IsAlive(entityId)) return;
+		if (!scene || entityId == NullEntity || !scene->GetWorld().IsAlive(entityId)) {
+			return;
+		}
 		World& world = scene->GetWorld();
 		EntityId rootId = scene->GetSceneRootId();
 
-		if (ImGui::BeginMenu("Create child")) {
+		if (ImGui::BeginMenu("Create child##CreateChildMenu")) {
 			auto createChild = [&](const char* label, const char* tagBase, auto addExtraComponents) {
-				if (ImGui::MenuItem(label)) {
+				char buf[64];
+				snprintf(buf, sizeof(buf), "%s##CreateChild_%s", label, tagBase);
+				if (ImGui::MenuItem(buf)) {
 					std::string tagId = scene->GenerateUniqueTagId(tagBase);
 					EntityId childId = scene->CreateEntityECS(tagId);
 					addExtraComponents(childId);
@@ -33,22 +37,26 @@ namespace Iberus {
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Add component")) {
-			auto tryAdd = [&](const char* label, auto hasComp, auto addComp) {
-				if (!hasComp() && ImGui::MenuItem(label)) addComp();
+		if (ImGui::BeginMenu("Add component##AddComponentMenu")) {
+			auto tryAdd = [&](const char* label, const char* idSuffix, auto hasComp, auto addComp) {
+				char buf[64];
+				snprintf(buf, sizeof(buf), "%s##AddComponent_%s", label, idSuffix);
+				if (!hasComp() && ImGui::MenuItem(buf)) {
+					addComp();
+				}
 			};
-			tryAdd("Mesh Renderer", [&]() { return world.HasComponent<MeshRendererComponent>(entityId); },
+			tryAdd("Mesh Renderer", "MeshRenderer", [&]() { return world.HasComponent<MeshRendererComponent>(entityId); },
 				[&]() { scene->AddComponent<MeshRendererComponent>(entityId); });
-			tryAdd("Camera", [&]() { return world.HasComponent<CameraComponent>(entityId); },
+			tryAdd("Camera", "Camera", [&]() { return world.HasComponent<CameraComponent>(entityId); },
 				[&]() { scene->AddComponent<CameraComponent>(entityId); });
-			tryAdd("Light", [&]() { return world.HasComponent<LightComponent>(entityId); },
+			tryAdd("Light", "Light", [&]() { return world.HasComponent<LightComponent>(entityId); },
 				[&]() { scene->AddComponent<LightComponent>(entityId); });
-			tryAdd("SDF", [&]() { return world.HasComponent<SDFComponent>(entityId); },
+			tryAdd("SDF", "SDF", [&]() { return world.HasComponent<SDFComponent>(entityId); },
 				[&]() { scene->AddComponent<SDFComponent>(entityId); });
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::MenuItem("Copy")) {
+		if (ImGui::MenuItem("Copy##EntityCopy")) {
 			editor.SetCopiedEntity(entityId);
 		}
 
@@ -57,7 +65,7 @@ namespace Iberus {
 			auto* activeScene = Engine::Instance()->GetSceneManager().GetActiveScene();
 			canPaste = activeScene && activeScene->GetWorld().IsAlive(editor.GetCopiedEntityId());
 		}
-		if (ImGui::MenuItem("Paste", nullptr, false, canPaste)) {
+		if (ImGui::MenuItem("Paste##EntityPaste", nullptr, false, canPaste)) {
 			if (Scene* s = Engine::Instance()->GetSceneManager().GetActiveScene()) {
 				EntityId copiedId = editor.GetCopiedEntityId();
 				if (s->GetWorld().IsAlive(copiedId)) {
@@ -71,7 +79,7 @@ namespace Iberus {
 			}
 		}
 
-		if (ImGui::MenuItem("Duplicate")) {
+		if (ImGui::MenuItem("Duplicate##EntityDuplicate")) {
 			if (Scene* s = Engine::Instance()->GetSceneManager().GetActiveScene()) {
 				World& w = s->GetWorld();
 				auto* hier = w.GetComponent<HierarchyComponent>(entityId);
@@ -87,7 +95,7 @@ namespace Iberus {
 			}
 		}
 
-		if (ImGui::MenuItem("Delete")) {
+		if (ImGui::MenuItem("Delete##EntityDelete")) {
 			if (entityId != rootId && scene) {
 				if (editor.GetSelectedEntityId() == entityId) {
 					editor.SetSelectedEntity(NullEntity);
@@ -101,14 +109,19 @@ namespace Iberus {
 	}
 
 	static void DrawEntityTree(Scene* scene, World& world, EntityId entityId, EntityId parentId, Editor& editor) {
-		if (entityId == NullEntity || !world.IsAlive(entityId)) return;
+		if (entityId == NullEntity || !world.IsAlive(entityId)) {
+			return;
+		}
 		auto* tag = world.GetComponent<TagComponent>(entityId);
 		const char* name = tag ? tag->Id.c_str() : "?";
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 		if (editor.GetSelectedEntityId() == entityId) {
 			flags |= ImGuiTreeNodeFlags_Selected;
 		}
-		bool opened = ImGui::TreeNodeEx(name, flags);
+		ImGui::PushID(static_cast<int>(entityId));
+		char treeBuf[128];
+		snprintf(treeBuf, sizeof(treeBuf), "%s##Entity_%d", name, static_cast<int>(entityId));
+		bool opened = ImGui::TreeNodeEx(treeBuf, flags);
 		if (ImGui::IsItemClicked()) {
 			editor.SetSelectedEntity(entityId);
 		}
@@ -125,13 +138,16 @@ namespace Iberus {
 			}
 			ImGui::TreePop();
 		}
+		ImGui::PopID();
 	}
 
 	static void DrawEmptyContextMenu(Scene* scene, Editor& editor) {
 		EntityId rootId = scene->GetSceneRootId();
-		if (ImGui::BeginMenu("Create")) {
+		if (ImGui::BeginMenu("Create##CreateRootMenu")) {
 			auto createChild = [&](const char* label, const char* tagBase, auto addExtraComponents) {
-				if (ImGui::MenuItem(label)) {
+				char buf[64];
+				snprintf(buf, sizeof(buf), "%s##CreateRoot_%s", label, tagBase);
+				if (ImGui::MenuItem(buf)) {
 					std::string tagId = scene->GenerateUniqueTagId(tagBase);
 					EntityId childId = scene->CreateEntityECS(tagId);
 					addExtraComponents(childId);
@@ -150,7 +166,7 @@ namespace Iberus {
 			if (Scene* activeScene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
 				canPaste = activeScene->GetWorld().IsAlive(editor.GetCopiedEntityId());
 			}
-			if (ImGui::MenuItem("Paste", nullptr, false, canPaste)) {
+			if (ImGui::MenuItem("Paste##EmptyPaste", nullptr, false, canPaste)) {
 				EntityId copiedId = editor.GetCopiedEntityId();
 				EntityId cloned = scene->CloneEntityWithDescendants(copiedId);
 				if (cloned != NullEntity) {

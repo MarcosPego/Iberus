@@ -4,11 +4,14 @@
 #include "SceneTreePanel.h"
 #include "SceneViewPanel.h"
 #include "InspectorPanel.h"
+#include "FileSystemPanel.h"
+#include "AssetInspectorPanel.h"
 #include "EntityId.h"
 #include "MathUtils.h"
 #include "RenderCmd.h"
 
 #include <memory>
+#include <string>
 
 namespace Iberus {
 
@@ -42,6 +45,9 @@ namespace Iberus {
 		EntityId GetCopiedEntityId() const { return copiedEntityId; }
 		bool HasCopiedEntity() const { return copiedEntityId != NullEntity; }
 
+		void SetSelectedAssetPath(const std::string& path) { selectedAssetPath = path; }
+		const std::string& GetSelectedAssetPath() const { return selectedAssetPath; }
+
 		void SetViewportFocused(bool focused) { viewportFocused = focused; }
 		bool IsViewportFocused() const { return viewportFocused; }
 
@@ -57,7 +63,10 @@ namespace Iberus {
 		std::unique_ptr<SceneTreePanel> sceneTreePanel;
 		std::unique_ptr<SceneViewPanel> sceneViewPanel;
 		std::unique_ptr<InspectorPanel> inspectorPanel;
+		std::unique_ptr<FileSystemPanel> fileSystemPanel;
+		std::unique_ptr<AssetInspectorPanel> assetInspectorPanel;
 		EditorMode editorMode{ EditorMode::Editor };
+		std::string selectedAssetPath;
 		bool wasF11Down{ false };
 		EntityId selectedEntityId{ NullEntity };
 		EntityId copiedEntityId{ NullEntity };

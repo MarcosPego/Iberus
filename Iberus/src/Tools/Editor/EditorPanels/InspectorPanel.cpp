@@ -18,89 +18,118 @@ namespace Iberus {
 
 	static void DrawTransformComponent(World& world, EntityId entityId) {
 		auto* transform = world.GetComponent<TransformComponent>(entityId);
-		if (!transform) return;
-		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (!transform) {
+			return;
+		}
+		if (ImGui::CollapsingHeader("Transform##TransformHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
 			Vec3 pos = transform->Position;
-			if (ImGui::DragFloat3("Position", &pos.x, 0.1f)) transform->Position = pos;
+			if (ImGui::DragFloat3("Position##TransformPosition", &pos.x, 0.1f)) {
+				transform->Position = pos;
+			}
 			Vec3 rot = transform->Rotation;
-			if (ImGui::DragFloat3("Rotation", &rot.x, 1.0f)) transform->Rotation = rot;
+			if (ImGui::DragFloat3("Rotation##TransformRotation", &rot.x, 1.0f)) {
+				transform->Rotation = rot;
+			}
 			Vec3 scale = transform->Scale;
-			if (ImGui::DragFloat3("Scale", &scale.x, 0.01f)) transform->Scale = scale;
+			if (ImGui::DragFloat3("Scale##TransformScale", &scale.x, 0.01f)) {
+				transform->Scale = scale;
+			}
 		}
 	}
 
 	static void DrawTagComponent(World& world, EntityId entityId, Scene* scene) {
 		auto* tag = world.GetComponent<TagComponent>(entityId);
-		if (!tag) return;
-		if (ImGui::CollapsingHeader("Tag", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (!tag) {
+			return;
+		}
+		if (ImGui::CollapsingHeader("Tag##TagHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
 			char idBuf[256];
 			snprintf(idBuf, sizeof(idBuf), "%s", tag->Id.c_str());
-			if (ImGui::InputText("Id", idBuf, sizeof(idBuf))) tag->Id = idBuf;
+			if (ImGui::InputText("Id##TagId", idBuf, sizeof(idBuf))) {
+				tag->Id = idBuf;
+			}
 			char nameBuf[256];
 			snprintf(nameBuf, sizeof(nameBuf), "%s", tag->Name.c_str());
-			if (ImGui::InputText("Name", nameBuf, sizeof(nameBuf))) tag->Name = nameBuf;
+			if (ImGui::InputText("Name##TagName", nameBuf, sizeof(nameBuf))) {
+				tag->Name = nameBuf;
+			}
 		}
 	}
 
 	static void DrawActiveComponent(World& world, EntityId entityId, Scene* scene) {
 		auto* active = world.GetComponent<ActiveComponent>(entityId);
 		bool activeVal = active ? active->Active : true;
-		if (ImGui::CollapsingHeader("Active", ImGuiTreeNodeFlags_DefaultOpen)) {
-			if (ImGui::Checkbox("Active", &activeVal)) {
-				if (active) active->Active = activeVal;
-				else scene->AddComponent<ActiveComponent>(entityId, activeVal);
+		if (ImGui::CollapsingHeader("Active##ActiveHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
+			if (ImGui::Checkbox("Active##ActiveCheckbox", &activeVal)) {
+				if (active) {
+					active->Active = activeVal;
+				} else {
+					scene->AddComponent<ActiveComponent>(entityId, activeVal);
+				}
 			}
 		}
 	}
 
 	static void DrawMeshRendererComponent(World& world, EntityId entityId) {
 		auto* comp = world.GetComponent<MeshRendererComponent>(entityId);
-		if (!comp) return;
-		if (ImGui::CollapsingHeader("Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (!comp) {
+			return;
+		}
+		if (ImGui::CollapsingHeader("Mesh Renderer##MeshRendererHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
 			char meshBuf[256];
 			snprintf(meshBuf, sizeof(meshBuf), "%s", comp->MeshId.c_str());
-			if (ImGui::InputText("Mesh", meshBuf, sizeof(meshBuf))) comp->MeshId = meshBuf;
+			if (ImGui::InputText("Mesh##MeshRendererMesh", meshBuf, sizeof(meshBuf))) {
+				comp->MeshId = meshBuf;
+			}
 			char matBuf[256];
 			snprintf(matBuf, sizeof(matBuf), "%s", comp->MaterialId.c_str());
-			if (ImGui::InputText("Material", matBuf, sizeof(matBuf))) comp->MaterialId = matBuf;
+			if (ImGui::InputText("Material##MeshRendererMaterial", matBuf, sizeof(matBuf))) {
+				comp->MaterialId = matBuf;
+			}
 		}
 	}
 
 	static void DrawCameraComponent(World& world, EntityId entityId) {
 		auto* comp = world.GetComponent<CameraComponent>(entityId);
-		if (!comp) return;
-		if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (!comp) {
+			return;
+		}
+		if (ImGui::CollapsingHeader("Camera##CameraHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
 			int projType = static_cast<int>(comp->ProjectionType);
 			const char* projNames[] = { "Unknown", "Orthographic", "Perspective" };
-			if (ImGui::Combo("Projection", &projType, projNames, 3)) {
+			if (ImGui::Combo("Projection##CameraProjection", &projType, projNames, 3)) {
 				comp->ProjectionType = static_cast<CameraProjectionType>(projType);
 			}
 			if (comp->ProjectionType == CameraProjectionType::Perspective) {
 				auto& p = comp->PerspectiveParams;
-				ImGui::DragFloat("FOV Y", &p.Fovy, 1.0f, 1.0f, 179.0f);
-				ImGui::DragFloat("Near", &p.NearZ, 0.01f, 0.001f, 100.0f);
-				ImGui::DragFloat("Far", &p.FarZ, 1.0f, 1.0f, 100000.0f);
+				ImGui::DragFloat("FOV Y##CameraFov", &p.Fovy, 1.0f, 1.0f, 179.0f);
+				ImGui::DragFloat("Near##CameraNear", &p.NearZ, 0.01f, 0.001f, 100.0f);
+				ImGui::DragFloat("Far##CameraFar", &p.FarZ, 1.0f, 1.0f, 100000.0f);
 			}
 		}
 	}
 
 	static void DrawSDFComponent(World& world, EntityId entityId, Scene* scene) {
 		auto* comp = world.GetComponent<SDFComponent>(entityId);
-		if (!comp) return;
-		if (ImGui::CollapsingHeader("SDF", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (!comp) {
+			return;
+		}
+		if (ImGui::CollapsingHeader("SDF##SDFHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
 			for (size_t i = 0; i < comp->Parts.size(); ++i) {
 				auto& part = comp->Parts[i];
-				if (ImGui::TreeNode((void*)(intptr_t)i, "Part %zu", i)) {
-					ImGui::DragFloat3("Position", &part.Transform.Position.x, 0.1f);
-					ImGui::DragInt("Type", &part.Type);
-					ImGui::DragFloat("Radius", &part.Radius, 0.01f);
+				if (ImGui::TreeNode((void*)(intptr_t)i, "Part %zu##SDFPart", i)) {
+					ImGui::DragFloat3("Position##SDFPartPosition", &part.Transform.Position.x, 0.1f);
+					ImGui::DragInt("Type##SDFPartType", &part.Type);
+					ImGui::DragFloat("Radius##SDFPartRadius", &part.Radius, 0.01f);
 					char matBuf[256];
 					snprintf(matBuf, sizeof(matBuf), "%s", part.MaterialId.c_str());
-					if (ImGui::InputText("Material Override", matBuf, sizeof(matBuf))) part.MaterialId = matBuf;
+					if (ImGui::InputText("Material Override##SDFPartMaterial", matBuf, sizeof(matBuf))) {
+						part.MaterialId = matBuf;
+					}
 					ImGui::TreePop();
 				}
 			}
-			if (ImGui::Button("Add Part")) {
+			if (ImGui::Button("Add Part##SDFAddPart")) {
 				SDFPartData part;
 				comp->Parts.push_back(part);
 			}
@@ -109,15 +138,19 @@ namespace Iberus {
 
 	static void DrawLightComponent(World& world, EntityId entityId) {
 		auto* comp = world.GetComponent<LightComponent>(entityId);
-		if (!comp) return;
-		if (ImGui::CollapsingHeader("Light", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (!comp) {
+			return;
+		}
+		if (ImGui::CollapsingHeader("Light##LightHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
 			int type = static_cast<int>(comp->Type);
 			const char* typeNames[] = { "Point", "Spot", "Directional", "Area" };
-			if (ImGui::Combo("Type", &type, typeNames, 4)) comp->Type = static_cast<LightType>(type + 1);
-			ImGui::ColorEdit3("Color", &comp->Color.x);
-			ImGui::DragFloat("Intensity", &comp->Intensity, 0.1f);
-			ImGui::DragFloat("Range", &comp->Range, 1.0f);
-			ImGui::DragFloat3("Direction", &comp->Direction.x, 0.01f);
+			if (ImGui::Combo("Type##LightType", &type, typeNames, 4)) {
+				comp->Type = static_cast<LightType>(type + 1);
+			}
+			ImGui::ColorEdit3("Color##LightColor", &comp->Color.x);
+			ImGui::DragFloat("Intensity##LightIntensity", &comp->Intensity, 0.1f);
+			ImGui::DragFloat("Range##LightRange", &comp->Range, 1.0f);
+			ImGui::DragFloat3("Direction##LightDirection", &comp->Direction.x, 0.01f);
 		}
 	}
 
@@ -157,20 +190,24 @@ namespace Iberus {
 		}
 
 		ImGui::Separator();
-		if (ImGui::Button("Add Component")) {
+		if (ImGui::Button("Add Component##AddComponent")) {
 			ImGui::OpenPopup("AddComponentPopup");
 		}
 		if (ImGui::BeginPopup("AddComponentPopup")) {
-			auto tryAdd = [&](const char* label, bool hasIt, auto addIt) {
-				if (!hasIt && ImGui::MenuItem(label)) addIt();
+			auto tryAdd = [&](const char* label, const char* idSuffix, bool hasIt, auto addIt) {
+				char buf[64];
+				snprintf(buf, sizeof(buf), "%s##%s", label, idSuffix);
+				if (!hasIt && ImGui::MenuItem(buf)) {
+					addIt();
+				}
 			};
-			tryAdd("Mesh Renderer", world.HasComponent<MeshRendererComponent>(entityId),
+			tryAdd("Mesh Renderer", "AddMeshRenderer", world.HasComponent<MeshRendererComponent>(entityId),
 				[&]() { scene->AddComponent<MeshRendererComponent>(entityId); });
-			tryAdd("Camera", world.HasComponent<CameraComponent>(entityId),
+			tryAdd("Camera", "AddCamera", world.HasComponent<CameraComponent>(entityId),
 				[&]() { scene->AddComponent<CameraComponent>(entityId); });
-			tryAdd("Light", world.HasComponent<LightComponent>(entityId),
+			tryAdd("Light", "AddLight", world.HasComponent<LightComponent>(entityId),
 				[&]() { scene->AddComponent<LightComponent>(entityId); });
-			tryAdd("SDF", world.HasComponent<SDFComponent>(entityId),
+			tryAdd("SDF", "AddSDF", world.HasComponent<SDFComponent>(entityId),
 				[&]() { scene->AddComponent<SDFComponent>(entityId); });
 			ImGui::EndPopup();
 		}

@@ -420,6 +420,9 @@
     <ClInclude Include="src\FileSystem\FileSystem.h">
       <Filter>src\FileSystem</Filter>
     </ClInclude>
+    <ClInclude Include="src\FileSystem\FileWatcher.h">
+      <Filter>src\FileSystem</Filter>
+    </ClInclude>
     <ClInclude Include="src\Iberus.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -528,6 +531,9 @@
     <ClInclude Include="src\Scene\Resources\FileSystemProvider.h">
       <Filter>src\Scene\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Resources\ProjectPaths.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Resources\IProvider.h">
       <Filter>src\Scene\Resources</Filter>
     </ClInclude>
@@ -563,6 +569,15 @@
     </ClInclude>
     <ClInclude Include="src\Tools\Editor\EditorLayer.h">
       <Filter>src\Tools\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\ThumbnailCache.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\FileSystemPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClInclude>
     <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
@@ -636,6 +651,9 @@
       <Filter>src\Core\Types</Filter>
     </ClCompile>
     <ClCompile Include="src\FileSystem\FileSystem.cpp">
+      <Filter>src\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\FileWatcher.cpp">
       <Filter>src\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\Logging\Log.cpp">
@@ -758,6 +776,9 @@
     <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp">
       <Filter>src\Scene\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Resources\ProjectPaths.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Resources\IProvider.cpp">
       <Filter>src\Scene\Resources</Filter>
     </ClCompile>
@@ -790,6 +811,15 @@
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorLayer.cpp">
       <Filter>src\Tools\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\ThumbnailCache.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\FileSystemPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp">
       <Filter>src\Tools\Editor\EditorPanels</Filter>

@@ -15,13 +15,17 @@ namespace Iberus {
 	Editor::Editor()
 		: sceneTreePanel(std::make_unique<SceneTreePanel>(*this))
 		, sceneViewPanel(std::make_unique<SceneViewPanel>(*this))
-		, inspectorPanel(std::make_unique<InspectorPanel>(*this)) {
+		, inspectorPanel(std::make_unique<InspectorPanel>(*this))
+		, fileSystemPanel(std::make_unique<FileSystemPanel>(*this))
+		, assetInspectorPanel(std::make_unique<AssetInspectorPanel>(*this)) {
 	}
 
 	Editor::~Editor() = default;
 
 	void Editor::UpdateEditorCamera(double deltaTime) {
-		if (editorMode != EditorMode::Editor || !viewportFocused) return;
+		if (editorMode != EditorMode::Editor || !viewportFocused) {
+			return;
+		}
 
 		auto& input = Engine::Instance()->GetInputManager();
 		bool togglePressed = input.IsKeyPressed(KeyCode::C);
@@ -31,7 +35,9 @@ namespace Iberus {
 		}
 		editorCameraWasTogglePressed = togglePressed;
 
-		if (!editorCameraEnabled) return;
+		if (!editorCameraEnabled) {
+			return;
+		}
 
 		const float mouseSensitivity = 0.15f;
 		const float moveSpeed = 8.0f;
@@ -47,8 +53,12 @@ namespace Iberus {
 				editorCameraYaw -= delta.x * mouseSensitivity;
 				editorCameraPitch -= delta.y * mouseSensitivity;
 				const float maxPitch = 89.0f;
-				if (editorCameraPitch > maxPitch) editorCameraPitch = maxPitch;
-				if (editorCameraPitch < -maxPitch) editorCameraPitch = -maxPitch;
+				if (editorCameraPitch > maxPitch) {
+					editorCameraPitch = maxPitch;
+				}
+				if (editorCameraPitch < -maxPitch) {
+					editorCameraPitch = -maxPitch;
+				}
 				editorCamera.Rotation = Vec3(editorCameraPitch, editorCameraYaw, 0.0f);
 				editorCameraLastMouse = currentMouse;
 			}
@@ -62,12 +72,24 @@ namespace Iberus {
 		Vec3 rightXY(cosf(yawRad), -sinf(yawRad), 0.0f);
 
 		Vec3 movement(0, 0, 0);
-		if (input.IsKeyPressed(KeyCode::W)) movement += forwardXY;
-		if (input.IsKeyPressed(KeyCode::S)) movement -= forwardXY;
-		if (input.IsKeyPressed(KeyCode::A)) movement -= rightXY;
-		if (input.IsKeyPressed(KeyCode::D)) movement += rightXY;
-		if (input.IsKeyPressed(KeyCode::E)) movement.z += 1.0f;
-		if (input.IsKeyPressed(KeyCode::Q)) movement.z -= 1.0f;
+		if (input.IsKeyPressed(KeyCode::W)) {
+			movement += forwardXY;
+		}
+		if (input.IsKeyPressed(KeyCode::S)) {
+			movement -= forwardXY;
+		}
+		if (input.IsKeyPressed(KeyCode::A)) {
+			movement -= rightXY;
+		}
+		if (input.IsKeyPressed(KeyCode::D)) {
+			movement += rightXY;
+		}
+		if (input.IsKeyPressed(KeyCode::E)) {
+			movement.z += 1.0f;
+		}
+		if (input.IsKeyPressed(KeyCode::Q)) {
+			movement.z -= 1.0f;
+		}
 
 		if (movement.length() > 0) {
 			movement = normalize(movement);
@@ -76,7 +98,9 @@ namespace Iberus {
 	}
 
 	std::unique_ptr<CameraRenderCmd> Editor::GetEditorCameraOverride() const {
-		if (editorMode != EditorMode::Editor) return nullptr;
+		if (editorMode != EditorMode::Editor) {
+			return nullptr;
+		}
 
 		float aspect = Engine::Instance()->GetEffectiveRenderAspectRatio();
 		Vec3 pos = editorCamera.Position;
@@ -122,6 +146,8 @@ namespace Iberus {
 		sceneTreePanel->OnDraw(*gui);
 		sceneViewPanel->OnDraw(*gui);
 		inspectorPanel->OnDraw(*gui);
+		fileSystemPanel->OnDraw(*gui);
+		assetInspectorPanel->OnDraw(*gui);
 		gui->EndDockSpace();
 	}
 

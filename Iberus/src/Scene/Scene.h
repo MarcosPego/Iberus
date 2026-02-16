@@ -76,13 +76,18 @@ namespace Iberus {
 
 		template<typename T>
 		bool PushBehaviour(EntityId entityId, std::unique_ptr<T> behaviour) {
-			if (!behaviour || !world.IsAlive(entityId)) return false;
+			if (!behaviour || !world.IsAlive(entityId)) {
+				return false;
+			}
 			auto* b = behaviour.get();
 			behaviour->BindBehaviour(entityId, world);
 			std::string type = b->GetType();
 			std::string tagId;
-			if (auto* tag = world.GetComponent<TagComponent>(entityId)) tagId = tag->Id;
-			else tagId = std::to_string(entityId);
+			if (auto* tag = world.GetComponent<TagComponent>(entityId)) {
+				tagId = tag->Id;
+			} else {
+				tagId = std::to_string(entityId);
+			}
 			std::string bid = "Behaviour_" + tagId;
 			auto& list = registeredBehaviours[type];
 			if (std::find_if(list.begin(), list.end(), [&bid](const auto& p) { return p.second->GetID() == bid; }) != list.end()) {

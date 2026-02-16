@@ -17,7 +17,9 @@ namespace Math {
 
 	void Mat2::clean(){
 		for (int i = 0; i < this->array_size; i++) {
-			if (fabs(this->data[i]) < EPSILON) this->data[i] = 0.0f;
+			if (fabs(this->data[i]) < EPSILON) {
+				this->data[i] = 0.0f;
+			}
 		}
 	}
 

@@ -10,6 +10,44 @@ namespace Iberus {
 		return pathString;
 	}
 
+	std::string FileSystem::GetAssetsPath() {
+		std::string base = GetWorkingDir();
+		std::filesystem::path assetsUpper = std::filesystem::path(base) / "Assets";
+		std::filesystem::path assetsLower = std::filesystem::path(base) / "assets";
+		if (std::filesystem::exists(assetsUpper) && std::filesystem::is_directory(assetsUpper)) {
+			return assetsUpper.string();
+		}
+		if (std::filesystem::exists(assetsLower) && std::filesystem::is_directory(assetsLower)) {
+			return assetsLower.string();
+		}
+		return assetsUpper.string();
+	}
+
+	std::vector<DirEntry> FileSystem::ListDirectory(const std::string& path) {
+		std::vector<DirEntry> result;
+		try {
+			std::filesystem::path p(path);
+			if (!std::filesystem::exists(p) || !std::filesystem::is_directory(p)) {
+				return result;
+			}
+			for (const auto& entry : std::filesystem::directory_iterator(p)) {
+				DirEntry e;
+				auto u8 = entry.path().filename().u8string();
+				e.name.assign(u8.begin(), u8.end());
+				e.isDirectory = entry.is_directory();
+				result.push_back(e);
+			}
+			std::sort(result.begin(), result.end(), [](const DirEntry& a, const DirEntry& b) {
+				if (a.isDirectory != b.isDirectory) {
+					return a.isDirectory;
+				}
+				return a.name < b.name;
+			});
+		} catch (...) {
+		}
+		return result;
+	}
+
 	std::size_t FileSystem::GetRawFileSize(const std::string& filename) {
 		FILE* file;
 

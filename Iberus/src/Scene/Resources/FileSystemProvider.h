@@ -2,6 +2,8 @@
 
 #include "IProvider.h"
 
+#include <string>
+
 namespace Iberus {
 
 	class FileSystemProvider : public IProvider {
@@ -12,9 +14,11 @@ namespace Iberus {
 			workingDir = newWorkingDir;
 		}
 
+		/// Returns path from which resources are loaded (working dir).
+		const std::string& GetWorkingDir() const { return workingDir; }
+
 	private:
 		std::string workingDir;
-
 	};
 }
 

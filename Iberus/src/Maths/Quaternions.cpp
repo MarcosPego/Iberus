@@ -145,10 +145,18 @@ namespace Math {
 
 	const void qClean(Qtrn& q)
 	{
-		if (fabs(q.t) < EPSILON) q.t = 0.0f;
-		if (fabs(q.x) < EPSILON) q.x = 0.0f;
-		if (fabs(q.y) < EPSILON) q.y = 0.0f;
-		if (fabs(q.z) < EPSILON) q.z = 0.0f;
+		if (fabs(q.t) < EPSILON) {
+			q.t = 0.0f;
+		}
+		if (fabs(q.x) < EPSILON) {
+			q.x = 0.0f;
+		}
+		if (fabs(q.y) < EPSILON) {
+			q.y = 0.0f;
+		}
+		if (fabs(q.z) < EPSILON) {
+			q.z = 0.0f;
+		}
 	}
 
 	const float qQuadrance(const Qtrn& q)

@@ -22,7 +22,9 @@ namespace Iberus {
 
 		int sdfSlot = 0;
 		for (auto [entityId, sdf] : *sdfStorage) {
-			if (!world.IsAlive(entityId)) continue;
+			if (!world.IsAlive(entityId)) {
+				continue;
+			}
 			if (activeStorage) {
 				auto* active = activeStorage->Get(entityId);
 				if (active && !active->Active) {
@@ -62,7 +64,9 @@ namespace Iberus {
 				Vec4 color = Vec4(1, 1, 1, 1);
 				if (!part.MaterialId.empty()) {
 					Material* partMat = scene.GetOrCreateMaterial<Material>(part.MaterialId);
-					if (partMat) color = partMat->albedoColor;
+					if (partMat) {
+						color = partMat->albedoColor;
+					}
 				} else if (entityMaterial) {
 					color = entityMaterial->albedoColor;
 				}

@@ -72,7 +72,9 @@ namespace Iberus {
 	}
 
 	void Scene::DestroyEntityWithDescendants(EntityId entityId) {
-		if (entityId == NullEntity || !world.IsAlive(entityId)) return;
+		if (entityId == NullEntity || !world.IsAlive(entityId)) {
+			return;
+		}
 		auto* hierarchy = world.GetComponent<HierarchyComponent>(entityId);
 		EntityId parentId = hierarchy ? hierarchy->ParentId : NullEntity;
 
@@ -111,13 +113,20 @@ namespace Iberus {
 		std::string candidate = base;
 		int suffix = 1;
 		auto* tagStorage = world.GetStorage<TagComponent>();
-		if (!tagStorage) return candidate;
+		if (!tagStorage) {
+			return candidate;
+		}
 		while (true) {
 			bool found = false;
 			for (auto [eid, tag] : *tagStorage) {
-				if (tag.Id == candidate) { found = true; break; }
+				if (tag.Id == candidate) {
+				found = true;
+				break;
 			}
-			if (!found) return candidate;
+			}
+			if (!found) {
+				return candidate;
+			}
 			candidate = base + "_" + std::to_string(suffix++);
 		}
 	}
@@ -125,7 +134,9 @@ namespace Iberus {
 	static EntityId CloneEntityRecursive(Scene& scene, EntityId sourceId, EntityId newParentId, const std::string& parentTagForChild) {
 		(void)parentTagForChild;
 		World& world = scene.GetWorld();
-		if (sourceId == NullEntity || !world.IsAlive(sourceId)) return NullEntity;
+		if (sourceId == NullEntity || !world.IsAlive(sourceId)) {
+			return NullEntity;
+		}
 
 		auto* srcTag = world.GetComponent<TagComponent>(sourceId);
 		std::string newTagId = scene.GenerateUniqueTagId(srcTag ? srcTag->Id + "_clone" : "Entity_clone");

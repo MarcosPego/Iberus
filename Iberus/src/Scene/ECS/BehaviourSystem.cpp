@@ -9,7 +9,9 @@ namespace Iberus {
 	void BehaviourSystem::Update(World& world, Scene& scene, double deltaTime) {
 		for (auto& [type, list] : scene.GetRegisteredBehaviours()) {
 			for (auto& [entityId, behaviour] : list) {
-				if (!world.IsAlive(entityId)) continue;
+				if (!world.IsAlive(entityId)) {
+					continue;
+				}
 				auto* active = world.GetComponent<ActiveComponent>(entityId);
 				if (active && !active->Active) {
 					continue;

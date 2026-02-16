@@ -27,12 +27,24 @@ namespace Iberus {
 
 	ModifierFlags InputTranslationGLFW::FromGLFWMods(int glfwMods) {
 		ModifierFlags flags = ModifierFlags::NoModifiers;
-		if (glfwMods & GLFW_MOD_SHIFT)    flags = flags | ModifierFlags::Shift;
-		if (glfwMods & GLFW_MOD_CONTROL)  flags = flags | ModifierFlags::Ctrl;
-		if (glfwMods & GLFW_MOD_ALT)      flags = flags | ModifierFlags::Alt;
-		if (glfwMods & GLFW_MOD_SUPER)   flags = flags | ModifierFlags::Super;
-		if (glfwMods & GLFW_MOD_CAPS_LOCK) flags = flags | ModifierFlags::CapsLock;
-		if (glfwMods & GLFW_MOD_NUM_LOCK)  flags = flags | ModifierFlags::NumLock;
+		if (glfwMods & GLFW_MOD_SHIFT) {
+			flags = flags | ModifierFlags::Shift;
+		}
+		if (glfwMods & GLFW_MOD_CONTROL) {
+			flags = flags | ModifierFlags::Ctrl;
+		}
+		if (glfwMods & GLFW_MOD_ALT) {
+			flags = flags | ModifierFlags::Alt;
+		}
+		if (glfwMods & GLFW_MOD_SUPER) {
+			flags = flags | ModifierFlags::Super;
+		}
+		if (glfwMods & GLFW_MOD_CAPS_LOCK) {
+			flags = flags | ModifierFlags::CapsLock;
+		}
+		if (glfwMods & GLFW_MOD_NUM_LOCK) {
+			flags = flags | ModifierFlags::NumLock;
+		}
 		return flags;
 	}
 

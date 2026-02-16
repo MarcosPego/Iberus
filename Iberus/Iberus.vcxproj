@@ -254,6 +254,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Events\KeyEvent.h" />
     <ClInclude Include="src\Events\MouseEvent.h" />
     <ClInclude Include="src\FileSystem\FileSystem.h" />
+    <ClInclude Include="src\FileSystem\FileWatcher.h" />
     <ClInclude Include="src\Iberus.h" />
     <ClInclude Include="src\Logging\Log.h" />
     <ClInclude Include="src\Maths\MathUtils.h" />
@@ -290,6 +291,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Scene\Material.h" />
     <ClInclude Include="src\Scene\Resources\Buffer.h" />
     <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
+    <ClInclude Include="src\Scene\Resources\ProjectPaths.h" />
     <ClInclude Include="src\Scene\Resources\IProvider.h" />
     <ClInclude Include="src\Scene\Resources\Mesh.h" />
     <ClInclude Include="src\Scene\Resources\MeshFactory.h" />
@@ -312,6 +314,9 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\SceneInclude.h" />
     <ClInclude Include="src\Tools\Editor\Editor.h" />
     <ClInclude Include="src\Tools\Editor\EditorLayer.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\ThumbnailCache.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\FileSystemPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\SceneTreePanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewFBO.h" />
@@ -354,6 +359,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Core\LayerStack.cpp" />
     <ClCompile Include="src\Core\Types\Color.cpp" />
     <ClCompile Include="src\FileSystem\FileSystem.cpp" />
+    <ClCompile Include="src\FileSystem\FileWatcher.cpp" />
     <ClCompile Include="src\Logging\Log.cpp" />
     <ClCompile Include="src\Maths\Mat2.cpp" />
     <ClCompile Include="src\Maths\Mat3.cpp" />
@@ -394,6 +400,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Scene\Material.cpp" />
     <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
     <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
+    <ClCompile Include="src\Scene\Resources\ProjectPaths.cpp" />
     <ClCompile Include="src\Scene\Resources\IProvider.cpp" />
     <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
     <ClCompile Include="src\Scene\Resources\MeshFactory.cpp" />
@@ -412,6 +419,9 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Tools\Editor\Editor.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorLayer.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\ThumbnailCache.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\FileSystemPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\SceneTreePanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewFBO.cpp" />

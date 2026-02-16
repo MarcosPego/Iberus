@@ -15,7 +15,7 @@ namespace Iberus {
 
 		virtual void BeginDockSpace() = 0;
 		virtual void EndDockSpace() = 0;
-		virtual void Image(void* textureId, float w, float h) = 0;
+		virtual void Image(void* textureId, float w, float h, float uv0x = 0.0f, float uv0y = 0.0f, float uv1x = 1.0f, float uv1y = 1.0f) = 0;
 	};
 
 }

@@ -8,19 +8,11 @@ out vec3 exVerticies;
 out vec2 exUVs;
 out vec3 exNormals;
 
-out vec4 position;
-
-uniform mat4 ModelMatrix;
-uniform mat4 ViewMatrix;
-uniform mat4 ProjectionMatrix;
-
 void main(void)
 {
 	exVerticies = inVerticies;
 	exUVs = inUVs;
 	exNormals = inNormals;
 
-	vec4 meshPosition = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(inVerticies, 1.0);
-	position = meshPosition;
-	gl_Position = meshPosition;
+	gl_Position = vec4(inVerticies, 1.0);
 }

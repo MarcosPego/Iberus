@@ -24,7 +24,7 @@ namespace Iberus {
 
 		void BeginDockSpace() override;
 		void EndDockSpace() override;
-		void Image(void* textureId, float w, float h) override;
+		void Image(void* textureId, float w, float h, float uv0x = 0.0f, float uv0y = 0.0f, float uv1x = 1.0f, float uv1y = 1.0f) override;
 
 	private:
 		bool initialized{ false };

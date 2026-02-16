@@ -168,6 +168,7 @@ namespace Iberus {
 		renderer->PushRenderCmd(new UniformRenderCmd("uvsOut", 3, UniformType::INT));*/
 
 		MeshFactory::CreateQuad("renderQuad", *resourceManager, currentWindow->GetWidth(), currentWindow->GetHeight());
+		MeshFactory::CreateNDCQuad("renderQuadNDC", *resourceManager);
 
 		renderer->ExecuteAndFlushCmdQueue();
 	}

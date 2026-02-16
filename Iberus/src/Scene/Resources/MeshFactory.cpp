@@ -51,6 +51,43 @@ namespace Iberus {
         return resourceManager.CreateResource<Mesh>(ID, vertices, uvs, normals);
 	}
 
+	Mesh* MeshFactory::CreateNDCQuad(const std::string& ID, ResourceManager& resourceManager) {
+		auto* mesh = resourceManager.GetResource<Mesh>(ID);
+		if (mesh) {
+			return mesh;
+		}
+
+		std::vector<Vec3> vertices = {
+			{ -1.0f, -1.0f, 0.0f },
+			{ -1.0f,  1.0f, 0.0f },
+			{  1.0f,  1.0f, 0.0f },
+
+			{  1.0f,  1.0f, 0.0f },
+			{  1.0f, -1.0f, 0.0f },
+			{ -1.0f, -1.0f, 0.0f }
+		};
+
+		std::vector<Vec3> normals = {
+			{ 0.0f, 0.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f }
+		};
+
+		std::vector<Vec2> uvs = {
+			{ 0.0f, 0.0f },
+			{ 0.0f, 1.0f },
+			{ 1.0f, 1.0f },
+			{ 1.0f, 1.0f },
+			{ 1.0f, 0.0f },
+			{ 0.0f, 0.0f }
+		};
+
+		return resourceManager.CreateResource<Mesh>(ID, vertices, uvs, normals);
+	}
+
     // Calculate vertex positions for the current grid cell
 /*float xPos0 = x * stepX - halfWidth;
 float yPos0 = y * stepY - halfHeight;

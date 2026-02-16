@@ -8,7 +8,6 @@ out vec3 exVerticies;
 out vec2 exUVs;
 out vec3 exNormals;
 
-uniform mat4 ModelMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
 
@@ -21,5 +20,5 @@ void main(void)
 	exNormals = inNormals;
 
 	worldMatrix = ProjectionMatrix * ViewMatrix;
-	gl_Position = worldMatrix * ModelMatrix * vec4(inVerticies, 1.0);
+	gl_Position = vec4(inVerticies, 1.0);
 }

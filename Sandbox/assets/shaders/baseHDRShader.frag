@@ -17,8 +17,6 @@ uniform bool autoExpose = false;
 uniform float avgLuminance;
 uniform float gamma;
 
-in vec4 position;
-
 layout(location = 0) out vec4 diffuseColor;
 
 

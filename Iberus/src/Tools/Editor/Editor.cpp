@@ -41,7 +41,7 @@ namespace Iberus {
 			} else {
 				Vec2 delta = currentMouse - editorCameraLastMouse;
 				editorCameraYaw += delta.x * mouseSensitivity;
-				editorCameraPitch -= delta.y * mouseSensitivity;
+				editorCameraPitch += delta.y * mouseSensitivity;
 				const float maxPitch = 89.0f;
 				if (editorCameraPitch > maxPitch) {
 					editorCameraPitch = maxPitch;

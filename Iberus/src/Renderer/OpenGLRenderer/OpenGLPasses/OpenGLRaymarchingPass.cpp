@@ -2,7 +2,6 @@
 #include "OpenGLRaymarchingPass.h"
 
 #include "Engine.h"
-#include "Window.h"
 #include "Framebuffer.h"
 #include "Matrix.h"
 #include "ShaderBindings.h"
@@ -44,7 +43,7 @@ namespace Iberus {
 		}
 		targetBuffer = renderer.CreateFramebuffer("raymarchFBO", texturesAPI);*/
 
-		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuad"));
+		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuadNDC"));
 	}
 
 	void OpenGLRaymarchingPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
@@ -79,23 +78,16 @@ namespace Iberus {
 				ShaderBindings::SetUniform<Vec3>(programID, "cameraPos", cameraRenderCmd->cameraPos);
 				ShaderBindings::SetUniform<Mat4>(programID, "cameraToWorld", cameraRenderCmd->cameraToWorld);
 			}
-
 			for (const auto& renderCmd : renderBatch.GetSDFRenderCmds()) {
 				renderer.PushUniform(renderCmd.get(), programID);
-			}		
+			}
 		}
 
-		auto* window = engine->GetCurrentWindow();
-		float scaleX = (window && window->GetWidth() > 0) ? static_cast<float>(effW) / static_cast<float>(window->GetWidth()) : 1.0f;
-		float scaleY = (window && window->GetHeight() > 0) ? static_cast<float>(effH) / static_cast<float>(window->GetHeight()) : 1.0f;
-		auto modelMatrix = MatrixFactory::CreateModelMatrix({ -effW * 0.5f, -effH * 0.5f, 0.0f }, { 0, 0, 0 }, { scaleX, scaleY, 1.0f });
-		ShaderBindings::SetUniform<Mat4>(programID, "ModelMatrix", modelMatrix);
-
+		glDisable(GL_CULL_FACE);
 		quadMesh->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)quadMesh->VertexSize());
 		if (glGetError() != GL_NO_ERROR) {
 			//std::cout << "Error in Mesh" << std::endl;
 		}
-
 	}
 }

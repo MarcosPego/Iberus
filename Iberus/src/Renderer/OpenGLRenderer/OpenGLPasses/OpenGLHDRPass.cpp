@@ -2,7 +2,6 @@
 #include "OpenGLHDRPass.h"
 
 #include "Engine.h"
-#include "Window.h"
 #include "Framebuffer.h"
 #include "Matrix.h"
 #include "ShaderBindings.h"
@@ -36,7 +35,7 @@ namespace Iberus {
 
 		ShaderBindings::SetUniform<float>(programID, "exposure", exposure);
 		ShaderBindings::SetUniform<float>(programID, "gamma", gamma);
-		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuad"));
+		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuadNDC"));
 	}
 
 	void OpenGLHDRPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
@@ -58,20 +57,7 @@ namespace Iberus {
 		int effH = engine->GetEffectiveRenderHeight();
 		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(effW), static_cast<float>(effH)));
 
-		for (const RenderBatch& renderBatch : frame.renderBatches) {
-			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
-			if (cameraRenderCmd) {
-				ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", cameraRenderCmd->viewMatrix);
-				ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", cameraRenderCmd->projectionMatrix);
-				ShaderBindings::SetUniform<Vec3>(programID, "cameraPos", cameraRenderCmd->cameraPos);
-			}
-		}
-
-		auto* window = engine->GetCurrentWindow();
-		float scaleX = (window && window->GetWidth() > 0) ? static_cast<float>(effW) / static_cast<float>(window->GetWidth()) : 1.0f;
-		float scaleY = (window && window->GetHeight() > 0) ? static_cast<float>(effH) / static_cast<float>(window->GetHeight()) : 1.0f;
-		auto modelMatrix = MatrixFactory::CreateModelMatrix({ -effW * 0.5f, -effH * 0.5f, 0.0f }, { 0, 0, 0 }, { scaleX, scaleY, 1.0f });
-		ShaderBindings::SetUniform<Mat4>(programID, "ModelMatrix", modelMatrix);
+		glDisable(GL_CULL_FACE);
 		quadMesh->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)quadMesh->VertexSize());
 		if (glGetError() != GL_NO_ERROR) {

@@ -25,7 +25,7 @@ namespace Iberus {
 			}
 			fbo->Resize(w, h);
 			Engine::Instance()->SetEditorRenderTarget(fbo->GetFBO(), w, h);
-			gui.Image(reinterpret_cast<void*>(static_cast<intptr_t>(fbo->GetTextureID())), static_cast<float>(w), static_cast<float>(h));
+			gui.Image(reinterpret_cast<void*>(static_cast<intptr_t>(fbo->GetTextureID())), static_cast<float>(w), static_cast<float>(h), 0.0f, 1.0f, 1.0f, 0.0f);
 		}
 		ImGui::End();
 	}

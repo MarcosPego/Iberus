@@ -99,8 +99,8 @@ namespace Iberus {
 	void ImguiContext::EndDockSpace() {
 	}
 
-	void ImguiContext::Image(void* textureId, float w, float h) {
-		ImGui::Image(reinterpret_cast<ImTextureID>(textureId), ImVec2(w, h));
+	void ImguiContext::Image(void* textureId, float w, float h, float uv0x, float uv0y, float uv1x, float uv1y) {
+		ImGui::Image(reinterpret_cast<ImTextureID>(textureId), ImVec2(w, h), ImVec2(uv0x, uv0y), ImVec2(uv1x, uv1y));
 	}
 
 }

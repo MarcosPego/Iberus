@@ -24,8 +24,8 @@ namespace Iberus {
 		Math::Vec3 Position{ 0, 0, -5 };
 		Math::Vec3 Rotation{ 0, 180, 0 };
 		float Fovy{ 60.0f };
-		float NearZ{ 0.1f };
-		float FarZ{ 8000.0f };
+		float NearZ{ 0.001f };
+		float FarZ{ 100000.0f };
 	};
 
 	class IBERUS_API Editor {
@@ -78,7 +78,5 @@ namespace Iberus {
 		float editorCameraYaw{ 180 };
 		bool editorCameraDragging{ false };
 		Math::Vec2 editorCameraLastMouse{ 0, 0 };
-		bool editorCameraEnabled{ false };
-		bool editorCameraWasTogglePressed{ false };
 	};
 }

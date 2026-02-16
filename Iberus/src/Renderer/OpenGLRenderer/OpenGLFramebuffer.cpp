@@ -11,6 +11,7 @@ namespace Iberus {
 		textures = inTextures;
 
 		glGenFramebuffers(1, &fbo);
+		glGenRenderbuffers(1, &depthRenderbuffer);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 
 		for (unsigned int i = 0; i < textures.size(); i++) {
@@ -37,6 +38,12 @@ namespace Iberus {
 
 		glDrawBuffers(4, DrawBuffers);
 
+		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
+		glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, currentWindow->GetWidth(), currentWindow->GetHeight());
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
 		GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
 		if (Status != GL_FRAMEBUFFER_COMPLETE) {
@@ -50,6 +57,9 @@ namespace Iberus {
 	OpenGLFramebuffer::~OpenGLFramebuffer() {
 		if (fbo != 0) {
 			glDeleteFramebuffers(1, &fbo);
+		}
+		if (depthRenderbuffer != 0) {
+			glDeleteRenderbuffers(1, &depthRenderbuffer);
 		}
 	}
 
@@ -97,6 +107,9 @@ namespace Iberus {
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		}
+		glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
 

@@ -18,6 +18,7 @@ namespace Iberus {
 	private:
 		unsigned int fbo{ 0 };
 		unsigned int textureID{ 0 };
+		unsigned int depthRenderbuffer{ 0 };
 		int width{ 0 };
 		int height{ 0 };
 	};

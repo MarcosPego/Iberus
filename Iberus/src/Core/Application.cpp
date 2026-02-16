@@ -87,15 +87,9 @@ namespace Iberus {
 			}
 
 			guiContext->BeginFrame();
-			if (editorMode) {
-				layerStack.ForEachLayerOverlaysFirst([deltaTime](Layer* layer) {
-					layer->OnUpdate(deltaTime);
-				});
-			} else {
-				layerStack.ForEachLayer([deltaTime](Layer* layer) {
-					layer->OnUpdate(deltaTime);
-				});
-			}
+			layerStack.ForEachLayerOverlaysFirst([deltaTime](Layer* layer) {
+				layer->OnUpdate(deltaTime);
+			});
 			guiContext->EndFrame(editorMode);
 
 			Update();

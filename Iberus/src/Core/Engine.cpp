@@ -51,7 +51,9 @@ namespace Iberus {
 		auto frame = Frame();
 		auto* scene = sceneManager->GetActiveScene();
 		if (scene) {
-			scene->Update(deltaTime);
+			if (sceneSimulationEnabled) {
+				scene->Update(deltaTime);
+			}
 			scene->PushDraw(frame, GetCameraOverride());
 			scene->PushDrawSDF(frame);
 		}

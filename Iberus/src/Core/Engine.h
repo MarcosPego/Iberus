@@ -47,6 +47,9 @@ namespace Iberus {
 		void SetCameraOverride(std::unique_ptr<CameraRenderCmd> cmd);
 		CameraRenderCmd* GetCameraOverride() { return cameraOverride.get(); }
 
+		void SetSceneSimulationEnabled(bool enabled) { sceneSimulationEnabled = enabled; }
+		bool IsSceneSimulationEnabled() const { return sceneSimulationEnabled; }
+
 		/// Returns effective render dimensions (editor viewport when active, else main window).
 		int GetEffectiveRenderWidth() const;
 		int GetEffectiveRenderHeight() const;
@@ -73,6 +76,7 @@ namespace Iberus {
 		int pendingResizeHeight{ 0 };
 
 		std::unique_ptr<CameraRenderCmd> cameraOverride;
+		bool sceneSimulationEnabled{ false };
 	};
 }
 

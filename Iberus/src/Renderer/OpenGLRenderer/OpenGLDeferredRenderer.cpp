@@ -51,6 +51,8 @@ namespace Iberus {
 			currentHeight = height;
 		}
 
+		glViewport(0, 0, width, height);
+
 		auto _renderBatchCommands = [&](Frame& frame, ShaderApi* globalShader) {
 			RenderBatchCommands(frame, globalShader);
 		};

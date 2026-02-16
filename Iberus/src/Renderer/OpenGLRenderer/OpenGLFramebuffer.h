@@ -20,6 +20,7 @@ namespace Iberus {
 
 	private:
 		GLuint fbo{ 0 };
+		GLuint depthRenderbuffer{ 0 };
 		std::vector<TextureApi*> textures;
 	};
 

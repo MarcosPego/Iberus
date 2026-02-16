@@ -28,16 +28,6 @@ namespace Iberus {
 		}
 
 		auto& input = Engine::Instance()->GetInputManager();
-		bool togglePressed = input.IsKeyPressed(KeyCode::C);
-
-		if (togglePressed && !editorCameraWasTogglePressed) {
-			editorCameraEnabled = !editorCameraEnabled;
-		}
-		editorCameraWasTogglePressed = togglePressed;
-
-		if (!editorCameraEnabled) {
-			return;
-		}
 
 		const float mouseSensitivity = 0.15f;
 		const float moveSpeed = 8.0f;
@@ -50,7 +40,7 @@ namespace Iberus {
 				editorCameraLastMouse = currentMouse;
 			} else {
 				Vec2 delta = currentMouse - editorCameraLastMouse;
-				editorCameraYaw -= delta.x * mouseSensitivity;
+				editorCameraYaw += delta.x * mouseSensitivity;
 				editorCameraPitch -= delta.y * mouseSensitivity;
 				const float maxPitch = 89.0f;
 				if (editorCameraPitch > maxPitch) {
@@ -66,29 +56,31 @@ namespace Iberus {
 			editorCameraDragging = false;
 		}
 
-		// WASD movement
+		// WASD movement - forward/back along view direction, strafe left/right
+		float pitchRad = Deg2Rad(editorCameraPitch);
 		float yawRad = Deg2Rad(editorCameraYaw);
-		Vec3 forwardXY(sinf(yawRad), cosf(yawRad), 0.0f);
-		Vec3 rightXY(cosf(yawRad), -sinf(yawRad), 0.0f);
+		Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
+		forward = normalize(forward);
+		Vec3 right = normalize(cross(forward, Vec3(0, 1, 0)));
 
 		Vec3 movement(0, 0, 0);
 		if (input.IsKeyPressed(KeyCode::W)) {
-			movement += forwardXY;
+			movement += forward;
 		}
 		if (input.IsKeyPressed(KeyCode::S)) {
-			movement -= forwardXY;
+			movement -= forward;
 		}
 		if (input.IsKeyPressed(KeyCode::A)) {
-			movement -= rightXY;
+			movement -= right;
 		}
 		if (input.IsKeyPressed(KeyCode::D)) {
-			movement += rightXY;
+			movement += right;
 		}
 		if (input.IsKeyPressed(KeyCode::E)) {
-			movement.z += 1.0f;
+			movement.y += 1.0f;
 		}
 		if (input.IsKeyPressed(KeyCode::Q)) {
-			movement.z -= 1.0f;
+			movement.y -= 1.0f;
 		}
 
 		if (movement.length() > 0) {
@@ -126,8 +118,6 @@ namespace Iberus {
 	}
 
 	void Editor::OnUpdate(double deltaTime, IGUIContext* gui) {
-		UpdateEditorCamera(deltaTime);
-
 		auto& input = Engine::Instance()->GetInputManager();
 		bool f11Down = input.IsKeyPressed(KeyCode::F11);
 		bool f11Pressed = f11Down && !wasF11Down;
@@ -149,6 +139,8 @@ namespace Iberus {
 		fileSystemPanel->OnDraw(*gui);
 		assetInspectorPanel->OnDraw(*gui);
 		gui->EndDockSpace();
+
+		UpdateEditorCamera(deltaTime);
 	}
 
 }

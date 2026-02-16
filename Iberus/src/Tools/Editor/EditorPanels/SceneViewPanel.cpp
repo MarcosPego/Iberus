@@ -11,7 +11,7 @@ namespace Iberus {
 	}
 
 	void SceneViewPanel::OnDraw(IGUIContext& gui) {
-		if (!gui.BeginWindow("Viewport")) {
+		if (!ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoNavInputs)) {
 			editor.SetViewportFocused(false);
 			return;
 		}
@@ -27,7 +27,7 @@ namespace Iberus {
 			Engine::Instance()->SetEditorRenderTarget(fbo->GetFBO(), w, h);
 			gui.Image(reinterpret_cast<void*>(static_cast<intptr_t>(fbo->GetTextureID())), static_cast<float>(w), static_cast<float>(h));
 		}
-		gui.EndWindow();
+		ImGui::End();
 	}
 
 }

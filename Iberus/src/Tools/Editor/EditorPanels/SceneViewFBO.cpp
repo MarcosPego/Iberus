@@ -6,6 +6,7 @@ namespace Iberus {
 	SceneViewFBO::SceneViewFBO() {
 		glGenFramebuffers(1, &fbo);
 		glGenTextures(1, &textureID);
+		glGenRenderbuffers(1, &depthRenderbuffer);
 	}
 
 	SceneViewFBO::~SceneViewFBO() {
@@ -14,6 +15,9 @@ namespace Iberus {
 		}
 		if (textureID) {
 			glDeleteTextures(1, &textureID);
+		}
+		if (depthRenderbuffer) {
+			glDeleteRenderbuffers(1, &depthRenderbuffer);
 		}
 	}
 
@@ -35,6 +39,12 @@ namespace Iberus {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureID, 0);
+
+		glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, w, h);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

@@ -35,8 +35,10 @@ namespace Iberus {
 				continue;
 			}
 
-			auto* entityTransform = world.GetComponent<TransformComponent>(entityId);
-			Vec3 entityPos = entityTransform ? entityTransform->Position : Vec3(0, 0, 0);
+			auto* localToWorld = world.GetComponent<LocalToWorldComponent>(entityId);
+			if (!localToWorld) {
+				continue;
+			}
 
 			Material* entityMaterial = nullptr;
 			auto* meshRenderer = world.GetComponent<MeshRendererComponent>(entityId);
@@ -51,7 +53,9 @@ namespace Iberus {
 
 			int count = 0;
 			for (const auto& part : sdf.Parts) {
-				Vec3 center = entityPos + part.Transform.Position;
+				Vec4 localCenter(part.Transform.Position);
+				Vec4 worldCenter4 = localToWorld->Matrix * localCenter;
+				Vec3 center(worldCenter4);
 
 				std::string sdfPart = std::format("{0}.sdfParts[{1}]", sdfMesh, count);
 				renderBatch.PushRenderCmdToQueue(

@@ -31,6 +31,8 @@ namespace Iberus {
 	struct Frame {
 		Vec4 clearColor{ 0.15f, 0.15f, 0.17f, 1.0f };
 		std::vector<RenderBatch> renderBatches;
+		int renderWidth{ 0 };
+		int renderHeight{ 0 };
 
 		RenderBatch& PushBatch() {
 			renderBatches.emplace_back(RenderBatch()); // Push a new Render Batch

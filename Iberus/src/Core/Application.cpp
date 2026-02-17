@@ -90,7 +90,7 @@ namespace Iberus {
 			layerStack.ForEachLayerOverlaysFirst([deltaTime](Layer* layer) {
 				layer->OnUpdate(deltaTime);
 			});
-			guiContext->EndFrame(editorMode);
+			guiContext->EndFrame(editorMode, engine->HasEditorRenderTarget());
 
 			Update();
 			window->Update();

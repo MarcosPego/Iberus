@@ -66,6 +66,8 @@ namespace Iberus {
 			renderHeight = editorRenderTargetHeight;
 			outputFBO = editorRenderTargetFBO;
 		}
+		frame.renderWidth = renderWidth;
+		frame.renderHeight = renderHeight;
 		renderer->RenderFrame(frame, outputFBO, renderWidth, renderHeight);
 		inputManager->OnFrameEnd();
 	}
@@ -85,6 +87,10 @@ namespace Iberus {
 		editorRenderTargetFBO = 0;
 		editorRenderTargetWidth = 0;
 		editorRenderTargetHeight = 0;
+	}
+
+	bool Engine::HasEditorRenderTarget() const {
+		return editorRenderTargetFBO != 0 && editorRenderTargetWidth > 0 && editorRenderTargetHeight > 0;
 	}
 
 	void Engine::OnSwitchedToGameMode() {

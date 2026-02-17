@@ -6,6 +6,7 @@
 #include "Matrix.h"
 #include "ShaderBindings.h"
 #include "OpenGLShader.h"
+#include "OpenGLFramebuffer.h"
 
 #include "ShaderApi.h"
 #include "TextureApi.h"
@@ -57,19 +58,26 @@ namespace Iberus {
 
 		shaderPass->Bind();
 		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), texturesIdxs);
+		if (auto* glFbo = dynamic_cast<OpenGLFramebuffer*>(sourceBuffer)) {
+			glFbo->BindDepthTexture(depthTextureIdx);
+		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		int w = frame.renderWidth > 0 ? frame.renderWidth : 1;
+		int h = frame.renderHeight > 0 ? frame.renderHeight : 1;
+		glViewport(0, 0, w, h);
 
 		GLuint programID{ 0 };
 		if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderPass); openGLShader) {
 			programID = openGLShader->GetProgramID();
 		}
 
-		auto* engine = Engine::Instance();
-		int effW = engine->GetEffectiveRenderWidth();
-		int effH = engine->GetEffectiveRenderHeight();
-		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(effW), static_cast<float>(effH)));
+		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(w), static_cast<float>(h)));
+		ShaderBindings::SetUniform<int>(programID, "depthIn", depthTextureIdx);
+		// debugRayMode: 0=normal, 1=rayDir, 2=rayOrigin, 3=hitMiss, 4=sdfAtOrigin, 5=ndc
+		ShaderBindings::SetUniform<int>(programID, "debugRayMode", 0);
 
-		auto& renderer = engine->GetRenderer();
+		auto& renderer = Engine::Instance()->GetRenderer();
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
 			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
 			if (cameraRenderCmd) {

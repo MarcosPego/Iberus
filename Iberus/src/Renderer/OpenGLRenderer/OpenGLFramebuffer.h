@@ -18,9 +18,11 @@ namespace Iberus {
 		GLuint GetFBO() const override { return fbo; }
 		void ResizeAttachments(int width, int height) override;
 
+		void BindDepthTexture(int textureUnit) const;
+
 	private:
 		GLuint fbo{ 0 };
-		GLuint depthRenderbuffer{ 0 };
+		GLuint depthTexture{ 0 };
 		std::vector<TextureApi*> textures;
 	};
 

@@ -38,6 +38,7 @@ namespace Iberus {
 
 		void SetEditorRenderTarget(unsigned int fboId, int width, int height);
 		void ClearEditorRenderTarget();
+		bool HasEditorRenderTarget() const;
 		void OnSwitchedToGameMode();
 
 		/// Sync renderer to current effective output size (viewport in Editor, window in Game).

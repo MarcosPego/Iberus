@@ -5,7 +5,8 @@ in mat4 worldMatrix;
 uniform sampler2D worldPosIn;   
 uniform sampler2D diffuseIn;     
 uniform sampler2D normalIn;     
-uniform sampler2D uvsIn; 
+uniform sampler2D uvsIn;
+uniform sampler2D depthIn;
 
 struct SDFPart {
 	vec3 center;
@@ -31,9 +32,14 @@ layout (location = 3) out vec3 uvsOut;
 uniform vec2 screenSize;
 uniform vec3 cameraPos;
 uniform mat4 cameraToWorld;
+uniform int debugRayMode;  // 0=normal, 1=rayDir, 2=rayOrigin, 3=hitMiss, 4=sdfAtOrigin, 5=ndc
 
 vec2 CalcUVCoord() {
   return gl_FragCoord.xy / screenSize;
+}
+
+vec2 CalcNDC() {
+  return (gl_FragCoord.xy - 0.5) / screenSize * 2.0 - 1.0;
 }
 
 /// Distance Field Functions
@@ -60,7 +66,7 @@ float smootMin(float a, float b, float k) {
 }
 
 float distanceField(vec3 position) {
-	float result =  2^128;
+	float result = 1e30;
 	for (int i = 0; i < sdfMeshBufferSize; i++) {
 		SDFMesh mesh = sdfMeshes[i];
 		float resultingT = result;
@@ -75,7 +81,7 @@ float distanceField(vec3 position) {
 					resultingT = sdSphere(position - part.center, part.radius);
 
 				} else if (part.type == 2) {
-					resultingT = sdBox(position - part.center, part.radius), resultingT;
+					resultingT = sdBox(position - part.center, part.radius);
 				}
 
 				if (resultingT < result) {
@@ -125,7 +131,7 @@ float raymarching(vec3 origin, vec3 direction) {
 		if (distance < 0.01) {
 			return t;
 		}
-		t += distance;
+		t += max(distance, 0.001);  // min step to avoid stepping backward (negative dist = inside SDF)
 	}
 
 	return -1.0;
@@ -135,17 +141,18 @@ float raymarching(vec3 origin, vec3 direction) {
 
 void main(void)
 {
-	mat4 camToWorld = inverse(worldMatrix);
 	vec2 uvCoord = CalcUVCoord();
-	
-	vec4 nearPos4 = camToWorld * vec4(uvCoord.xy * 2 - 1, -1, 1);
-    vec4 farPos4 = camToWorld * vec4(uvCoord.xy * 2 - 1, +1, 1);
+	vec2 ndc = CalcNDC();
+	mat4 camToWorld = inverse(worldMatrix);
 
-	vec3 nearpos = nearPos4.xyz / nearPos4.w;
-    vec3 farpos = farPos4.xyz / farPos4.w;
+	vec4 nearPos4 = camToWorld * vec4(ndc, -1.0, 1.0);
+	vec4 farPos4 = camToWorld * vec4(ndc, 1.0, 1.0);
 
-    vec3 rayOrigin = nearpos;
-    vec3 rayDirection = normalize(farpos - nearpos);
+	vec3 nearPos = nearPos4.xyz / nearPos4.w;
+	vec3 farPos = farPos4.xyz / farPos4.w;
+
+	vec3 rayOrigin = nearPos;
+	vec3 rayDirection = normalize(farPos - nearPos);
 
 	vec3 normal = vec3(0,0,0);
 	vec3 pos = vec3(0,0,0);
@@ -158,8 +165,49 @@ void main(void)
 		finalColor = vec4(0, 0, 0, 0);
 	}
 
-	worldPosOut     = texture(worldPosIn, uvCoord).xyz + pos;				
-	diffuseOut      = texture(diffuseIn, uvCoord).xyz + finalColor.xyz;	
-	normalOut       = texture(normalIn, uvCoord).xyz + normal;					
-	uvsOut			= texture(uvsIn, uvCoord).xyz;	
+	// Depth occlusion: use geometry depth buffer (precision-stable at any distance)
+	if (t >= 0.0) {
+		float geomDepth = texture(depthIn, uvCoord).r;
+		vec4 clipPos = worldMatrix * vec4(pos, 1.0);
+		float raymarchDepth = (clipPos.z / clipPos.w) * 0.5 + 0.5;
+		const float depthBias = 0.0001;
+		if (raymarchDepth > geomDepth + depthBias) {
+			// SDF hit is behind geometry - treat as miss
+			pos = vec3(0, 0, 0);
+			normal = vec3(0, 0, 0);
+			finalColor = vec4(0, 0, 0, 0);
+			t = -1.0;
+		}
+	}
+
+	// Choose surface: SDF in front occludes geometry, otherwise use geometry
+	bool sdfInFront = (t >= 0.0);
+	vec3 geomPos = texture(worldPosIn, uvCoord).xyz;
+	vec3 geomDiffuse = texture(diffuseIn, uvCoord).xyz;
+	vec3 geomNormal = texture(normalIn, uvCoord).xyz;
+
+	// DEBUG: ray visualization - compare game vs editor viewport
+	vec3 outColor;
+	if (debugRayMode == 1) {
+		outColor = 0.5 + 0.5 * rayDirection;
+	} else if (debugRayMode == 2) {
+		vec3 originOffset = rayOrigin - cameraPos;
+		float len = length(originOffset);
+		outColor = vec3(min(len * 0.1, 1.0), 0.0, 0.0);
+	} else if (debugRayMode == 3) {
+		outColor = (t >= 0.0) ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
+	} else if (debugRayMode == 4) {
+		float d = distanceField(rayOrigin);
+		float v = 1.0 - smoothstep(0.0, 10.0, d);
+		outColor = vec3(v, v, v);
+	} else if (debugRayMode == 5) {
+		outColor = vec3(ndc * 0.5 + 0.5, 0.0);
+	} else {
+		outColor = sdfInFront ? finalColor.xyz : geomDiffuse;
+	}
+
+	worldPosOut     = sdfInFront ? pos : geomPos;
+	diffuseOut      = outColor;
+	normalOut       = sdfInFront ? normal : geomNormal;
+	uvsOut			= texture(uvsIn, uvCoord).xyz;
 }

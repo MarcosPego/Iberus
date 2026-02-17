@@ -24,7 +24,7 @@ namespace Iberus {
 		Math::Vec3 Position{ 0, 0, -5 };
 		Math::Vec3 Rotation{ 0, 180, 0 };
 		float Fovy{ 60.0f };
-		float NearZ{ 0.001f };
+		float NearZ{ 0.1f };
 		float FarZ{ 100000.0f };
 	};
 

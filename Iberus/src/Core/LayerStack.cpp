@@ -48,13 +48,13 @@ namespace Iberus {
 	}
 
 	void LayerStack::ForEachLayerOverlaysFirst(const std::function<void(Layer*)>& fn) const {
-		// Run layers first so Engine::Update renders before ImGui draws the viewport Image.
-		// This ensures delete/duplicate changes appear immediately instead of one frame behind.
-		for (Layer* layer : layers) {
-			fn(layer);
-		}
+		// Run overlays first so EditorLayer can set editor render target and camera before GameLayer renders.
+		// This ensures the deferred passes use correct viewport dimensions and aspect ratio.
 		for (Layer* overlay : overlays) {
 			fn(overlay);
+		}
+		for (Layer* layer : layers) {
+			fn(layer);
 		}
 	}
 }

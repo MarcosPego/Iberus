@@ -56,7 +56,7 @@ namespace Iberus {
 		ImGui::NewFrame();
 	}
 
-	void ImguiContext::EndFrame(bool render) {
+	void ImguiContext::EndFrame(bool render, bool clearBackdrop) {
 		if (!initialized) {
 			return;
 		}
@@ -70,6 +70,10 @@ namespace Iberus {
 				if (w > 0 && h > 0) {
 					glBindFramebuffer(GL_FRAMEBUFFER, 0);
 					glViewport(0, 0, w, h);
+					if (clearBackdrop) {
+						glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+						glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+					}
 				}
 				ImGui_ImplOpenGL3_RenderDrawData(drawData);
 			}

@@ -32,6 +32,7 @@ namespace Iberus {
 			return false;
 		}
 
+		this->nativeWindow = nativeWindow;
 		initialized = true;
 		return true;
 	}
@@ -41,6 +42,7 @@ namespace Iberus {
 			return;
 		}
 
+		nativeWindow = nullptr;
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -54,6 +56,13 @@ namespace Iberus {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+	}
+
+	bool ImguiContext::IsMinimized() const {
+		if (!initialized || !nativeWindow) {
+			return false;
+		}
+		return glfwGetWindowAttrib(static_cast<GLFWwindow*>(nativeWindow), GLFW_ICONIFIED) == GLFW_TRUE;
 	}
 
 	void ImguiContext::EndFrame(bool render, bool clearBackdrop) {

@@ -17,6 +17,8 @@ namespace Iberus {
 		void BeginFrame();
 		void EndFrame(bool render = true, bool clearBackdrop = true);
 
+		bool IsMinimized() const;
+
 		bool BeginWindow(const char* title) override;
 		void EndWindow() override;
 		void Text(const char* text) override;
@@ -28,6 +30,7 @@ namespace Iberus {
 
 	private:
 		bool initialized{ false };
+		void* nativeWindow{ nullptr };
 	};
 
 }

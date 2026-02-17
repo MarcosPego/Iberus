@@ -86,11 +86,14 @@ namespace Iberus {
 				scene->FlushPendingDestroys();
 			}
 
-			guiContext->BeginFrame();
-			layerStack.ForEachLayerOverlaysFirst([deltaTime](Layer* layer) {
-				layer->OnUpdate(deltaTime);
-			});
-			guiContext->EndFrame(editorMode, engine->HasEditorRenderTarget());
+			// Skip ImGui frame when minimized to avoid crash in ImGui::EndFrame error recovery
+			if (!guiContext->IsMinimized()) {
+				guiContext->BeginFrame();
+				layerStack.ForEachLayerOverlaysFirst([deltaTime](Layer* layer) {
+					layer->OnUpdate(deltaTime);
+				});
+				guiContext->EndFrame(editorMode, engine->HasEditorRenderTarget());
+			}
 
 			Update();
 			window->Update();

@@ -11,9 +11,12 @@ namespace Iberus {
 		bool isDirectory;
 	};
 
-	class FileSystem {
+	class IBERUS_API FileSystem {
 	public:
 		static std::string GetWorkingDir();
+
+		/// Directory containing the executable.
+		static std::string GetExeDirectory();
 
 		/// Root folder for game assets. Tries "Assets" then "assets" under working dir.
 		static std::string GetAssetsPath();

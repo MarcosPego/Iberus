@@ -1,6 +1,6 @@
 workspace "Iberus"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "Game"
 
 	configurations {
 		"Debug",
@@ -9,6 +9,7 @@ workspace "Iberus"
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+gamedir = "Game-Build"
 
 project "Iberus"
 	location "Iberus"
@@ -50,12 +51,14 @@ project "Iberus"
 		"%{prj.name}/dependencies/spdlog/include",
 		"%{prj.name}/dependencies/glfw/include",
 		"%{prj.name}/dependencies/glfw/include/GLFW",
+		"%{prj.name}/dependencies/glew/include",
 		"%{prj.name}/dependencies/glew/include/GL",
 		"%{prj.name}/dependencies/stb_image",
 		"%{prj.name}/dependencies/imgui",
 		"%{prj.name}/dependencies/imgui/backends",
 		"%{prj.name}/dependencies/FastNoise2/include/",
-		"%{prj.name}/dependencies/FastNoise2/include/**"
+		"%{prj.name}/dependencies/FastNoise2/include/**",
+		"%{prj.name}/dependencies"
 	}
 
 	libdirs {
@@ -86,16 +89,16 @@ project "Iberus"
 		}
 
 		postbuildcommands {
-			("if not exist \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\" mkdir \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\"")
+			("if not exist \"$(SolutionDir)" .. gamedir .. "\" mkdir \"$(SolutionDir)" .. gamedir .. "\"")
 		}
 		postbuildcommands {
-			("copy /Y \"$(TargetPath)\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+			("copy /Y \"$(TargetPath)\" \"$(SolutionDir)" .. gamedir .. "\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+			("if exist \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
 		}
 
 	filter "configurations:Debug"
@@ -105,7 +108,7 @@ project "Iberus"
 			"FastNoiseD"
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
 		}
 
 	filter "configurations:Release"
@@ -115,31 +118,31 @@ project "Iberus"
 			"FastNoise"
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
 		}
-	
+
 	filter "configurations:Dist"
-		defines "IB_DIST" 
+		defines "IB_DIST"
 		optimize "On"
 		links {
 			"FastNoise"
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)bin\\" .. outputdir .. "\\Sandbox\\\"")
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
 		}
 
-project "Sandbox"
-	location "Sandbox"
+project "Game"
+	location "Game"
 	kind "ConsoleApp"
 	language "C++"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	targetdir ("$(SolutionDir)" .. gamedir)
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files {
@@ -161,12 +164,13 @@ project "Sandbox"
 	}
 
 	libdirs {
+		"bin/" .. outputdir .. "/Iberus",
 		"Iberus/dependencies/glfw/lib-vc2019",
 		"Iberus/dependencies/glew/lib/Release/x64",
 		"Iberus/dependencies/FastNoise2/lib"
 	}
 
-	links {		
+	links {
 		"glew32",
 		"opengl32",
 		"glfw3_mt",
@@ -190,7 +194,10 @@ project "Sandbox"
 			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)\"")
 		}
 		postbuildcommands {
-			("if exist \"$(SolutionDir)Sandbox\\assets\" xcopy /E /I /Y \"$(SolutionDir)Sandbox\\assets\" \"$(TargetDir)assets\\\"")
+			("if exist \"$(SolutionDir)bin\" rmdir /s /q \"$(SolutionDir)bin\"")
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)bin-int\" rmdir /s /q \"$(SolutionDir)bin-int\"")
 		}
 
 	filter "configurations:Debug"
@@ -215,7 +222,7 @@ project "Sandbox"
 		postbuildcommands {
 			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)\"")
 		}
-	
+
 	filter "configurations:Dist"
 		defines "IB_DIST"
 		optimize "On"

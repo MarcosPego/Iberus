@@ -7,6 +7,7 @@
 #include "CreatureCreatorPanel.h"
 #include "FileSystemPanel.h"
 #include "AssetInspectorPanel.h"
+#include "WelcomePanel.h"
 #include "EntityId.h"
 #include "MathUtils.h"
 #include "RenderCmd.h"
@@ -61,6 +62,7 @@ namespace Iberus {
 	private:
 		void UpdateEditorCamera(double deltaTime);
 
+		std::unique_ptr<WelcomePanel> welcomePanel;
 		std::unique_ptr<SceneTreePanel> sceneTreePanel;
 		std::unique_ptr<SceneViewPanel> sceneViewPanel;
 		std::unique_ptr<InspectorPanel> inspectorPanel;

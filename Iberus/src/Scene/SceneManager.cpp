@@ -23,4 +23,9 @@ namespace Iberus {
 		return nullptr;
 	}
 
+	void SceneManager::Clear() {
+		activeScene = nullptr;
+		scenes.clear();
+	}
+
 }

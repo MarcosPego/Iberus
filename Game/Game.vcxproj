@@ -15,10 +15,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}</ProjectGuid>
+    <ProjectGuid>{7FA9857C-6BE0-860D-14CD-6C1000E3020F}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Sandbox</RootNamespace>
+    <RootNamespace>Game</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -55,23 +55,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-x86_64\Sandbox\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <OutDir>$(SolutionDir)Game-Build\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-x86_64\Game\</IntDir>
+    <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-x86_64\Sandbox\</OutDir>
-    <IntDir>..\bin-int\Release-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <OutDir>$(SolutionDir)Game-Build\</OutDir>
+    <IntDir>..\bin-int\Release-windows-x86_64\Game\</IntDir>
+    <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Dist-windows-x86_64\Sandbox\</OutDir>
-    <IntDir>..\bin-int\Dist-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <OutDir>$(SolutionDir)Game-Build\</OutDir>
+    <IntDir>..\bin-int\Dist-windows-x86_64\Game\</IntDir>
+    <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\GUI;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\GUI\Imgui;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\Resources;..\Iberus\src\Scene\ECS;..\Iberus\src\Tools\Editor;..\Iberus\src\Tools\GUI;..\Iberus\src\Tools\Editor\EditorPanels;..\Iberus\src\Tools\GUI\Imgui;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Project;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Serialization;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\ECS;..\Iberus\src\Scene\Resources;..\Iberus\src\Scene\Serialization;..\Iberus\src\Tools\Editor;..\Iberus\src\Tools\GUI;..\Iberus\src\Tools\Editor\EditorPanels;..\Iberus\src\Tools\GUI\Imgui;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -89,12 +89,13 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\bin\Debug-windows-x86_64\Iberus;..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"
-if exist "$(SolutionDir)Sandbox\assets" xcopy /E /I /Y "$(SolutionDir)Sandbox\assets" "$(TargetDir)assets\"
+if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
+if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
 if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -103,7 +104,7 @@ if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" copy 
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\GUI;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\GUI\Imgui;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\Resources;..\Iberus\src\Scene\ECS;..\Iberus\src\Tools\Editor;..\Iberus\src\Tools\GUI;..\Iberus\src\Tools\Editor\EditorPanels;..\Iberus\src\Tools\GUI\Imgui;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Project;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Serialization;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\ECS;..\Iberus\src\Scene\Resources;..\Iberus\src\Scene\Serialization;..\Iberus\src\Tools\Editor;..\Iberus\src\Tools\GUI;..\Iberus\src\Tools\Editor\EditorPanels;..\Iberus\src\Tools\GUI\Imgui;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -117,12 +118,13 @@ if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" copy 
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\bin\Release-windows-x86_64\Iberus;..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"
-if exist "$(SolutionDir)Sandbox\assets" xcopy /E /I /Y "$(SolutionDir)Sandbox\assets" "$(TargetDir)assets\"
+if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
+if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
 if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
@@ -132,7 +134,7 @@ if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\GUI;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\GUI\Imgui;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\Resources;..\Iberus\src\Scene\ECS;..\Iberus\src\Tools\Editor;..\Iberus\src\Tools\GUI;..\Iberus\src\Tools\Editor\EditorPanels;..\Iberus\src\Tools\GUI\Imgui;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Project;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Serialization;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\ECS;..\Iberus\src\Scene\Resources;..\Iberus\src\Scene\Serialization;..\Iberus\src\Tools\Editor;..\Iberus\src\Tools\GUI;..\Iberus\src\Tools\Editor\EditorPanels;..\Iberus\src\Tools\GUI\Imgui;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -146,26 +148,25 @@ if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\bin\Dist-windows-x86_64\Iberus;..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"
-if exist "$(SolutionDir)Sandbox\assets" xcopy /E /I /Y "$(SolutionDir)Sandbox\assets" "$(TargetDir)assets\"
+if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
+if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
 if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\CustomSceneCreator.h" />
-    <ClInclude Include="src\Core\SceneViewerCameraBehaviour.h" />
     <ClInclude Include="src\SandboxBehaviour.h" />
     <ClInclude Include="src\SandboxBehaviour2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\CustomSceneCreator.cpp" />
-    <ClCompile Include="src\Core\SceneViewerCameraBehaviour.cpp" />
-    <ClCompile Include="src\SandboxApp.cpp" />
+    <ClCompile Include="src\GameApp.cpp" />
     <ClCompile Include="src\SandboxBehaviour.cpp" />
     <ClCompile Include="src\SandboxBehaviour2.cpp" />
   </ItemGroup>

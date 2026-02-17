@@ -1,7 +1,9 @@
 #include "Enginepch.h"
 #include "Editor.h"
+#include "Application.h"
 #include "Engine.h"
 #include "SceneManager.h"
+#include "SceneSerializer.h"
 #include "KeyCode.h"
 #include "MouseCode.h"
 #include "Matrix.h"
@@ -13,7 +15,8 @@ using namespace Math;
 namespace Iberus {
 
 	Editor::Editor()
-		: sceneTreePanel(std::make_unique<SceneTreePanel>(*this))
+		: welcomePanel(std::make_unique<WelcomePanel>(*Application::Get()))
+		, sceneTreePanel(std::make_unique<SceneTreePanel>(*this))
 		, sceneViewPanel(std::make_unique<SceneViewPanel>(*this))
 		, inspectorPanel(std::make_unique<InspectorPanel>(*this))
 		, creatureCreatorPanel(std::make_unique<CreatureCreatorPanel>(*this))
@@ -130,9 +133,49 @@ namespace Iberus {
 			}
 		}
 
+		bool ctrlS = input.IsKeyPressed(KeyCode::S) && (input.IsKeyPressed(KeyCode::LeftControl) || input.IsKeyPressed(KeyCode::RightControl));
+		if (ctrlS) {
+			Application* app = Application::Get();
+			if (!app->GetCurrentScenePath().empty()) {
+				if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
+					if (SceneSerializer::SaveToFile(*scene, app->GetCurrentScenePath())) {
+						app->SetSceneDirty(false);
+					}
+				}
+			}
+		}
+
 		if (editorMode != EditorMode::Editor || !gui) {
 			return;
 		}
+
+		if (Application::Get()->ShouldShowProjectScreen()) {
+			welcomePanel->OnDraw(*gui);
+			return;
+		}
+
+		if (ImGui::BeginMainMenuBar()) {
+			if (ImGui::BeginMenu("File##EditorFileMenu")) {
+				bool hasScenePath = !Application::Get()->GetCurrentScenePath().empty();
+				bool hasScene = Engine::Instance()->GetSceneManager().GetActiveScene() != nullptr;
+				if (ImGui::MenuItem("Save##EditorSave", "Ctrl+S", false, hasScene && hasScenePath)) {
+					if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
+						if (SceneSerializer::SaveToFile(*scene, Application::Get()->GetCurrentScenePath())) {
+							Application::Get()->SetSceneDirty(false);
+						}
+					}
+				}
+				if (ImGui::MenuItem("Open Project##EditorOpenProject")) {
+					Application::Get()->RequestProjectScreen();
+				}
+				if (ImGui::MenuItem("Close Project##EditorCloseProject")) {
+					Application::Get()->OnCloseProject();
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+
 		gui->BeginDockSpace();
 		sceneTreePanel->OnDraw(*gui);
 		sceneViewPanel->OnDraw(*gui);

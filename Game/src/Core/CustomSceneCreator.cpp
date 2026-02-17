@@ -15,7 +15,10 @@ using namespace Math;
 
 namespace Iberus {
 
-	void CustomSceneCreator::Create() {
+	void CustomSceneCreator::SetupResourcesAndMaterials(Scene* scene) {
+		if (!scene) {
+			return;
+		}
 		auto& resourceManager = Engine::Instance()->GetResourceManager();
 		auto* provider = &Engine::Instance()->GetEngineProvider();
 		Shader* shader = resourceManager.GetOrCreateResource<Shader>("assets/shaders/baseLitShader", provider);
@@ -24,27 +27,16 @@ namespace Iberus {
 		Texture* texture2 = resourceManager.GetOrCreateResource<Texture>("assets/textures/texExample2.png", provider);
 		Texture* texture3 = resourceManager.GetOrCreateResource<Texture>("assets/textures/texExample3.png", provider);
 
-		auto* currentScene = Engine::Instance()->GetSceneManager().CreateScene("TestScene", true);
-
-		// Camera: at (0,0,-5) looking toward +Z
-		EntityId cameraId = currentScene->GetActiveCameraId();
-		if (auto* transform = currentScene->GetComponent<TransformComponent>(cameraId)) {
-			transform->Position = Vec3(0, 0, -5);
-			transform->Rotation = Vec3(0, 180, 0);
-		}
-		currentScene->PushBehaviour(cameraId, new SceneViewerCameraBehaviour());
-
-		// Materials
-		Material* sdfmaterial1 = currentScene->GetOrCreateMaterial<Material>("SDFMaterial1");
-		Material* sdfmaterial2 = currentScene->GetOrCreateMaterial<Material>("SDFMaterial2");
-		Material* sdfmaterial3 = currentScene->GetOrCreateMaterial<Material>("SDFMaterial3");
+		Material* sdfmaterial1 = scene->GetOrCreateMaterial<Material>("SDFMaterial1");
+		Material* sdfmaterial2 = scene->GetOrCreateMaterial<Material>("SDFMaterial2");
+		Material* sdfmaterial3 = scene->GetOrCreateMaterial<Material>("SDFMaterial3");
 		sdfmaterial1->albedoColor = Vec4(0, 0.8, 1, 1);
 		sdfmaterial2->albedoColor = Vec4(0.34, 0.45, 1.0f, 1);
 		sdfmaterial3->albedoColor = Vec4(0.24, 0, 0.67, 1);
 
-		Material* cubeMat1 = currentScene->GetOrCreateMaterial<Material>("CubeMaterial1");
-		Material* cubeMat2 = currentScene->GetOrCreateMaterial<Material>("CubeMaterial2");
-		Material* cubeMat3 = currentScene->GetOrCreateMaterial<Material>("CubeMaterial3");
+		Material* cubeMat1 = scene->GetOrCreateMaterial<Material>("CubeMaterial1");
+		Material* cubeMat2 = scene->GetOrCreateMaterial<Material>("CubeMaterial2");
+		Material* cubeMat3 = scene->GetOrCreateMaterial<Material>("CubeMaterial3");
 		cubeMat1->SetShader(shader);
 		cubeMat1->SetTexture("albedoTexture", texture1);
 		cubeMat2->SetShader(shader);
@@ -52,10 +44,23 @@ namespace Iberus {
 		cubeMat3->SetShader(shader);
 		cubeMat3->SetTexture("albedoTexture", texture3);
 
-		Material* planeMat = currentScene->GetOrCreateMaterial<Material>("PlaneMaterial");
+		Material* planeMat = scene->GetOrCreateMaterial<Material>("PlaneMaterial");
 		planeMat->SetShader(shader);
 		planeMat->SetTexture("albedoTexture", texture2);
 		planeMat->albedoColor = Vec4(0.5f, 0.5f, 0.5f, 1.0f);
+	}
+
+	void CustomSceneCreator::Create() {
+		auto* currentScene = Engine::Instance()->GetSceneManager().CreateScene("TestScene", true);
+		SetupResourcesAndMaterials(currentScene);
+
+		// Camera: at (0,0,-5) looking toward +Z
+		EntityId cameraId = currentScene->GetActiveCameraId();
+		if (auto* transform = currentScene->GetComponent<TransformComponent>(cameraId)) {
+			transform->Position = Vec3(0, 0, -5);
+			transform->Rotation = Vec3(0, 180, 0);
+		}
+		currentScene->PushBehaviour(cameraId, new Iberus::SceneViewerCameraBehaviour());
 
 		// --- SDF entity (kept as-is) ---
 		{

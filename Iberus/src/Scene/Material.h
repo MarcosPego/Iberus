@@ -2,6 +2,9 @@
 
 #include "MathUtils.h"
 
+#include <string>
+#include <unordered_map>
+
 using namespace Math;
 
 namespace Iberus {
@@ -35,6 +38,10 @@ namespace Iberus {
 		void SetTexture(const std::string& ID, Texture* inTexture);
 
 		void PushDraw(RenderBatch& renderBatch);
+
+		const std::string& GetId() const { return ID; }
+		std::string GetShaderId() const;
+		std::unordered_map<std::string, std::string> GetTextureSlotPaths() const;
 
 	private:
 		void BindTextures(RenderBatch& renderBatch);

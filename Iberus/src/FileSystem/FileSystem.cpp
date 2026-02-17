@@ -1,7 +1,24 @@
 #include "Enginepch.h"
 #include "FileSystem.h"
 
+#ifdef IB_PLATFORM_WINDOWS
+#include <Windows.h>
+#endif
+
 namespace Iberus {
+
+	std::string FileSystem::GetExeDirectory() {
+#ifdef IB_PLATFORM_WINDOWS
+		char path[MAX_PATH];
+		if (GetModuleFileNameA(NULL, path, MAX_PATH) > 0) {
+			std::filesystem::path p(path);
+			auto dir = p.parent_path();
+			auto u8 = dir.u8string();
+			return std::string{ u8.begin(), u8.end() };
+		}
+#endif
+		return GetWorkingDir();
+	}
 
 	std::string FileSystem::GetWorkingDir() {
 		const auto path = std::filesystem::current_path();

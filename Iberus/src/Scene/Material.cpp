@@ -27,6 +27,20 @@ namespace Iberus {
 		textures[ID] = inTexture;
 	}
 
+	std::string Material::GetShaderId() const {
+		return shader ? shader->GetID() : "";
+	}
+
+	std::unordered_map<std::string, std::string> Material::GetTextureSlotPaths() const {
+		std::unordered_map<std::string, std::string> out;
+		for (const auto& [slot, tex] : textures) {
+			if (tex) {
+				out[slot] = tex->GetID();
+			}
+		}
+		return out;
+	}
+
 	void Material::BindTextures(RenderBatch& renderBatch) {
 		for (const auto& entry : texturesBindings) {
 			renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<int>>(entry.first, entry.second, UniformType::INT));

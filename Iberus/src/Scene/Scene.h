@@ -35,6 +35,8 @@ namespace Iberus {
 		EntityId CreateEntityECS(const std::string& id);
 		EntityId GetSceneRootId() const { return sceneRootId; }
 		EntityId GetActiveCameraId() const { return activeCameraId; }
+		void SetSceneRootId(EntityId id) { sceneRootId = id; }
+		void SetActiveCameraId(EntityId id) { activeCameraId = id; }
 
 		template<typename T, typename... Args>
 		T* AddComponent(EntityId entity, Args&&... args) {

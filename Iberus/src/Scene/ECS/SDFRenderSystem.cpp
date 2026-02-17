@@ -49,9 +49,43 @@ namespace Iberus {
 			constexpr int MAX_PARTS = 16; // Must match sdfPartBufferSize in shader
 			const int partCount = static_cast<int>(std::min(sdf.Parts.size(), static_cast<size_t>(MAX_PARTS)));
 
+			// Compute world-space bounding sphere for culling
+			Vec3 boundMin(1e30f, 1e30f, 1e30f);
+			Vec3 boundMax(-1e30f, -1e30f, -1e30f);
+			float maxPartRadius = 0.0f;
+			const Mat4& m = localToWorld->Matrix;
+			for (int idx = 0; idx < partCount; ++idx) {
+				const auto& p = sdf.Parts[idx];
+				Vec3 worldCenter = Vec3(m * Vec4(p.Transform.Position));
+				boundMin.x = std::min(boundMin.x, worldCenter.x);
+				boundMin.y = std::min(boundMin.y, worldCenter.y);
+				boundMin.z = std::min(boundMin.z, worldCenter.z);
+				boundMax.x = std::max(boundMax.x, worldCenter.x);
+				boundMax.y = std::max(boundMax.y, worldCenter.y);
+				boundMax.z = std::max(boundMax.z, worldCenter.z);
+				if (p.Type == 3) {
+					Vec3 worldEnd = Vec3(m * Vec4(p.Endpoint));
+					boundMin.x = std::min(boundMin.x, worldEnd.x);
+					boundMin.y = std::min(boundMin.y, worldEnd.y);
+					boundMin.z = std::min(boundMin.z, worldEnd.z);
+					boundMax.x = std::max(boundMax.x, worldEnd.x);
+					boundMax.y = std::max(boundMax.y, worldEnd.y);
+					boundMax.z = std::max(boundMax.z, worldEnd.z);
+				}
+				maxPartRadius = std::max(maxPartRadius, p.Radius);
+			}
+			Vec3 boundCenter = (boundMin + boundMax) * 0.5f;
+			float boundRadius = (boundMax - boundMin).length() * 0.5f + maxPartRadius;
+
 			const std::string sdfMesh = std::format("sdfMeshes[{0}]", sdfSlot);
 			renderBatch.PushRenderCmdToQueue(
 				std::make_unique<UniformRenderCmd<int>>(sdfMesh + ".size", partCount, UniformType::INT),
+				CMDQueue::SDF);
+			renderBatch.PushRenderCmdToQueue(
+				std::make_unique<UniformRenderCmd<Vec3>>(sdfMesh + ".boundCenter", boundCenter, UniformType::VEC3),
+				CMDQueue::SDF);
+			renderBatch.PushRenderCmdToQueue(
+				std::make_unique<UniformRenderCmd<float>>(sdfMesh + ".boundRadius", boundRadius, UniformType::FLOAT),
 				CMDQueue::SDF);
 
 			for (int count = 0; count < partCount; ++count) {

@@ -18,7 +18,9 @@ struct SDFPart {
 
 const int sdfPartBufferSize = 16;
 struct SDFMesh {
-    int size;
+	int size;
+	vec3 boundCenter;
+	float boundRadius;
 	SDFPart sdfParts[sdfPartBufferSize];
 };
 
@@ -65,12 +67,10 @@ float sdCapsule(vec3 p, vec3 a, vec3 b, float r) {
 
 vec4 finalColor = vec4(0,0,0,0);
 
-float smoothMax(float a, float b, float k) {
-	return log(exp(k * a) + exp(k * b)) / k;
-}
-
+// Polynomial smooth min (much cheaper than exp/log, similar look)
 float smootMin(float a, float b, float k) {
-	return -smoothMax(-a, -b, k);
+	float h = max(k - abs(a - b), 0.0) / k;
+	return min(a, b) - h * h * k * 0.25;
 }
 
 float distanceField(vec3 position) {
@@ -79,10 +79,15 @@ float distanceField(vec3 position) {
 		if (sdfMeshes[i].size <= 0) {
 			continue;
 		}
-		SDFMesh mesh = sdfMeshes[i];
+		// Bounding sphere culling: if we're farther from this mesh than current best hit, skip it
+		float dToBound = length(position - sdfMeshes[i].boundCenter) - sdfMeshes[i].boundRadius;
+		if (dToBound > result) {
+			continue;
+		}
+		int meshSize = sdfMeshes[i].size;
 		float resultingT = result;
-		for (int j = 0; j < mesh.size; j++) {
-			SDFPart part = mesh.sdfParts[j];
+		for (int j = 0; j < meshSize; j++) {
+			SDFPart part = sdfMeshes[i].sdfParts[j];
 			if (part.type <= 0) {
 				break;
 			}
@@ -103,11 +108,11 @@ float distanceField(vec3 position) {
 			} else {
 				float _previousT = resultingT;
 				if (part.type == 1) {
-					resultingT = smootMin(sdSphere(position - part.center, part.radius), resultingT, 6.0f);
+					resultingT = smootMin(sdSphere(position - part.center, part.radius), resultingT, 0.5f);
 				} else if (part.type == 2) {
-					resultingT = smootMin(sdBox(position - part.center, part.radius), resultingT, 4.0f);
+					resultingT = smootMin(sdBox(position - part.center, part.radius), resultingT, 0.4f);
 				} else if (part.type == 3) {
-					resultingT = smootMin(sdCapsule(position, part.center, part.endpoint, part.radius), resultingT, 6.0f);
+					resultingT = smootMin(sdCapsule(position, part.center, part.endpoint, part.radius), resultingT, 0.5f);
 				}
 				if (resultingT < result) {
 					finalColor = mix(finalColor, part.color, clamp(_previousT - resultingT, 0, 1));
@@ -119,18 +124,20 @@ float distanceField(vec3 position) {
 	return result;
 }
 
-vec3 getNormal(vec3 position) {
-	const vec2 offset = vec2(0.001, 0.0);
-	return vec3(
-		-(distanceField(position + offset.xyy) - distanceField(position - offset.xyy)), // not sure why the x has to be inverted
-		distanceField(position + offset.yxy) - distanceField(position - offset.yxy),
-		distanceField(position + offset.yyx) - distanceField(position - offset.yyx)
+// Tetrahedron gradient - 4 evaluations instead of 6
+vec3 getNormal(vec3 p) {
+	vec2 e = vec2(0.001, -0.001);
+	return normalize(
+		e.xyy * distanceField(p + e.xyy) +
+		e.yyx * distanceField(p + e.yyx) +
+		e.yxy * distanceField(p + e.yxy) +
+		e.xxx * distanceField(p + e.xxx)
 	);
 }
 
 float raymarching(vec3 origin, vec3 direction) {
 	float t = 0;
-	const int maxIteration = 128;
+	const int maxIteration = 64;
 	float maxDistance = 100.0f;
 
 	for (int i = 0; i < maxIteration; i++) {

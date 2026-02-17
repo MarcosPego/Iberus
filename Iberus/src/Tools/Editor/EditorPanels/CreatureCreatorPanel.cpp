@@ -18,32 +18,50 @@ namespace Iberus {
 
 		void ApplyWorm(SDFComponent& sdf, Scene* scene) {
 			sdf.Parts.clear();
-			const int segCount = 5;   // 5 capsule segments → 6 points
+			const int segCount = 5;
 			const float span = 3.0f;
 			const float radius = 0.18f;
-			const std::string matId = "SDFMaterial1";
-			scene->GetOrCreateMaterial<Material>(matId);
+			const std::string bodyMatId = "SDFMaterial1";
+			const std::string eyeMatId = "SDFMaterial2";
+			scene->GetOrCreateMaterial<Material>(bodyMatId);
+			scene->GetOrCreateMaterial<Material>(eyeMatId);
+
 			for (int i = 0; i < segCount; ++i) {
 				SDFPartData p;
-				p.Type = 3; // Capsule segments read more worm-like than spheres
+				p.Type = 3;
 				float t0 = (segCount > 1) ? (i / (float)segCount) : 0.0f;
 				float t1 = (segCount > 1) ? ((i + 1) / (float)segCount) : 1.0f;
 				p.Transform.Position = Vec3(t0 * span - span / 2, 0, 0);
 				p.Endpoint = Vec3(t1 * span - span / 2, 0, 0);
 				p.Radius = radius;
-				p.MaterialId = matId;
+				p.MaterialId = bodyMatId;
 				sdf.Parts.push_back(p);
 			}
+
+			// Eyes at head (front)
+			const float headX = span / 2;
+			auto eye = [&](float z) {
+				SDFPartData p;
+				p.Type = 1;
+				p.Transform.Position = Vec3(headX + 0.12f, 0.1f, z);
+				p.Radius = 0.05f;
+				p.MaterialId = eyeMatId;
+				sdf.Parts.push_back(p);
+			};
+			eye(0.07f);
+			eye(-0.07f);
 		}
 
 		void ApplySnake(SDFComponent& sdf, Scene* scene) {
 			sdf.Parts.clear();
 			const float spineLen = 4.0f;
-			const int segs = 12;
+			const int segs = 10;
 			const float spineRadius = 0.08f;
 			const std::string spineMatId = "SDFMaterial1";
-			const std::string eyeMatId = "SDFMaterial2";
+			const std::string headMatId = "SDFMaterial2";
+			const std::string eyeMatId = "SDFMaterial3";
 			scene->GetOrCreateMaterial<Material>(spineMatId);
+			scene->GetOrCreateMaterial<Material>(headMatId);
 			scene->GetOrCreateMaterial<Material>(eyeMatId);
 
 			for (int i = 0; i < segs; ++i) {
@@ -56,20 +74,40 @@ namespace Iberus {
 				sdf.Parts.push_back(p);
 			}
 
+			// Head bulge - distinguishes head from body
 			const float headX = spineLen / 2;
-			SDFPartData eye1;
-			eye1.Type = 1;
-			eye1.Transform.Position = Vec3(headX + 0.15f, 0.12f, 0.06f);
-			eye1.Radius = 0.06f;
-			eye1.MaterialId = eyeMatId;
-			sdf.Parts.push_back(eye1);
+			SDFPartData head;
+			head.Type = 1;
+			head.Transform.Position = Vec3(headX + 0.1f, 0.08f, 0);
+			head.Radius = 0.12f;
+			head.MaterialId = headMatId;
+			sdf.Parts.push_back(head);
 
-			SDFPartData eye2;
-			eye2.Type = 1;
-			eye2.Transform.Position = Vec3(headX + 0.15f, 0.12f, -0.06f);
-			eye2.Radius = 0.06f;
-			eye2.MaterialId = eyeMatId;
-			sdf.Parts.push_back(eye2);
+			// Eyes - larger, on top of head
+			auto eye = [&](float z) {
+				SDFPartData p;
+				p.Type = 1;
+				p.Transform.Position = Vec3(headX + 0.2f, 0.18f, z);
+				p.Radius = 0.07f;
+				p.MaterialId = eyeMatId;
+				sdf.Parts.push_back(p);
+			};
+			eye(0.08f);
+			eye(-0.08f);
+
+			// Forked tongue
+			auto tongueSeg = [&](Vec3 from, Vec3 to) {
+				SDFPartData p;
+				p.Type = 3;
+				p.Transform.Position = from;
+				p.Endpoint = to;
+				p.Radius = 0.02f;
+				p.MaterialId = headMatId;
+				sdf.Parts.push_back(p);
+			};
+			Vec3 tongueBase(headX + 0.25f, 0.05f, 0);
+			tongueSeg(tongueBase, Vec3(headX + 0.45f, 0.02f, 0.04f));
+			tongueSeg(tongueBase, Vec3(headX + 0.45f, 0.02f, -0.04f));
 		}
 
 		void ApplyDragonBase(SDFComponent& sdf, Scene* scene) {
@@ -77,47 +115,98 @@ namespace Iberus {
 			const std::string bodyMatId = "SDFMaterial1";
 			const std::string limbMatId = "SDFMaterial2";
 			const std::string headMatId = "SDFMaterial3";
+			const std::string wingMatId = "SDFMaterial2";
+			const std::string eyeMatId = "SDFMaterial3";
 			scene->GetOrCreateMaterial<Material>(bodyMatId);
 			scene->GetOrCreateMaterial<Material>(limbMatId);
 			scene->GetOrCreateMaterial<Material>(headMatId);
+			scene->GetOrCreateMaterial<Material>(wingMatId);
+			scene->GetOrCreateMaterial<Material>(eyeMatId);
 
-			// Body: elongated torso along X
-			SDFPartData body1;
-			body1.Type = 3;
-			body1.Transform.Position = Vec3(-0.8f, 0.5f, 0);
-			body1.Endpoint = Vec3(0.6f, 0.5f, 0);
-			body1.Radius = 0.18f;
-			body1.MaterialId = bodyMatId;
-			sdf.Parts.push_back(body1);
+			// Body: elongated torso
+			SDFPartData body;
+			body.Type = 3;
+			body.Transform.Position = Vec3(-0.7f, 0.5f, 0);
+			body.Endpoint = Vec3(0.5f, 0.5f, 0);
+			body.Radius = 0.16f;
+			body.MaterialId = bodyMatId;
+			sdf.Parts.push_back(body);
 
-			// Head: distinct sphere at front
+			// Neck + head
+			SDFPartData neck;
+			neck.Type = 3;
+			neck.Transform.Position = Vec3(0.5f, 0.5f, 0);
+			neck.Endpoint = Vec3(0.95f, 0.65f, 0);
+			neck.Radius = 0.1f;
+			neck.MaterialId = bodyMatId;
+			sdf.Parts.push_back(neck);
+
 			SDFPartData head;
 			head.Type = 1;
-			head.Transform.Position = Vec3(1.0f, 0.6f, 0);
-			head.Radius = 0.18f;
+			head.Transform.Position = Vec3(1.1f, 0.7f, 0);
+			head.Radius = 0.14f;
 			head.MaterialId = headMatId;
 			sdf.Parts.push_back(head);
 
-			// Four limb stubs - spread out, smaller so they don't blob with body
-			auto limb = [&](Vec3 pos) {
+			// Snout
+			SDFPartData snout;
+			snout.Type = 3;
+			snout.Transform.Position = Vec3(1.1f, 0.68f, 0);
+			snout.Endpoint = Vec3(1.35f, 0.65f, 0);
+			snout.Radius = 0.06f;
+			snout.MaterialId = headMatId;
+			sdf.Parts.push_back(snout);
+
+			// Eyes
+			auto eye = [&](float z) {
 				SDFPartData p;
 				p.Type = 1;
-				p.Transform.Position = pos;
-				p.Radius = 0.08f;
+				p.Transform.Position = Vec3(1.08f, 0.78f, z);
+				p.Radius = 0.05f;
+				p.MaterialId = eyeMatId;
+				sdf.Parts.push_back(p);
+			};
+			eye(0.08f);
+			eye(-0.08f);
+
+			// Four legs (capsules for length)
+			auto leg = [&](Vec3 shoulder, Vec3 foot) {
+				SDFPartData p;
+				p.Type = 3;
+				p.Transform.Position = shoulder;
+				p.Endpoint = foot;
+				p.Radius = 0.06f;
 				p.MaterialId = limbMatId;
 				sdf.Parts.push_back(p);
 			};
-			limb(Vec3(0.3f, 0.25f, 0.35f));
-			limb(Vec3(0.3f, 0.25f, -0.35f));
-			limb(Vec3(-0.3f, 0.25f, 0.35f));
-			limb(Vec3(-0.3f, 0.25f, -0.35f));
+			leg(Vec3(0.2f, 0.4f, 0.28f), Vec3(0.15f, 0.05f, 0.35f));
+			leg(Vec3(0.2f, 0.4f, -0.28f), Vec3(0.15f, 0.05f, -0.35f));
+			leg(Vec3(-0.4f, 0.4f, 0.28f), Vec3(-0.45f, 0.05f, 0.35f));
+			leg(Vec3(-0.4f, 0.4f, -0.28f), Vec3(-0.45f, 0.05f, -0.35f));
 
-			// Tail: thin tapering capsule to the rear
+			// Wings - each wing is 2 segments (upper arm, wing membrane)
+			auto wingSeg = [&](Vec3 from, Vec3 to) {
+				SDFPartData p;
+				p.Type = 3;
+				p.Transform.Position = from;
+				p.Endpoint = to;
+				p.Radius = 0.08f;
+				p.MaterialId = wingMatId;
+				sdf.Parts.push_back(p);
+			};
+			// Left wing
+			wingSeg(Vec3(0.0f, 0.55f, 0.35f), Vec3(-0.15f, 0.85f, 0.4f));
+			wingSeg(Vec3(-0.15f, 0.85f, 0.4f), Vec3(-0.4f, 0.75f, 0.3f));
+			// Right wing
+			wingSeg(Vec3(0.0f, 0.55f, -0.35f), Vec3(-0.15f, 0.85f, -0.4f));
+			wingSeg(Vec3(-0.15f, 0.85f, -0.4f), Vec3(-0.4f, 0.75f, -0.3f));
+
+			// Tail
 			SDFPartData tail;
 			tail.Type = 3;
-			tail.Transform.Position = Vec3(-0.8f, 0.45f, 0);
-			tail.Endpoint = Vec3(-1.6f, 0.2f, 0);
-			tail.Radius = 0.1f;
+			tail.Transform.Position = Vec3(-0.7f, 0.45f, 0);
+			tail.Endpoint = Vec3(-1.5f, 0.15f, 0);
+			tail.Radius = 0.08f;
 			tail.MaterialId = bodyMatId;
 			sdf.Parts.push_back(tail);
 		}

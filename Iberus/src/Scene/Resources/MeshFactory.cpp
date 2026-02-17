@@ -88,83 +88,70 @@ namespace Iberus {
 		return resourceManager.CreateResource<Mesh>(ID, vertices, uvs, normals);
 	}
 
-    // Calculate vertex positions for the current grid cell
-/*float xPos0 = x * stepX - halfWidth;
-float yPos0 = y * stepY - halfHeight;
-float xPos1 = (x + 1) * stepX - halfWidth;
-float yPos1 = y * stepY - halfHeight;
-float xPos2 = (x + 1) * stepX - halfWidth;
-float yPos2 = (y + 1) * stepY - halfHeight;
-float xPos3 = x * stepX - halfWidth;
-float yPos3 = (y + 1) * stepY - halfHeight;
-vertices.push_back(Vec3(xPos0, yPos0, 0.0f));
-vertices.push_back(Vec3(xPos1, yPos1, 0.0f));
-vertices.push_back(Vec3(xPos2, yPos2, 0.0f));
-
-vertices.push_back(Vec3(xPos2, yPos2, 0.0f));
-vertices.push_back(Vec3(xPos3, yPos3, 0.0f));
-vertices.push_back(Vec3(xPos0, yPos0, 0.0f));*/
-
-
-
-    Mesh* MeshFactory::CreatePlane(const std::string& ID, ResourceManager& resourceManager, int width, int height, std::vector<float> heightMap) {
-        auto* mesh = resourceManager.GetResource<Mesh>(ID);
-        if (mesh) {
-            return mesh;
+    Mesh* MeshFactory::CreatePlane(const std::string& ID, ResourceManager& resourceManager, int width, int height,
+        const std::vector<float>& heightMap, float heightScale, float worldSizeX, float worldSizeZ) {
+        const size_t expectedSize = static_cast<size_t>(width) * height;
+        if (width < 2 || height < 2 || heightMap.size() != expectedSize) {
+            return nullptr;
         }
+
+        const float halfX = worldSizeX * 0.5f;
+        const float halfZ = worldSizeZ * 0.5f;
+        const float stepX = worldSizeX / (width - 1);
+        const float stepZ = worldSizeZ / (height - 1);
+
+        auto heightAt = [&](int ix, int iz) {
+            return heightMap[iz * width + ix] * heightScale;
+        };
+
         std::vector<Vec3> vertices;
         std::vector<Vec3> normals;
         std::vector<Vec2> uvs;
 
-        float halfWidth = static_cast<float>(width) / 2.0f;
-        float halfHeight = static_cast<float>(height) / 2.0f;
+        for (int iz = 0; iz < height - 1; iz++) {
+            for (int ix = 0; ix < width - 1; ix++) {
+                const float x0 = ix * stepX - halfX;
+                const float x1 = (ix + 1) * stepX - halfX;
+                const float z0 = iz * stepZ - halfZ;
+                const float z1 = (iz + 1) * stepZ - halfZ;
 
-        float stepX = width > 1 ? 1.0f / (width - 1) : 0.0f;
-        float stepY = height > 1 ? 1.0f / (height - 1) : 0.0f;
+                const float y00 = heightAt(ix, iz);
+                const float y10 = heightAt(ix + 1, iz);
+                const float y11 = heightAt(ix + 1, iz + 1);
+                const float y01 = heightAt(ix, iz + 1);
 
-        for (int y = 0; y < height - 1; y++) {
-            for (int x = 0; x < width - 1; x++) {
-                float xPos0 = x * stepX - halfWidth;
-                float yPos0 = heightMap[y * width + x] * 1;
-                float zPos0 = y * stepY - halfHeight;
+                const Vec3 v00(x0, y00, z0);
+                const Vec3 v10(x1, y10, z0);
+                const Vec3 v11(x1, y11, z1);
+                const Vec3 v01(x0, y01, z1);
 
-                float xPos1 = (x + 1) * stepX - halfWidth;
-                float yPos1 = heightMap[y * width + (x + 1)] * 1;
-                float zPos1 = y * stepY - halfHeight;
+                // Triangle 1: v00,v10,v11. Triangle 2: v11,v01,v00.
+                // Use cross(B-A, C-A) for normal; swap order so normal points +Y (up) for terrain.
+                Vec3 n0 = normalize(cross(v11 - v00, v10 - v00));
+                Vec3 n1 = normalize(cross(v00 - v11, v01 - v11));
 
-                float xPos2 = (x + 1) * stepX - halfWidth;
-                float yPos2 = heightMap[(y + 1) * width + (x + 1)] * 1;
-                float zPos2 = (y + 1) * stepY - halfHeight;
+                vertices.push_back(v00);
+                vertices.push_back(v10);
+                vertices.push_back(v11);
+                normals.push_back(n0);
+                normals.push_back(n0);
+                normals.push_back(n0);
 
-                float xPos3 = x * stepX - halfWidth;
-                float yPos3 = heightMap[(y + 1) * width + x] * 1;
-                float zPos3 = (y + 1) * stepY - halfHeight;
+                vertices.push_back(v11);
+                vertices.push_back(v01);
+                vertices.push_back(v00);
+                normals.push_back(n1);
+                normals.push_back(n1);
+                normals.push_back(n1);
 
-                // Create vertices for the two triangles in the grid cell
-                vertices.push_back(Vec3(xPos0, yPos0, zPos0));
-                vertices.push_back(Vec3(xPos1, yPos1, zPos1));
-                vertices.push_back(Vec3(xPos2, yPos2, zPos2));
-
-                vertices.push_back(Vec3(xPos2, yPos2, zPos2));
-                vertices.push_back(Vec3(xPos3, yPos3, zPos3));
-                vertices.push_back(Vec3(xPos0, yPos0, zPos0));
-
-
-                // Calculate normals (assuming upward-facing normals for a plane)
-                for (int i = 0; i < 6; i++) {
-                    normals.push_back(Vec3(0.0f, 0.0f, 1.0f));
-                }
-
-                // Calculate UV coordinates
-                float u0 = static_cast<float>(x) / (width - 1);
-                float u1 = static_cast<float>(x + 1) / (width - 1);
-                float v0 = static_cast<float>(y) / (height - 1);
-                float v1 = static_cast<float>(y + 1) / (height - 1);
+                const float u0 = static_cast<float>(ix) / (width - 1);
+                const float u1 = static_cast<float>(ix + 1) / (width - 1);
+                const float v0 = static_cast<float>(iz) / (height - 1);
+                const float v1 = static_cast<float>(iz + 1) / (height - 1);
 
                 uvs.push_back(Vec2(u0, v0));
                 uvs.push_back(Vec2(u1, v0));
                 uvs.push_back(Vec2(u1, v1));
-
                 uvs.push_back(Vec2(u1, v1));
                 uvs.push_back(Vec2(u0, v1));
                 uvs.push_back(Vec2(u0, v0));

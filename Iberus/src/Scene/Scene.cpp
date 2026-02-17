@@ -10,6 +10,7 @@
 #include "CameraSystem.h"
 #include "LightSystem.h"
 #include "MeshRenderSystem.h"
+#include "TerrainSystem.h"
 #include "SDFRenderSystem.h"
 #include "BehaviourSystem.h"
 
@@ -164,6 +165,11 @@ namespace Iberus {
 			SDFComponent copy = *srcS;
 			*scene.AddComponent<SDFComponent>(newId) = copy;
 		}
+		if (auto* srcT = world.GetComponent<TerrainComponent>(sourceId)) {
+			TerrainComponent copy = *srcT;
+			copy.NeedsRegenerate = true;
+			*scene.AddComponent<TerrainComponent>(newId) = copy;
+		}
 
 		// Copy children list before recursing to avoid iterator invalidation if storage reallocates
 		std::vector<EntityId> childIds;
@@ -193,6 +199,7 @@ namespace Iberus {
 		auto& renderBatch = frame.PushBatch();
 
 		TransformSystem::Update(world);
+		TerrainSystem::Update(world);
 		if (camera) {
 			renderBatch.PushRenderCmdToQueue(
 				std::make_unique<CameraRenderCmd>(

@@ -52,21 +52,57 @@ vec2 CalcUVCoord() {
     return gl_FragCoord.xy / screenSize;
 }
 
+// Light type: 1=Point, 2=Spot, 3=Dir, 4=Area
+vec3 CalcLightContribution(vec3 fragPos, vec3 normalizedNormal, int idx) {
+	vec3 lightBaseColor = lights[idx].color * lights[idx].intensity;
+	vec3 lightDir;
+	float attenuation = 1.0;
+
+	if (lights[idx].type == 3) {
+		// Directional: direction points from light toward surface (e.g. sun rays)
+		lightDir = normalize(-lights[idx].direction);
+	} else {
+		// Point or Spot: direction from fragment to light
+		vec3 toLight = lights[idx].position - fragPos;
+		float dist = length(toLight);
+		lightDir = toLight / max(dist, 0.0001);
+
+		// Range cull
+		if (lights[idx].range > 0.0 && dist > lights[idx].range) {
+			return vec3(0.0);
+		}
+
+		// Attenuation: 1 / (c + l*d + q*d*d)
+		attenuation = 1.0 / (lights[idx].constant + lights[idx].linear * dist + lights[idx].quadratic * dist * dist);
+
+		// Spot cone (type 2)
+		if (lights[idx].type == 2) {
+			vec3 spotDir = normalize(-lights[idx].direction);
+			float cosTheta = dot(lightDir, spotDir);
+			float cutoff = cos(radians(lights[idx].angel));
+			if (cosTheta < cutoff) {
+				return vec3(0.0);
+			}
+		}
+	}
+
+	float diff = max(dot(normalizedNormal, lightDir), 0.0);
+	return diff * lightBaseColor * attenuation;
+}
+
 void main(void)
 {
 	vec2 uvCoord = CalcUVCoord();
 
-	vec3 position = texture(worldPosIn, uvCoord).xyz;
+	vec3 fragPos = texture(worldPosIn, uvCoord).xyz;
 	vec3 normalizedNormal = normalize(texture(normalIn, uvCoord).xyz);
 
-	float ambientStrength = 0.2;
-	vec3 lightColor = ambientStrength * vec3(1.0, 1.0, 1.0);
+	float ambientStrength = 0.1;
+	vec3 ambient = ambientStrength * vec3(1.0, 1.0, 1.0);
+	vec3 lightColor = ambient;
 
 	for (int i = 0; i < lightCount && i < 32; ++i) {
-		vec3 lightBaseColor = lights[i].color * lights[i].intensity;
-		vec3 lightDir = normalize(lights[i].position - position);
-		float diff = max(dot(normalizedNormal, lightDir), 0.0);
-		lightColor += diff * lightBaseColor;
+		lightColor += CalcLightContribution(fragPos, normalizedNormal, i);
 	}
 
 	vec3 color = texture(diffuseIn, uvCoord).xyz;

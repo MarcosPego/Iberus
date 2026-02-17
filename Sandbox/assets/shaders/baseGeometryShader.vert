@@ -8,21 +8,20 @@ out vec3 exVerticies;
 out vec2 exUVs;
 out vec3 exNormals;
 
-out vec4 position;
-
 uniform mat4 ModelMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
 
 void main(void)
 {
-	mat4 worlMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-	vec4 meshPosition = vec4(inVerticies, 1.0);
-	position = worlMatrix * meshPosition;
+	vec4 worldPos4 = ModelMatrix * vec4(inVerticies, 1.0);
+	vec4 clipPos = ProjectionMatrix * ViewMatrix * worldPos4;
 
-	exVerticies = position.xyz;
+	// World-space position for deferred lighting
+	exVerticies = worldPos4.xyz;
 	exUVs = inUVs;
-	exNormals = (worlMatrix * vec4(inNormals, 0.0)).xyz;
+	// World-space normals (model matrix only; no view/projection)
+	exNormals = normalize((ModelMatrix * vec4(inNormals, 0.0)).xyz);
 
-	gl_Position = position;
+	gl_Position = clipPos;
 }

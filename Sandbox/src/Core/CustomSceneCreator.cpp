@@ -7,7 +7,6 @@
 #include "SceneManager.h"
 #include "Shader.h"
 #include "Mesh.h"
-#include "MeshFactory.h"
 #include "Texture.h"
 #include "Material.h"
 #include "Components.h"
@@ -24,9 +23,6 @@ namespace Iberus {
 		Texture* texture1 = resourceManager.GetOrCreateResource<Texture>("assets/textures/texExample1.png", provider);
 		Texture* texture2 = resourceManager.GetOrCreateResource<Texture>("assets/textures/texExample2.png", provider);
 		Texture* texture3 = resourceManager.GetOrCreateResource<Texture>("assets/textures/texExample3.png", provider);
-
-		// Ground plane mesh (flat quad, will be rotated to lie horizontally)
-		MeshFactory::CreateQuad("groundPlane", resourceManager, 60, 60);
 
 		auto* currentScene = Engine::Instance()->GetSceneManager().CreateScene("TestScene", true);
 
@@ -110,18 +106,16 @@ namespace Iberus {
 		createCube("Cube4", Vec3(6, 5, 16), "CubeMaterial3");
 		createCube("Cube5", Vec3(-10, 1, 20), "CubeMaterial2");
 
-		// --- Ground plane below ---
+		// --- Terrain (displaced height map, editable via TerrainComponent in Inspector) ---
 		{
-			EntityId planeId = currentScene->CreateEntityECS("GroundPlane");
-			auto* meshRenderer = currentScene->AddComponent<MeshRendererComponent>(planeId);
-			meshRenderer->MeshId = "groundPlane";
-			meshRenderer->MaterialId = "PlaneMaterial";
-			if (auto* t = currentScene->GetComponent<TransformComponent>(planeId)) {
-				t->Position = Vec3(-30, 0, 20);
-				t->Rotation = Vec3(90.0f, 0, 0);
+			EntityId terrainId = currentScene->CreateEntityECS("Terrain");
+			currentScene->AddComponent<TerrainComponent>(terrainId);
+			if (auto* t = currentScene->GetComponent<TransformComponent>(terrainId)) {
+				t->Position = Vec3(0, 0, 50);
+				t->Rotation = Vec3(0, 0, 0);
 				t->Scale = Vec3(1, 1, 1);
 			}
-			currentScene->AddChildECS(currentScene->GetSceneRootId(), planeId, "GroundPlane");
+			currentScene->AddChildECS(currentScene->GetSceneRootId(), terrainId, "Terrain");
 		}
 	}
 

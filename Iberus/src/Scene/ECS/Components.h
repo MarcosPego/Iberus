@@ -111,4 +111,20 @@ namespace Iberus {
 		Vec3 Direction{ 0, -1, 0 };
 	};
 
+	struct IBERUS_API TerrainComponent {
+		int Width{ 65 };
+		int Height{ 65 };
+		float XOffset{ 0.0f };
+		float ZOffset{ 0.0f };
+		float Frequency{ 0.01f };
+		int Seed{ 1337 };
+		int Octaves{ 2 };
+		float HeightScale{ 25.0f };
+		float WorldSizeX{ 60.0f };
+		float WorldSizeZ{ 60.0f };
+		std::string MeshId{ "terrain_heightmap" };
+		std::string MaterialId{ "PlaneMaterial" };
+		bool NeedsRegenerate{ true };
+	};
+
 }

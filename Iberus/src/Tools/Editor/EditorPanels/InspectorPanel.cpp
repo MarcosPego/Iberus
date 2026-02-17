@@ -142,7 +142,9 @@ namespace Iberus {
 			return;
 		}
 		if (ImGui::CollapsingHeader("Light##LightHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
-			int type = static_cast<int>(comp->Type);
+			// LightType is 1-based (Point=1, Spot=2, etc); Combo uses 0-based indices
+			int type = static_cast<int>(comp->Type) - 1;
+			type = (type < 0) ? 0 : (type > 3 ? 3 : type);
 			const char* typeNames[] = { "Point", "Spot", "Directional", "Area" };
 			if (ImGui::Combo("Type##LightType", &type, typeNames, 4)) {
 				comp->Type = static_cast<LightType>(type + 1);
@@ -151,6 +153,61 @@ namespace Iberus {
 			ImGui::DragFloat("Intensity##LightIntensity", &comp->Intensity, 0.1f);
 			ImGui::DragFloat("Range##LightRange", &comp->Range, 1.0f);
 			ImGui::DragFloat3("Direction##LightDirection", &comp->Direction.x, 0.01f);
+		}
+	}
+
+	static void DrawTerrainComponent(World& world, EntityId entityId) {
+		auto* comp = world.GetComponent<TerrainComponent>(entityId);
+		if (!comp) {
+			return;
+		}
+		if (ImGui::CollapsingHeader("Terrain##TerrainHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
+			auto setDirty = [comp]() { comp->NeedsRegenerate = true; };
+			if (ImGui::DragInt("Width##TerrainWidth", &comp->Width, 1.0f, 2, 512)) {
+				setDirty();
+			}
+			if (ImGui::DragInt("Height##TerrainHeight", &comp->Height, 1.0f, 2, 512)) {
+				setDirty();
+			}
+			if (ImGui::DragFloat("Height Scale##TerrainHeightScale", &comp->HeightScale, 0.5f, 0.0f, 100.0f)) {
+				setDirty();
+			}
+			if (ImGui::DragFloat("Frequency##TerrainFrequency", &comp->Frequency, 0.001f, 0.001f, 1.0f)) {
+				setDirty();
+			}
+			if (ImGui::DragInt("Seed##TerrainSeed", &comp->Seed)) {
+				setDirty();
+			}
+			if (ImGui::DragInt("Octaves##TerrainOctaves", &comp->Octaves, 1.0f, 1, 8)) {
+				setDirty();
+			}
+			if (ImGui::DragFloat("X Offset##TerrainXOffset", &comp->XOffset, 0.1f)) {
+				setDirty();
+			}
+			if (ImGui::DragFloat("Z Offset##TerrainZOffset", &comp->ZOffset, 0.1f)) {
+				setDirty();
+			}
+			if (ImGui::DragFloat("World Size X##TerrainWorldSizeX", &comp->WorldSizeX, 1.0f, 1.0f, 1000.0f)) {
+				setDirty();
+			}
+			if (ImGui::DragFloat("World Size Z##TerrainWorldSizeZ", &comp->WorldSizeZ, 1.0f, 1.0f, 1000.0f)) {
+				setDirty();
+			}
+			char meshBuf[256];
+			snprintf(meshBuf, sizeof(meshBuf), "%s", comp->MeshId.c_str());
+			if (ImGui::InputText("Mesh Id##TerrainMeshId", meshBuf, sizeof(meshBuf))) {
+				comp->MeshId = meshBuf;
+				setDirty();
+			}
+			char matBuf[256];
+			snprintf(matBuf, sizeof(matBuf), "%s", comp->MaterialId.c_str());
+			if (ImGui::InputText("Material Id##TerrainMaterialId", matBuf, sizeof(matBuf))) {
+				comp->MaterialId = matBuf;
+				setDirty();
+			}
+			if (ImGui::Button("Regenerate##TerrainRegenerate")) {
+				comp->NeedsRegenerate = true;
+			}
 		}
 	}
 
@@ -188,6 +245,9 @@ namespace Iberus {
 		if (world.HasComponent<LightComponent>(entityId)) {
 			DrawLightComponent(world, entityId);
 		}
+		if (world.HasComponent<TerrainComponent>(entityId)) {
+			DrawTerrainComponent(world, entityId);
+		}
 
 		ImGui::Separator();
 		if (ImGui::Button("Add Component##AddComponent")) {
@@ -209,6 +269,8 @@ namespace Iberus {
 				[&]() { scene->AddComponent<LightComponent>(entityId); });
 			tryAdd("SDF", "AddSDF", world.HasComponent<SDFComponent>(entityId),
 				[&]() { scene->AddComponent<SDFComponent>(entityId); });
+			tryAdd("Terrain", "AddTerrain", world.HasComponent<TerrainComponent>(entityId),
+				[&]() { scene->AddComponent<TerrainComponent>(entityId); });
 			ImGui::EndPopup();
 		}
 

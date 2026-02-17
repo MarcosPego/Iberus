@@ -53,6 +53,33 @@ namespace Math {
 		return sample;
 	}
 
+	void Noise::GetHeightMap2D(std::vector<float>& outHeights, int width, int height, float xOffset, float zOffset,
+		float frequency, int seed, int octaves, bool normalizeToZeroOne) {
+		outHeights.resize(static_cast<size_t>(width) * height);
+		if (outHeights.empty()) {
+			return;
+		}
+
+		auto fnPerlin = FastNoise::New<FastNoise::Perlin>();
+		fnPerlin->SetScale(0.3f);
+		auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
+		fnFractal->SetSource(fnPerlin);
+		fnFractal->SetGain(0.5f);
+		fnFractal->SetOctaveCount(octaves);
+		fnFractal->SetLacunarity(2.0f);
+
+		auto minMax = fnFractal->GenUniformGrid2D(outHeights.data(), xOffset, zOffset, width, height,
+			frequency, frequency, seed);
+
+		if (normalizeToZeroOne) {
+			const float range = minMax.max - minMax.min;
+			const float invRange = range > 1e-6f ? 1.0f / range : 1.0f;
+			for (float& h : outHeights) {
+				h = (h - minMax.min) * invRange;
+			}
+		}
+	}
+
 	Iberus::Buffer Noise::SampleToTextureBuffer(NoiseSample& noiseSample, int channel) {
 		auto* bufferData = noiseSample.noiseFloatBuffer.GetData();
 		Iberus::Buffer outData = Iberus::Buffer(noiseSample.noiseFloatBuffer.GetSize() * channel);

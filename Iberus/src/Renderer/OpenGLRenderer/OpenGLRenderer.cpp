@@ -38,9 +38,24 @@ namespace Iberus {
 	}
 
 	void OpenGLRenderer::ExecuteAndFlushCmdQueue() {
+		// Process DELETE commands first, so that when a resource is replaced (old destroyed
+		// pushes Delete, new created pushes Upload), we erase the old before uploading the new.
+		// Otherwise Delete would erase the mesh we just uploaded.
+		for (const auto& renderCmd : renderCmdQueue) {
+			RenderCmdType type = renderCmd->GetRenderCmdType();
+			if (type == RenderCmdType::DELETE_SHADER) {
+				auto* shaderCmd = dynamic_cast<DeleteShaderRenderCmd*>(renderCmd.get());
+				renderObjects.erase(shaderCmd->ID);
+			} else if (type == RenderCmdType::DELETE_MESH) {
+				auto* meshCmd = dynamic_cast<DeleteMeshRenderCmd*>(renderCmd.get());
+				renderObjects.erase(meshCmd->ID);
+			} else if (type == RenderCmdType::DELETE_TEXTURE) {
+				auto* texCmd = dynamic_cast<DeleteTextureRenderCmd*>(renderCmd.get());
+				renderObjects.erase(texCmd->ID);
+			}
+		}
 		for (const auto& renderCmd : renderCmdQueue) {
 			switch (renderCmd->GetRenderCmdType()) {
-
 			case RenderCmdType::UPLOAD_SHADER: {
 				auto* shaderCmd = dynamic_cast<UploadShaderRenderCmd*>(renderCmd.get());
 				auto handle = GenerateHandle(); // Needs to be reviewed
@@ -58,21 +73,13 @@ namespace Iberus {
 				auto* textureCmd = dynamic_cast<UploadTextureRenderCmd*>(renderCmd.get());
 				auto handle = GenerateHandle(); // Needs to be reviewed
 				auto* texture = new OpenGLTexture(textureCmd->ID, handle, std::move(textureCmd->buffer), textureCmd->width, textureCmd->height, textureCmd->channels);
-				
+
 				renderObjects[textureCmd->ID].reset(texture);
 			} break;
-			case RenderCmdType::DELETE_SHADER: {
-				auto* shaderCmd = dynamic_cast<DeleteShaderRenderCmd*>(renderCmd.get());
-				renderObjects.erase(shaderCmd->ID);
-			} break;
-			case RenderCmdType::DELETE_MESH: {
-				auto* meshCmd = dynamic_cast<DeleteMeshRenderCmd*>(renderCmd.get());
-				renderObjects.erase(meshCmd->ID);
-			} break;
-			case RenderCmdType::DELETE_TEXTURE: {
-				auto* texCmd = dynamic_cast<DeleteTextureRenderCmd*>(renderCmd.get());
-				renderObjects.erase(texCmd->ID); 
-			} break;
+			case RenderCmdType::DELETE_SHADER:
+			case RenderCmdType::DELETE_MESH:
+			case RenderCmdType::DELETE_TEXTURE:
+				break;
 			default:
 				break;
 			}
@@ -168,8 +175,11 @@ namespace Iberus {
 				}	break;
 				case RenderCmdType::PUSH_MESH: {
 					auto* meshCmd = dynamic_cast<MeshRenderCmd*>(cmdPtr);
-					auto* mesh = dynamic_cast<MeshApi*>(renderObjects[meshCmd->ID].get());
-
+					auto it = renderObjects.find(meshCmd->ID);
+					auto* mesh = (it != renderObjects.end()) ? dynamic_cast<MeshApi*>(it->second.get()) : nullptr;
+					if (!mesh) {
+						continue;
+					}
 					if (mesh != boundMesh) {
 						// Unbind previous mesh
 						if (boundMesh) {

@@ -76,7 +76,7 @@ namespace Iberus {
 		T* InitializeResource(const std::string& id, Args&&... args) {
 			auto resource = std::make_unique<T>(id, std::forward<Args>(args)...);
 			auto* ptr = resource.get();
-			resources.emplace(id, std::move(resource));
+			resources[id] = std::move(resource);
 			return dynamic_cast<T*>(ptr);
 		}
 

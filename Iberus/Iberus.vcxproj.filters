@@ -573,6 +573,9 @@
     <ClInclude Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.h">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\CreatureCreatorPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
     <ClInclude Include="src\Tools\Editor\EditorPanels\ThumbnailCache.h">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClInclude>
@@ -813,6 +816,9 @@
       <Filter>src\Tools\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\CreatureCreatorPanel.cpp">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorPanels\ThumbnailCache.cpp">

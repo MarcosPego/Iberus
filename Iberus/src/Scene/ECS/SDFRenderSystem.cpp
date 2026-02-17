@@ -11,7 +11,7 @@ using namespace Math;
 namespace Iberus {
 
 	// Must match sdfMeshBufferSize in baseRaymarchingShader.frag
-	constexpr int SDF_MESH_BUFFER_SIZE = 3;
+	constexpr int SDF_MESH_BUFFER_SIZE = 4;
 
 	void SDFRenderSystem::Execute(World& world, Scene& scene, RenderBatch& renderBatch) {
 		auto* sdfStorage = world.GetStorage<SDFComponent>();
@@ -46,16 +46,26 @@ namespace Iberus {
 				entityMaterial = scene.GetOrCreateMaterial<Material>(meshRenderer->MaterialId);
 			}
 
+			constexpr int MAX_PARTS = 16; // Must match sdfPartBufferSize in shader
+			const int partCount = static_cast<int>(std::min(sdf.Parts.size(), static_cast<size_t>(MAX_PARTS)));
+
 			const std::string sdfMesh = std::format("sdfMeshes[{0}]", sdfSlot);
 			renderBatch.PushRenderCmdToQueue(
-				std::make_unique<UniformRenderCmd<int>>(sdfMesh + ".size", static_cast<int>(sdf.Parts.size()), UniformType::INT),
+				std::make_unique<UniformRenderCmd<int>>(sdfMesh + ".size", partCount, UniformType::INT),
 				CMDQueue::SDF);
 
-			int count = 0;
-			for (const auto& part : sdf.Parts) {
+			for (int count = 0; count < partCount; ++count) {
+				const auto& part = sdf.Parts[count];
 				Vec4 localCenter(part.Transform.Position);
 				Vec4 worldCenter4 = localToWorld->Matrix * localCenter;
 				Vec3 center(worldCenter4);
+
+				Vec3 endpoint = center;
+				if (part.Type == 3) {
+					Vec4 localEndpoint(part.Endpoint);
+					Vec4 worldEndpoint4 = localToWorld->Matrix * localEndpoint;
+					endpoint = Vec3(worldEndpoint4);
+				}
 
 				std::string sdfPart = std::format("{0}.sdfParts[{1}]", sdfMesh, count);
 				renderBatch.PushRenderCmdToQueue(
@@ -64,6 +74,8 @@ namespace Iberus {
 					std::make_unique<UniformRenderCmd<float>>(sdfPart + ".radius", part.Radius, UniformType::FLOAT), CMDQueue::SDF);
 				renderBatch.PushRenderCmdToQueue(
 					std::make_unique<UniformRenderCmd<Vec3>>(sdfPart + ".center", center, UniformType::VEC3), CMDQueue::SDF);
+				renderBatch.PushRenderCmdToQueue(
+					std::make_unique<UniformRenderCmd<Vec3>>(sdfPart + ".endpoint", endpoint, UniformType::VEC3), CMDQueue::SDF);
 
 				Vec4 color = Vec4(1, 1, 1, 1);
 				if (!part.MaterialId.empty()) {
@@ -76,7 +88,6 @@ namespace Iberus {
 				}
 				renderBatch.PushRenderCmdToQueue(
 					std::make_unique<UniformRenderCmd<Vec4>>(sdfPart + ".color", color, UniformType::VEC4), CMDQueue::SDF);
-				count++;
 			}
 			sdfSlot++;
 		}

@@ -16,6 +16,7 @@ namespace Iberus {
 		: sceneTreePanel(std::make_unique<SceneTreePanel>(*this))
 		, sceneViewPanel(std::make_unique<SceneViewPanel>(*this))
 		, inspectorPanel(std::make_unique<InspectorPanel>(*this))
+		, creatureCreatorPanel(std::make_unique<CreatureCreatorPanel>(*this))
 		, fileSystemPanel(std::make_unique<FileSystemPanel>(*this))
 		, assetInspectorPanel(std::make_unique<AssetInspectorPanel>(*this)) {
 	}
@@ -136,6 +137,7 @@ namespace Iberus {
 		sceneTreePanel->OnDraw(*gui);
 		sceneViewPanel->OnDraw(*gui);
 		inspectorPanel->OnDraw(*gui);
+		creatureCreatorPanel->OnDraw(*gui);
 		fileSystemPanel->OnDraw(*gui);
 		assetInspectorPanel->OnDraw(*gui);
 		gui->EndDockSpace();

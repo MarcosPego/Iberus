@@ -115,12 +115,46 @@ namespace Iberus {
 			return;
 		}
 		if (ImGui::CollapsingHeader("SDF##SDFHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::Text("Part count: %zu", comp->Parts.size());
+
 			for (size_t i = 0; i < comp->Parts.size(); ++i) {
 				auto& part = comp->Parts[i];
+				ImGui::PushID(static_cast<int>(i));
+
+				if (ImGui::Button("Up##SDFPartUp")) {
+					if (i > 0) {
+						std::swap(comp->Parts[i], comp->Parts[i - 1]);
+					}
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Down##SDFPartDown")) {
+					if (i + 1 < comp->Parts.size()) {
+						std::swap(comp->Parts[i], comp->Parts[i + 1]);
+					}
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Remove##SDFPartRemove")) {
+					comp->Parts.erase(comp->Parts.begin() + static_cast<std::ptrdiff_t>(i));
+					ImGui::PopID();
+					break;
+				}
+				ImGui::SameLine();
+
 				if (ImGui::TreeNode((void*)(intptr_t)i, "Part %zu##SDFPart", i)) {
 					ImGui::DragFloat3("Position##SDFPartPosition", &part.Transform.Position.x, 0.1f);
-					ImGui::DragInt("Type##SDFPartType", &part.Type);
+
+					int typeIdx = (part.Type == 1) ? 0 : (part.Type == 2) ? 1 : (part.Type == 3) ? 2 : 0;
+					const char* typeNames[] = { "Sphere", "Box", "Capsule" };
+					if (ImGui::Combo("Type##SDFPartType", &typeIdx, typeNames, 3)) {
+						part.Type = typeIdx + 1;
+					}
+
 					ImGui::DragFloat("Radius##SDFPartRadius", &part.Radius, 0.01f);
+
+					if (part.Type == 3) {
+						ImGui::DragFloat3("Endpoint##SDFPartEndpoint", &part.Endpoint.x, 0.1f);
+					}
+
 					char matBuf[256];
 					snprintf(matBuf, sizeof(matBuf), "%s", part.MaterialId.c_str());
 					if (ImGui::InputText("Material Override##SDFPartMaterial", matBuf, sizeof(matBuf))) {
@@ -128,10 +162,34 @@ namespace Iberus {
 					}
 					ImGui::TreePop();
 				}
+				ImGui::PopID();
 			}
-			if (ImGui::Button("Add Part##SDFAddPart")) {
-				SDFPartData part;
-				comp->Parts.push_back(part);
+
+			if (ImGui::BeginMenu("Add Part##SDFAddPartMenu")) {
+				if (ImGui::MenuItem("Sphere##AddSphere")) {
+					SDFPartData part;
+					part.Type = 1;
+					part.Radius = 0.5f;
+					part.MaterialId = "SDFMaterial1";
+					comp->Parts.push_back(part);
+				}
+				if (ImGui::MenuItem("Box##AddBox")) {
+					SDFPartData part;
+					part.Type = 2;
+					part.Radius = 0.5f;
+					part.MaterialId = "SDFMaterial1";
+					comp->Parts.push_back(part);
+				}
+				if (ImGui::MenuItem("Capsule##AddCapsule")) {
+					SDFPartData part;
+					part.Type = 3;
+					part.Transform.Position = Vec3(-0.5f, 0, 0);
+					part.Endpoint = Vec3(0.5f, 0, 0);
+					part.Radius = 0.25f;
+					part.MaterialId = "SDFMaterial1";
+					comp->Parts.push_back(part);
+				}
+				ImGui::EndMenu();
 			}
 		}
 	}

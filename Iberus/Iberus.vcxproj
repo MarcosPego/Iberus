@@ -316,6 +316,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Tools\Editor\Editor.h" />
     <ClInclude Include="src\Tools\Editor\EditorLayer.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\CreatureCreatorPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\ThumbnailCache.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\FileSystemPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h" />
@@ -422,6 +423,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Tools\Editor\Editor.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorLayer.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\CreatureCreatorPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\ThumbnailCache.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\FileSystemPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp" />

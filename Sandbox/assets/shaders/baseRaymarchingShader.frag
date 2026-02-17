@@ -13,15 +13,16 @@ struct SDFPart {
 	vec4 color; // For now only color, later I want textures too
 	float radius;
 	int type;
+	vec3 endpoint; // For capsule: segment endpoint in world space
 };
 
-const int sdfPartBufferSize = 8;
+const int sdfPartBufferSize = 16;
 struct SDFMesh {
     int size;
 	SDFPart sdfParts[sdfPartBufferSize];
 };
 
-const int sdfMeshBufferSize = 3;
+const int sdfMeshBufferSize = 4;
 uniform SDFMesh sdfMeshes[sdfMeshBufferSize];
 
 layout (location = 0) out vec3 worldPosOut;   
@@ -53,6 +54,13 @@ float sdBox(vec3 position, float size) {
 	return min(max(distance.x, max(distance.y, distance.z)), 0.0) + length(max(distance, 0.0));
 }
 
+float sdCapsule(vec3 p, vec3 a, vec3 b, float r) {
+	vec3 pa = p - a;
+	vec3 ba = b - a;
+	float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+	return length(pa - ba * h) - r;
+}
+
 ///
 
 vec4 finalColor = vec4(0,0,0,0);
@@ -68,6 +76,9 @@ float smootMin(float a, float b, float k) {
 float distanceField(vec3 position) {
 	float result = 1e30;
 	for (int i = 0; i < sdfMeshBufferSize; i++) {
+		if (sdfMeshes[i].size <= 0) {
+			continue;
+		}
 		SDFMesh mesh = sdfMeshes[i];
 		float resultingT = result;
 		for (int j = 0; j < mesh.size; j++) {
@@ -79,9 +90,10 @@ float distanceField(vec3 position) {
 			if (j == 0) {
 				if (part.type == 1) {
 					resultingT = sdSphere(position - part.center, part.radius);
-
 				} else if (part.type == 2) {
 					resultingT = sdBox(position - part.center, part.radius);
+				} else if (part.type == 3) {
+					resultingT = sdCapsule(position, part.center, part.endpoint, part.radius);
 				}
 
 				if (resultingT < result) {
@@ -91,10 +103,11 @@ float distanceField(vec3 position) {
 			} else {
 				float _previousT = resultingT;
 				if (part.type == 1) {
-					resultingT = smootMin(sdSphere(position - part.center, part.radius), resultingT, 1.50f);
-
+					resultingT = smootMin(sdSphere(position - part.center, part.radius), resultingT, 6.0f);
 				} else if (part.type == 2) {
-					resultingT = smootMin(sdBox(position - part.center, part.radius), resultingT, 1.0f);
+					resultingT = smootMin(sdBox(position - part.center, part.radius), resultingT, 4.0f);
+				} else if (part.type == 3) {
+					resultingT = smootMin(sdCapsule(position, part.center, part.endpoint, part.radius), resultingT, 6.0f);
 				}
 				if (resultingT < result) {
 					finalColor = mix(finalColor, part.color, clamp(_previousT - resultingT, 0, 1));

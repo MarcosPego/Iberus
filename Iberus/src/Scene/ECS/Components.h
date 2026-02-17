@@ -75,9 +75,16 @@ namespace Iberus {
 		Mat4 CameraToWorld;
 	};
 
+	enum class SDFPartType : int {
+		Sphere = 1,
+		Box = 2,
+		Capsule = 3
+	};
+
 	struct IBERUS_API SDFPartData {
 		TransformComponent Transform;
 		int Type{ 1 };
+		Vec3 Endpoint{ 0, 0, 0 }; // For capsule: local-space endpoint; segment = Transform.Position to Endpoint
 		float Radius{ 1.0f };
 		std::string MaterialId; // Override material per part; empty = use entity material
 	};

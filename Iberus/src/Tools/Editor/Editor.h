@@ -4,6 +4,7 @@
 #include "SceneTreePanel.h"
 #include "SceneViewPanel.h"
 #include "InspectorPanel.h"
+#include "CreatureCreatorPanel.h"
 #include "FileSystemPanel.h"
 #include "AssetInspectorPanel.h"
 #include "EntityId.h"
@@ -63,6 +64,7 @@ namespace Iberus {
 		std::unique_ptr<SceneTreePanel> sceneTreePanel;
 		std::unique_ptr<SceneViewPanel> sceneViewPanel;
 		std::unique_ptr<InspectorPanel> inspectorPanel;
+		std::unique_ptr<CreatureCreatorPanel> creatureCreatorPanel;
 		std::unique_ptr<FileSystemPanel> fileSystemPanel;
 		std::unique_ptr<AssetInspectorPanel> assetInspectorPanel;
 		EditorMode editorMode{ EditorMode::Editor };

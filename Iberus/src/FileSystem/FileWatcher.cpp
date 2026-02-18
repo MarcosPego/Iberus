@@ -1,6 +1,8 @@
 #include "Enginepch.h"
 #include "FileWatcher.h"
 
+#include <string_view>
+
 #ifdef IB_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif
@@ -12,6 +14,32 @@ namespace Iberus {
 #ifdef IB_PLATFORM_WINDOWS
 	// Buffer size for ReadDirectoryChangesW (must be DWORD-aligned)
 	static constexpr DWORD kBufferSize = 4096;
+
+	static std::wstring Utf8ToWide(const std::string& str) {
+		if (str.empty()) {
+			return {};
+		}
+		int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), static_cast<int>(str.size()), nullptr, 0);
+		if (size <= 0) {
+			return {};
+		}
+		std::wstring result(static_cast<size_t>(size), L'\0');
+		MultiByteToWideChar(CP_UTF8, 0, str.c_str(), static_cast<int>(str.size()), result.data(), size);
+		return result;
+	}
+
+	static std::string WideToUtf8(const std::wstring& wstr) {
+		if (wstr.empty()) {
+			return {};
+		}
+		int size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
+		if (size <= 0) {
+			return {};
+		}
+		std::string result(static_cast<size_t>(size), '\0');
+		WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int>(wstr.size()), result.data(), size, nullptr, nullptr);
+		return result;
+	}
 
 	FileWatcher::FileWatcher(const std::string& path) : path(path) {
 	}
@@ -45,7 +73,7 @@ namespace Iberus {
 	}
 
 	void FileWatcher::WatchThread() {
-		std::wstring wpath(path.begin(), path.end());
+		std::wstring wpath = Utf8ToWide(path);
 		HANDLE hDir = CreateFileW(
 			wpath.c_str(),
 			FILE_LIST_DIRECTORY,
@@ -103,8 +131,11 @@ namespace Iberus {
 				FILE_NOTIFY_INFORMATION* info = reinterpret_cast<FILE_NOTIFY_INFORMATION*>(overlappedBuffer);
 				do {
 					std::wstring wname(info->FileName, info->FileNameLength / sizeof(wchar_t));
-					std::string name(wname.begin(), wname.end());
-					std::string fullPath = (std::filesystem::path(path) / name).string();
+					std::string name = WideToUtf8(wname);
+					std::u8string_view pathU8(reinterpret_cast<const char8_t*>(path.data()), path.size());
+					std::u8string_view nameU8(reinterpret_cast<const char8_t*>(name.data()), name.size());
+					auto u8Full = (std::filesystem::path(pathU8) / std::filesystem::path(nameU8)).u8string();
+					std::string fullPath(reinterpret_cast<const char*>(u8Full.data()), u8Full.size());
 					callback(fullPath);
 					if (info->NextEntryOffset == 0) {
 						break;

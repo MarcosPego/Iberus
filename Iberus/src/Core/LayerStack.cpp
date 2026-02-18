@@ -1,5 +1,6 @@
 #include "Enginepch.h"
 #include "LayerStack.h"
+#include "Layer.h"
 
 namespace Iberus {
 	LayerStack::LayerStack() {

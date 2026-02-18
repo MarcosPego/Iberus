@@ -17,6 +17,8 @@ namespace Iberus {
 	public:
 		Application();
 		virtual ~Application();
+		Application(const Application&) = delete;
+		Application& operator=(const Application&) = delete;
 
 		virtual void Boot();
 		virtual void Update();

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Buffer.h"
+#include "Core.h"
 
 namespace Iberus {
-	class Resource {
+	class IBERUS_API Resource {
 	public:
 		explicit Resource(const std::string& inboundID);
 

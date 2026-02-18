@@ -92,10 +92,12 @@ namespace Math {
 		for (int z = 0; z < slice; z++) {
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					uint32_t dstIndex = (z * (width * height) + y * width + x) * channel;
-					uint32_t srcIndex = z * (width * height) + y * width + x;
-					auto value = std::max( (int)((bufferData[srcIndex] + 1)/2 * 255), 0);
-					*(uint32_t*)(outData.GetData() + dstIndex) = Iberus::Color(value, value, value).color;
+					uint32_t dstIndex = static_cast<uint32_t>((z * (width * height) + y * width + x) * channel);
+					uint32_t srcIndex = static_cast<uint32_t>(z * (width * height) + y * width + x);
+					int value = std::max(static_cast<int>((bufferData[srcIndex] + 1.0f) / 2.0f * 255.0f), 0);
+					value = std::min(value, 255);
+					uint8_t v = static_cast<uint8_t>(value);
+					*(uint32_t*)(outData.GetData() + dstIndex) = Iberus::Color(v, v, v).color;
 			
 				}
 			}

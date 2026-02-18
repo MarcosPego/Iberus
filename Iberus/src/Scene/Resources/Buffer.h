@@ -3,15 +3,18 @@
 namespace Iberus {
 	template <typename T>
 	struct IBERUS_API TemplatedBuffer {
-		TemplatedBuffer<T>() {
-		}
+		TemplatedBuffer() = default;
+		TemplatedBuffer(const TemplatedBuffer&) = delete;
+		TemplatedBuffer& operator=(const TemplatedBuffer&) = delete;
+		TemplatedBuffer(TemplatedBuffer&&) = default;
+		TemplatedBuffer& operator=(TemplatedBuffer&&) = default;
 
-		TemplatedBuffer<T>(std::size_t inboundSize) {
+		explicit TemplatedBuffer(std::size_t inboundSize) {
 			data = std::make_unique<T[]>(inboundSize);
 			size = inboundSize;
 		}
 
-		TemplatedBuffer<T>(std::unique_ptr<T[]> inboundData, std::size_t inboundSize) {
+		TemplatedBuffer(std::unique_ptr<T[]> inboundData, std::size_t inboundSize) {
 			data = std::move(inboundData);
 			size = inboundSize;
 		}
@@ -21,7 +24,7 @@ namespace Iberus {
 			return data.release();
 		}
 
-		void Reset(const TemplatedBuffer<T> inboundBuffer) {
+		void Reset(TemplatedBuffer<T>& inboundBuffer) {
 			size = inboundBuffer.GetSize();
 			data.reset(inboundBuffer.Release());
 		}

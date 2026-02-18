@@ -14,10 +14,10 @@ namespace Iberus {
 
         float x, y, w, h;
 
-        x = 0;
-        y = 0;
-        w = width;
-        h = height;
+        x = 0.0f;
+        y = 0.0f;
+        w = static_cast<float>(width);
+        h = static_cast<float>(height);
 
         std::vector<Vec3> vertices = {
             { x , y, 0.0 },

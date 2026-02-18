@@ -18,6 +18,9 @@ namespace Iberus {
 		/// Directory containing the executable.
 		static std::string GetExeDirectory();
 
+		/// App runtime directory (exe dir + "/App") where DLLs and configs live.
+		static std::string GetAppDirectory();
+
 		/// Root folder for game assets. Tries "Assets" then "assets" under working dir.
 		static std::string GetAssetsPath();
 

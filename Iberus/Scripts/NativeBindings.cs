@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace GameScripts;
+namespace IberusScripts;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct IberusVec3

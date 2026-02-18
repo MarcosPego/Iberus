@@ -75,11 +75,11 @@ namespace Iberus {
 			return true;
 		}
 #ifdef IB_PLATFORM_WINDOWS
-		std::string exeDir = FileSystem::GetExeDirectory();
-		std::wstring nethostPathW = ToWide(exeDir) + L"\\nethost.dll";
+		std::string appDir = FileSystem::GetAppDirectory();
+		std::wstring nethostPathW = ToWide(appDir) + L"\\nethost.dll";
 		impl->nethostLib = LOAD_LIB(nethostPathW);
 		if (!impl->nethostLib) {
-			IB_ERROR("ScriptHost: Failed to load nethost.dll from {}", exeDir);
+			IB_ERROR("ScriptHost: Failed to load nethost.dll from {}", appDir);
 			return false;
 		}
 		auto getHostfxrPathFn = (int (*)(char_t*, size_t*, const get_hostfxr_parameters*))GET_EXPORT(impl->nethostLib, "get_hostfxr_path");
@@ -89,9 +89,9 @@ namespace Iberus {
 			impl->nethostLib = nullptr;
 			return false;
 		}
-		std::string assemblyPath = (std::filesystem::path(exeDir) / "Game.Scripts.dll").string();
+		std::string assemblyPath = (std::filesystem::path(appDir) / "Iberus.Scripts.dll").string();
 		if (!std::filesystem::exists(assemblyPath)) {
-			IB_ERROR("ScriptHost: Game.Scripts.dll not found at {}", assemblyPath);
+			IB_ERROR("ScriptHost: Iberus.Scripts.dll not found at {}", assemblyPath);
 			FREE_LIB(impl->nethostLib);
 			impl->nethostLib = nullptr;
 			return false;
@@ -167,21 +167,21 @@ namespace Iberus {
 			IB_ERROR("ScriptHost: Assembly not found: {}", fullAssemblyPath);
 			return nullptr;
 		}
-		// Bridge always comes from Game.Scripts (runtime) in exe dir
+		// Bridge always comes from Iberus.Scripts (runtime) in exe dir
 		if (impl->createInstance == nullptr) {
-			std::string exeDir = FileSystem::GetExeDirectory();
-			std::string runtimePath = (std::filesystem::path(exeDir) / "Game.Scripts.dll").string();
+			std::string appDir = FileSystem::GetAppDirectory();
+			std::string runtimePath = (std::filesystem::path(appDir) / "Iberus.Scripts.dll").string();
 			if (!std::filesystem::exists(runtimePath)) {
-				IB_ERROR("ScriptHost: Game.Scripts.dll not found at {}", runtimePath);
+				IB_ERROR("ScriptHost: Iberus.Scripts.dll not found at {}", runtimePath);
 				return nullptr;
 			}
 			std::wstring runtimePathW = ToWide(runtimePath);
-			const wchar_t* bridgeTypeW = L"GameScripts.ScriptBridge, Game.Scripts";
+			const wchar_t* bridgeTypeW = L"IberusScripts.ScriptBridge, Iberus.Scripts";
 			void* createPtr = nullptr;
 			int rc = impl->loadAssembly(runtimePathW.c_str(), bridgeTypeW, L"CreateInstance",
 				UNMANAGEDCALLERSONLY_METHOD, nullptr, &createPtr);
 			if (rc != 0 || !createPtr) {
-				IB_ERROR("ScriptHost: Failed to get CreateInstance from Game.Scripts: {:x}", static_cast<unsigned>(rc));
+				IB_ERROR("ScriptHost: Failed to get CreateInstance from Iberus.Scripts: {:x}", static_cast<unsigned>(rc));
 				return nullptr;
 			}
 			impl->createInstance = (Impl::CreateInstanceFn)createPtr;

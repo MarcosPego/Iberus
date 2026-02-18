@@ -45,7 +45,7 @@ namespace Iberus {
 		if (!scriptHost->IsInitialized()) {
 			if (!s_loggedScriptHostNotInit) {
 				s_loggedScriptHostNotInit = true;
-				IB_CORE_WARN("[Scripts] ScriptHost not initialized. Check Game.Scripts.runtimeconfig.json and Game.Scripts.dll in exe folder.");
+				IB_CORE_WARN("[Scripts] ScriptHost not initialized. Check App/Iberus.Scripts.runtimeconfig.json and App/Iberus.Scripts.dll.");
 			}
 			return;
 		}

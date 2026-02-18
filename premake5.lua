@@ -10,6 +10,7 @@ workspace "Iberus"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 gamedir = "Game-Build"
+appdir = gamedir .. "/App"
 
 project "Iberus"
 	location "Iberus"
@@ -93,13 +94,16 @@ project "Iberus"
 			("if not exist \"$(SolutionDir)" .. gamedir .. "\" mkdir \"$(SolutionDir)" .. gamedir .. "\"")
 		}
 		postbuildcommands {
-			("copy /Y \"$(TargetPath)\" \"$(SolutionDir)" .. gamedir .. "\\\"")
+			("if not exist \"$(SolutionDir)" .. appdir .. "\" mkdir \"$(SolutionDir)" .. appdir .. "\"")
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
+			("copy /Y \"$(TargetPath)\" \"$(SolutionDir)" .. appdir .. "\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
+			("if exist \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(SolutionDir)" .. appdir .. "\\\"")
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. appdir .. "\\\"")
 		}
 
 	filter "configurations:Debug"
@@ -109,7 +113,7 @@ project "Iberus"
 			"FastNoiseD"
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(SolutionDir)" .. appdir .. "\\\"")
 		}
 
 	filter "configurations:Release"
@@ -119,10 +123,10 @@ project "Iberus"
 			"FastNoise"
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)" .. appdir .. "\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. appdir .. "\\\"")
 		}
 
 	filter "configurations:Dist"
@@ -132,10 +136,10 @@ project "Iberus"
 			"FastNoise"
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(SolutionDir)" .. appdir .. "\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. gamedir .. "\\\"")
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. appdir .. "\\\"")
 		}
 
 project "Game"
@@ -175,6 +179,7 @@ project "Game"
 		"glew32",
 		"opengl32",
 		"glfw3_mt",
+		"delayimp",
 		"Iberus"
 	}
 
@@ -188,20 +193,28 @@ project "Game"
 			"IB_DYNAMIC_LINK"
 		}
 
+		linkoptions { "/DELAYLOAD:Iberus.dll" }
+
 		postbuildcommands {
-			("dotnet publish \"$(SolutionDir)Game\\Scripts\\ScriptHost\\ScriptHost.csproj\" -c Release -r win-x64 --self-contained true -o \"$(TargetDir)\" -p:PublishSingleFile=false || echo ScriptHost publish failed")
+			("if not exist \"$(TargetDir)App\" mkdir \"$(TargetDir)App\"")
 		}
 		postbuildcommands {
-			("if exist \"$(SolutionDir)Game\\Scripts\\Game.Scripts.runtimeconfig.json\" copy /Y \"$(SolutionDir)Game\\Scripts\\Game.Scripts.runtimeconfig.json\" \"$(TargetDir)\"")
+			("if exist \"$(TargetDir)Iberus.dll\" move /Y \"$(TargetDir)Iberus.dll\" \"$(TargetDir)App\\\"")
 		}
 		postbuildcommands {
-			("powershell -NoProfile -Command \"if(-not (Test-Path '$(TargetDir)nethost.dll')){ $paths=@('C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\\.dotnet\\packs\\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\\win-x64\\native\\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)' -Force; break } } } } }\"")
+			("dotnet publish \"$(SolutionDir)Iberus\\Scripts\\ScriptHost\\ScriptHost.csproj\" -c Release -r win-x64 --self-contained false -o \"$(TargetDir)App\" -p:PublishSingleFile=false || echo ScriptHost publish failed")
 		}
 		postbuildcommands {
-			("if exist \"$(SolutionDir)Iberus\\dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(TargetDir)\"")
+			("if exist \"$(SolutionDir)Iberus\\Scripts\\Iberus.Scripts.runtimeconfig.json\" copy /Y \"$(SolutionDir)Iberus\\Scripts\\Iberus.Scripts.runtimeconfig.json\" \"$(TargetDir)App\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)\"")
+			("powershell -NoProfile -Command \"if(-not (Test-Path '$(TargetDir)App\\nethost.dll')){ $paths=@('C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\\.dotnet\\packs\\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\\win-x64\\native\\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\\' -Force; break } } } } }\"")
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(TargetDir)App\\\"")
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)App\\\"")
 		}
 		postbuildcommands {
 			("if exist \"$(SolutionDir)bin\" rmdir /s /q \"$(SolutionDir)bin\"")
@@ -217,7 +230,7 @@ project "Game"
 			"FastNoiseD"
 		}
 		postbuildcommands {
-			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(TargetDir)\"")
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(TargetDir)App\\\"")
 		}
 
 	filter "configurations:Release"
@@ -227,10 +240,10 @@ project "Game"
 			"FastNoise"
 		}
 		postbuildcommands {
-			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(TargetDir)\"")
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(TargetDir)App\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)\"")
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)App\\\"")
 		}
 
 	filter "configurations:Dist"
@@ -240,8 +253,8 @@ project "Game"
 			"FastNoise"
 		}
 		postbuildcommands {
-			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(TargetDir)\"")
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoise.dll\" \"$(TargetDir)App\\\"")
 		}
 		postbuildcommands {
-			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)\"")
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)App\\\"")
 		}

@@ -20,6 +20,10 @@ namespace Iberus {
 		return GetWorkingDir();
 	}
 
+	std::string FileSystem::GetAppDirectory() {
+		return (std::filesystem::path(GetExeDirectory()) / "App").string();
+	}
+
 	std::string FileSystem::GetWorkingDir() {
 		const auto path = std::filesystem::current_path();
 		const auto u8String = path.u8string();

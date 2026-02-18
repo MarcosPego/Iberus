@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -88,18 +88,21 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;delayimp.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Debug-windows-x86_64\Iberus;..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/DELAYLOAD:Iberus.dll %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>dotnet publish "$(SolutionDir)Game\Scripts\ScriptHost\ScriptHost.csproj" -c Release -r win-x64 --self-contained false -o "$(TargetDir)." -p:PublishSingleFile=false || echo ScriptHost publish failed
-if exist "$(SolutionDir)Game\Scripts\Game.Scripts.runtimeconfig.json" copy /Y "$(SolutionDir)Game\Scripts\Game.Scripts.runtimeconfig.json" "$(TargetDir)"
-powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)' -Force; break } } } } }"
-if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)"
-if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"
+      <Command>if not exist "$(TargetDir)App" mkdir "$(TargetDir)App"
+if exist "$(TargetDir)Iberus.dll" move /Y "$(TargetDir)Iberus.dll" "$(TargetDir)App\"
+dotnet publish "$(SolutionDir)Iberus\Scripts\ScriptHost\ScriptHost.csproj" -c Release -r win-x64 --self-contained false -o "$(TargetDir)App" -p:PublishSingleFile=false || echo ScriptHost publish failed
+if exist "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" copy /Y "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" "$(TargetDir)App\"
+powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)App\nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\' -Force; break } } } } }"
+if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"
 if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
 if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
-if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" "$(TargetDir)"</Command>
+if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" "$(TargetDir)App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -120,19 +123,22 @@ if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" copy 
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;delayimp.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Release-windows-x86_64\Iberus;..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/DELAYLOAD:Iberus.dll %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>dotnet publish "$(SolutionDir)Game\Scripts\ScriptHost\ScriptHost.csproj" -c Release -r win-x64 --self-contained false -o "$(TargetDir)." -p:PublishSingleFile=false || echo ScriptHost publish failed
-if exist "$(SolutionDir)Game\Scripts\Game.Scripts.runtimeconfig.json" copy /Y "$(SolutionDir)Game\Scripts\Game.Scripts.runtimeconfig.json" "$(TargetDir)"
-powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)' -Force; break } } } } }"
-if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)"
-if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"
+      <Command>if not exist "$(TargetDir)App" mkdir "$(TargetDir)App"
+if exist "$(TargetDir)Iberus.dll" move /Y "$(TargetDir)Iberus.dll" "$(TargetDir)App\"
+dotnet publish "$(SolutionDir)Iberus\Scripts\ScriptHost\ScriptHost.csproj" -c Release -r win-x64 --self-contained false -o "$(TargetDir)App" -p:PublishSingleFile=false || echo ScriptHost publish failed
+if exist "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" copy /Y "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" "$(TargetDir)App\"
+powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)App\nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\' -Force; break } } } } }"
+if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"
 if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
 if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
-if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)"
-if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"</Command>
+if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -153,19 +159,22 @@ if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;delayimp.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\bin\Dist-windows-x86_64\Iberus;..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/DELAYLOAD:Iberus.dll %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>dotnet publish "$(SolutionDir)Game\Scripts\ScriptHost\ScriptHost.csproj" -c Release -r win-x64 --self-contained false -o "$(TargetDir)." -p:PublishSingleFile=false || echo ScriptHost publish failed
-if exist "$(SolutionDir)Game\Scripts\Game.Scripts.runtimeconfig.json" copy /Y "$(SolutionDir)Game\Scripts\Game.Scripts.runtimeconfig.json" "$(TargetDir)"
-powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)' -Force; break } } } } }"
-if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)"
-if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"
+      <Command>if not exist "$(TargetDir)App" mkdir "$(TargetDir)App"
+if exist "$(TargetDir)Iberus.dll" move /Y "$(TargetDir)Iberus.dll" "$(TargetDir)App\"
+dotnet publish "$(SolutionDir)Iberus\Scripts\ScriptHost\ScriptHost.csproj" -c Release -r win-x64 --self-contained false -o "$(TargetDir)App" -p:PublishSingleFile=false || echo ScriptHost publish failed
+if exist "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" copy /Y "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" "$(TargetDir)App\"
+powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)App\nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\' -Force; break } } } } }"
+if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"
 if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
 if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
-if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)"
-if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)"</Command>
+if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

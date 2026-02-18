@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace GameScripts;
+namespace IberusScripts;
 
 /// <summary>
 /// Base class for C# scripts. Override OnInit and OnUpdate.

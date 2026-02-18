@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Game.Scripts.csproj" />
+    <ProjectReference Include="..\Iberus.Scripts.csproj" />
   </ItemGroup>
 
 </Project>

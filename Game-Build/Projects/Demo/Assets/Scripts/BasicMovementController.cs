@@ -1,4 +1,4 @@
-using GameScripts;
+using IberusScripts;
 
 namespace Demo;
 

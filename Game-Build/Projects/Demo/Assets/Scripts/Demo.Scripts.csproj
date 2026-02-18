@@ -17,8 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Game.Scripts">
-      <HintPath>.\Game.Scripts.dll</HintPath>
+    <Reference Include="Iberus.Scripts">
+      <HintPath>.\Iberus.Scripts.dll</HintPath>
     </Reference>
   </ItemGroup>
 

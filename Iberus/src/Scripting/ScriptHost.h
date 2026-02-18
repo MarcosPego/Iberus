@@ -12,7 +12,7 @@ namespace Iberus {
 	class World;
 
 	/// Hosts the .NET runtime and manages C# script instances.
-	/// Loads Game.Scripts.dll and dispatches Init/Update calls.
+	/// Loads Iberus.Scripts.dll and dispatches Init/Update calls.
 	class IBERUS_API ScriptHost {
 	public:
 		/// Opaque handle to a C# script instance.
@@ -25,7 +25,7 @@ namespace Iberus {
 		ScriptHost& operator=(const ScriptHost&) = delete;
 
 		/// Initialize the runtime using the given runtime config path.
-		/// Typical path: "{GameDir}/Game.Scripts.runtimeconfig.json"
+		/// Typical path: "{exeDir}/Iberus.Scripts.runtimeconfig.json"
 		bool Initialize(const std::string& runtimeConfigPath);
 
 		/// Load a script type and create an instance. Returns null on failure.

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\dotnet-hosting;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -95,10 +95,11 @@
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)Game-Build" mkdir "$(SolutionDir)Game-Build"
-copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" "$(SolutionDir)Game-Build\"</Command>
+if not exist "$(SolutionDir)Game-Build/App" mkdir "$(SolutionDir)Game-Build/App"
+copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" "$(SolutionDir)Game-Build/App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -107,7 +108,7 @@ if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(Pr
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\dotnet-hosting;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -126,11 +127,12 @@ if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(Pr
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)Game-Build" mkdir "$(SolutionDir)Game-Build"
-copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build\"</Command>
+if not exist "$(SolutionDir)Game-Build/App" mkdir "$(SolutionDir)Game-Build/App"
+copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -139,7 +141,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\dotnet-hosting;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -158,11 +160,12 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(SolutionDir)Game-Build" mkdir "$(SolutionDir)Game-Build"
-copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)Game-Build\"
-if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build\"</Command>
+if not exist "$(SolutionDir)Game-Build/App" mkdir "$(SolutionDir)Game-Build/App"
+copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -319,9 +322,9 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Scene\Serialization\PrefabAsset.h" />
     <ClInclude Include="src\Scene\Serialization\PrefabSerializer.h" />
     <ClInclude Include="src\Scene\Serialization\SceneSerializer.h" />
+    <ClInclude Include="src\SceneInclude.h" />
     <ClInclude Include="src\Scripting\ScriptAPI.h" />
     <ClInclude Include="src\Scripting\ScriptHost.h" />
-    <ClInclude Include="src\SceneInclude.h" />
     <ClInclude Include="src\Serialization\JsonValue.h" />
     <ClInclude Include="src\Tools\Editor\Editor.h" />
     <ClInclude Include="src\Tools\Editor\EditorLayer.h" />

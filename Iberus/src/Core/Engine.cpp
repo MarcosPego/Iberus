@@ -29,11 +29,11 @@ namespace Iberus {
 		if (!std::filesystem::exists(scriptsDir) || !std::filesystem::is_directory(scriptsDir)) {
 			return;
 		}
-		std::string exeDir = FileSystem::GetExeDirectory();
-		std::filesystem::path gameScriptsSrc = std::filesystem::path(exeDir) / "Game.Scripts.dll";
-		std::filesystem::path gameScriptsDst = scriptsDir / "Game.Scripts.dll";
-		if (std::filesystem::exists(gameScriptsSrc)) {
-			std::filesystem::copy_file(gameScriptsSrc, gameScriptsDst, std::filesystem::copy_options::overwrite_existing);
+		std::string appDir = FileSystem::GetAppDirectory();
+		std::filesystem::path scriptsSrc = std::filesystem::path(appDir) / "Iberus.Scripts.dll";
+		std::filesystem::path scriptsDst = scriptsDir / "Iberus.Scripts.dll";
+		if (std::filesystem::exists(scriptsSrc)) {
+			std::filesystem::copy_file(scriptsSrc, scriptsDst, std::filesystem::copy_options::overwrite_existing);
 		}
 		for (const auto& entry : std::filesystem::directory_iterator(scriptsDir)) {
 			if (!entry.is_regular_file() || entry.path().extension() != ".csproj") {
@@ -53,19 +53,19 @@ namespace Iberus {
 		engineProvider->SetWorkingDir(FileSystem::GetWorkingDir());
 
 		scriptHost = std::make_unique<ScriptHost>();
-		std::string exeDir = FileSystem::GetExeDirectory();
-		std::string scriptsConfig = exeDir + "/Game.Scripts.runtimeconfig.json";
+		std::string appDir = FileSystem::GetAppDirectory();
+		std::string scriptsConfig = appDir + "/Iberus.Scripts.runtimeconfig.json";
 		bool configExists = std::filesystem::exists(scriptsConfig);
-		bool nethostExists = std::filesystem::exists(exeDir + "/nethost.dll");
-		bool dllExists = std::filesystem::exists(exeDir + "/Game.Scripts.dll");
-		IB_CORE_INFO("[Scripts] Exe dir: {} | runtimeconfig.json: {} | nethost.dll: {} | Game.Scripts.dll: {}",
-			exeDir, configExists, nethostExists, dllExists);
+		bool nethostExists = std::filesystem::exists(appDir + "/nethost.dll");
+		bool dllExists = std::filesystem::exists(appDir + "/Iberus.Scripts.dll");
+		IB_CORE_INFO("[Scripts] App dir: {} | runtimeconfig.json: {} | nethost.dll: {} | Iberus.Scripts.dll: {}",
+			appDir, configExists, nethostExists, dllExists);
 		if (configExists) {
 			if (!scriptHost->Initialize(scriptsConfig)) {
 				IB_CORE_WARN("ScriptHost: Initialize failed (check nethost.dll and .NET runtime). C# scripts will not run.");
 			}
 		} else {
-			IB_CORE_WARN("ScriptHost: {} not found. Build Game project to generate C# output.", scriptsConfig);
+			IB_CORE_WARN("ScriptHost: {} not found. Build the solution to generate C# scripting output.", scriptsConfig);
 		}
 
 #ifdef USE_DEFERRED // Use deferred Pipeline

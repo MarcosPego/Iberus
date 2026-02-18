@@ -2,7 +2,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace GameScripts;
+namespace IberusScripts;
 
 /// <summary>
 /// Bridge between native host and script instances. Methods are called via P/Invoke
@@ -44,12 +44,12 @@ public static class ScriptBridge
                 }
                 else
                 {
-                    type = Type.GetType(typeName) ?? Type.GetType(typeName + ", Game.Scripts");
+                    type = Type.GetType(typeName) ?? Type.GetType(typeName + ", Iberus.Scripts");
                 }
             }
             else
             {
-                type = Type.GetType(typeName) ?? Type.GetType(typeName + ", Game.Scripts");
+                type = Type.GetType(typeName) ?? Type.GetType(typeName + ", Iberus.Scripts");
             }
             if (type == null || !typeof(Script).IsAssignableFrom(type))
             {

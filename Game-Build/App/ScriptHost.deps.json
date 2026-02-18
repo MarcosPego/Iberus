@@ -9,15 +9,15 @@
     ".NETCoreApp,Version=v9.0/win-x64": {
       "ScriptHost/1.0.0": {
         "dependencies": {
-          "Game.Scripts": "1.0.0"
+          "Iberus.Scripts": "1.0.0"
         },
         "runtime": {
           "ScriptHost.dll": {}
         }
       },
-      "Game.Scripts/1.0.0": {
+      "Iberus.Scripts/1.0.0": {
         "runtime": {
-          "Game.Scripts.dll": {
+          "Iberus.Scripts.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -31,7 +31,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Game.Scripts/1.0.0": {
+    "Iberus.Scripts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -58,7 +58,7 @@ namespace Iberus {
 		void SetScriptBaseDir(const std::string& dir) { scriptBaseDir = dir; }
 		const std::string& GetScriptBaseDir() const { return scriptBaseDir; }
 
-		/// Scans projectRoot/Assets/Scripts for *.csproj, copies Game.Scripts.dll, and builds each project.
+		/// Scans projectRoot/Assets/Scripts for *.csproj, copies Iberus.Scripts.dll, and builds each project.
 		void BuildProjectScripts(const std::string& projectRoot);
 
 		/// Returns effective render dimensions (editor viewport when active, else main window).

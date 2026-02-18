@@ -6,6 +6,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\GameApp.cpp" />
+    <ClCompile Include="src\TestRunner.cpp" />
   </ItemGroup>
 </Project>

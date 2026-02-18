@@ -13,6 +13,10 @@
       <Configuration>Dist</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Test|x64">
+      <Configuration>Test</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CF524EB9-BBF4-788F-A4AF-8CE390F0FFDF}</ProjectGuid>
@@ -40,6 +44,12 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -50,6 +60,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -71,6 +84,13 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\Dist-windows-x86_64\Iberus\</OutDir>
     <IntDir>..\bin-int\Dist-windows-x86_64\Iberus\</IntDir>
+    <TargetName>Iberus</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\bin\Test-windows-x86_64\Iberus\</OutDir>
+    <IntDir>..\bin-int\Test-windows-x86_64\Iberus\</IntDir>
     <TargetName>Iberus</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
@@ -166,6 +186,39 @@ if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(
 if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>dependencies\glfw\lib-vc2019;dependencies\glew\lib\Release\x64;dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImportLibrary>..\bin\Test-windows-x86_64\Iberus\Iberus.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(SolutionDir)Game-Build" mkdir "$(SolutionDir)Game-Build"
+if not exist "$(SolutionDir)Game-Build/App" mkdir "$(SolutionDir)Game-Build/App"
+copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
+if not exist "$(SolutionDir)Tests-Build" mkdir "$(SolutionDir)Tests-Build"
+if not exist "$(SolutionDir)Tests-Build/App" mkdir "$(SolutionDir)Tests-Build/App"
+copy /Y "$(TargetPath)" "$(SolutionDir)Tests-Build/App\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Tests-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Tests-Build/App\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" "$(SolutionDir)Tests-Build/App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

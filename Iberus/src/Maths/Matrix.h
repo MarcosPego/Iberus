@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector.h"
+#include <glew.h>
 
 namespace Math {
 	//Matrixes are used in Column major

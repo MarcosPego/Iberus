@@ -4,9 +4,10 @@
 
 #include "FileSystem.h"
 #include <filesystem>
+#include <cstring>
 #include <Windows.h>
 
-extern Iberus::Application* Iberus::CreateApplication();
+extern Iberus::Application* Iberus::CreateApplication(int argc, char** argv);
 
 
 int main(int argc, char** argv) {
@@ -34,7 +35,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	auto app = Iberus::CreateApplication();
+	auto app = Iberus::CreateApplication(argc, argv);
 	app->Boot();
 	app->Run();
 	delete app;

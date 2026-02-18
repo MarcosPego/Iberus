@@ -3,11 +3,17 @@
 #include "Core.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/ostream_sink.h"
+
+#include <ostream>
 
 namespace Iberus {
 	class IBERUS_API Log {
 	public:
 		static void Init();
+
+		/// Initialize loggers to write to the given stream (for deterministic test output).
+		static void InitForTest(std::ostream& sink);
 
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return coreLogger; }
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return clientLogger; }

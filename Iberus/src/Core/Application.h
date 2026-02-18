@@ -46,12 +46,17 @@ namespace Iberus {
 
 		virtual void OnProjectChosen(Project* openedProject) { (void)openedProject; }
 
+		void RequestExit() { running = false; }
+
 		const std::string& GetCurrentScenePath() const { return currentScenePath; }
 		void SetCurrentScenePath(const std::string& path) { currentScenePath = path; }
 		bool IsSceneDirty() const { return sceneDirty; }
 		void SetSceneDirty(bool dirty) { sceneDirty = dirty; }
 
 		virtual void OnCloseProject() {}
+
+	protected:
+		explicit Application(const WindowProps& windowProps);
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
@@ -72,7 +77,7 @@ namespace Iberus {
 		bool sceneDirty{ false };
 	};
 
-	Application* CreateApplication();
+	Application* CreateApplication(int argc, char** argv);
 }
 
 

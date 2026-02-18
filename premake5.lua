@@ -5,12 +5,15 @@ workspace "Iberus"
 	configurations {
 		"Debug",
 		"Release",
-		"Dist"
+		"Dist",
+		"Test"
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 gamedir = "Game-Build"
+testdir = "Tests-Build"
 appdir = gamedir .. "/App"
+appdir_test = testdir .. "/App"
 
 project "Iberus"
 	location "Iberus"
@@ -142,6 +145,29 @@ project "Iberus"
 			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. appdir .. "\\\"")
 		}
 
+	filter "configurations:Test"
+		defines "IB_DEBUG"
+		symbols "On"
+		links { "FastNoiseD" }
+		postbuildcommands {
+			("if not exist \"$(SolutionDir)" .. testdir .. "\" mkdir \"$(SolutionDir)" .. testdir .. "\"")
+		}
+		postbuildcommands {
+			("if not exist \"$(SolutionDir)" .. appdir_test .. "\" mkdir \"$(SolutionDir)" .. appdir_test .. "\"")
+		}
+		postbuildcommands {
+			("copy /Y \"$(TargetPath)\" \"$(SolutionDir)" .. appdir_test .. "\\\"")
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(ProjectDir)dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(SolutionDir)" .. appdir_test .. "\\\"")
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(ProjectDir)dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(SolutionDir)" .. appdir_test .. "\\\"")
+		}
+		postbuildcommands {
+			("if exist \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(ProjectDir)dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(SolutionDir)" .. appdir_test .. "\\\"")
+		}
+
 project "Game"
 	location "Game"
 	kind "ConsoleApp"
@@ -258,3 +284,77 @@ project "Game"
 		postbuildcommands {
 			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)App\\\"")
 		}
+
+	filter "configurations:Test"
+		defines "IB_DEBUG"
+		symbols "On"
+		links { "FastNoiseD" }
+		targetdir ("$(SolutionDir)" .. testdir)
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\FastNoise2\\bin\\FastNoiseD.dll\" \"$(TargetDir)App\\\"")
+		}
+
+project "IberusTests"
+	location "Tests"
+	kind "ConsoleApp"
+	language "C++"
+
+	targetdir ("$(SolutionDir)" .. gamedir)
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files {
+		"Tests/**.h",
+		"Tests/**.cpp"
+	}
+
+	includedirs {
+		"Iberus/dependencies/glfw/include/GLFW",
+		"Iberus/dependencies/glew/include/GL",
+		"Iberus/dependencies/spdlog/include",
+		"Iberus/dependencies/FastNoise2/include",
+		"Iberus/src/**",
+		"Iberus/src",
+		"Tests"
+	}
+
+	libdirs {
+		"bin/" .. outputdir .. "/Iberus",
+		"Iberus/dependencies/glfw/lib-vc2019",
+		"Iberus/dependencies/glew/lib/Release/x64",
+		"Iberus/dependencies/FastNoise2/lib"
+	}
+
+	links {
+		"glew32",
+		"opengl32",
+		"glfw3_mt",
+		"delayimp",
+		"Iberus"
+	}
+
+	filter "system:windows"
+		cppdialect "C++20"
+		staticruntime "Off"
+		systemversion "latest"
+		defines {
+			"IB_PLATFORM_WINDOWS",
+			"IB_DYNAMIC_LINK"
+		}
+		linkoptions { "/DELAYLOAD:Iberus.dll" }
+
+	filter "configurations:Debug"
+		defines "IB_DEBUG"
+		links { "FastNoiseD" }
+
+	filter "configurations:Release"
+		defines "IB_RELEASE"
+		links { "FastNoise" }
+
+	filter "configurations:Dist"
+		defines "IB_DIST"
+		links { "FastNoise" }
+
+	filter "configurations:Test"
+		defines "IB_DEBUG"
+		links { "FastNoiseD" }
+		targetdir ("$(SolutionDir)" .. testdir)

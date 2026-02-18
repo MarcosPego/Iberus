@@ -7,6 +7,7 @@ namespace Iberus {
 
 	class IBERUS_API MeshFactory {
 	public:
+		static Mesh* CreateCube(const std::string& ID, ResourceManager& resourceManager);
 		static Mesh* CreateQuad(const std::string& ID, ResourceManager& resourceManager, int width, int height);
 		static Mesh* CreateNDCQuad(const std::string& ID, ResourceManager& resourceManager);
 

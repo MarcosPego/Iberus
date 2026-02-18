@@ -16,10 +16,12 @@ namespace Iberus {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application() {
+	Application::Application() : Application(WindowProps{}) {
+	}
+
+	Application::Application(const WindowProps& windowProps) {
 		s_Instance = this;
-		static WindowProps winProps{};
-		window = std::unique_ptr<Window>(Window::Create(winProps));
+		window = std::unique_ptr<Window>(Window::Create(windowProps));
 		window->SetEventCallback(BIND_FN(Application::OnEvent));
 		engine = Engine::Instance();
 		engine->SetCurrentWindow(window.get());

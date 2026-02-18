@@ -14,6 +14,7 @@ namespace Iberus {
 		Vec2 resolution{ 1920.0f, 1000.f };
 		bool vsync{ true };
 		bool isFullScreen{ false };
+		bool hidden{ false };
 
 		WindowProps() {}
 		WindowProps(const Vec2& newResolution, const std::string& newTitle, bool fullscreen, bool newVsync = true) {

@@ -1,5 +1,8 @@
 #include <Iberus.h>
 
+#include "GameApp.h"
+#include "Scene/Serialization/SceneSerializer.h"
+
 #include "GameLayer.h"
 #include "EditorLayer.h"
 #include "SceneViewerCameraBehaviour.h"
@@ -93,6 +96,6 @@ public:
 	}
 };
 
-Iberus::Application* Iberus::CreateApplication() {
+Iberus::Application* Iberus::CreateGameApplication() {
 	return new Game();
 }

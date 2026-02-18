@@ -99,6 +99,9 @@ namespace Iberus {
 	}
 
 	void WindowsWindow::SetupWindow() {
+		if (windowProps.hidden) {
+			glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+		}
 		GLFWmonitor* monitor = windowProps.isFullScreen ? glfwGetPrimaryMonitor() : 0;
 		GLFWwindow* win = glfwCreateWindow(GetWidth(), GetHeight(), GetTitle().c_str(), monitor, 0);
 		if (!win) {

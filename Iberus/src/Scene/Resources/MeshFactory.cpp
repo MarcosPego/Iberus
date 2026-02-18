@@ -6,6 +6,47 @@ using namespace Math;
 
 namespace Iberus {
 
+	Mesh* MeshFactory::CreateCube(const std::string& ID, ResourceManager& resourceManager) {
+		auto* mesh = resourceManager.GetResource<Mesh>(ID);
+		if (mesh) {
+			return mesh;
+		}
+		// 1x1x1 cube centered at origin. 8 vertices, 12 triangles (2 per face).
+		const float h = 0.5f;
+		std::vector<Vec3> vertices = {
+			{-h,-h,-h}, {-h, h,-h}, { h, h,-h}, { h,-h,-h},  // back
+			{-h,-h, h}, { h,-h, h}, { h, h, h}, {-h, h, h},  // front
+			{-h,-h,-h}, { h,-h,-h}, { h,-h, h}, {-h,-h, h},  // bottom
+			{-h, h,-h}, {-h, h, h}, { h, h, h}, { h, h,-h},  // top
+			{-h,-h,-h}, {-h,-h, h}, {-h, h, h}, {-h, h,-h},  // left
+			{ h,-h,-h}, { h, h,-h}, { h, h, h}, { h,-h, h}   // right
+		};
+		std::vector<Vec3> normals = {
+			{ 0, 0,-1.0f}, { 0, 0,-1.0f}, { 0, 0,-1.0f}, { 0, 0,-1.0f},
+			{ 0, 0, 1.0f}, { 0, 0, 1.0f}, { 0, 0, 1.0f}, { 0, 0, 1.0f},
+			{ 0,-1.0f, 0}, { 0,-1.0f, 0}, { 0,-1.0f, 0}, { 0,-1.0f, 0},
+			{ 0, 1.0f, 0}, { 0, 1.0f, 0}, { 0, 1.0f, 0}, { 0, 1.0f, 0},
+			{-1.0f, 0, 0}, {-1.0f, 0, 0}, {-1.0f, 0, 0}, {-1.0f, 0, 0},
+			{ 1.0f, 0, 0}, { 1.0f, 0, 0}, { 1.0f, 0, 0}, { 1.0f, 0, 0}
+		};
+		std::vector<Vec2> uvs(24, Vec2(0, 0));
+		for (int i = 0; i < 6; ++i) {
+			uvs[i*4 + 0] = Vec2(0, 0);
+			uvs[i*4 + 1] = Vec2(1, 0);
+			uvs[i*4 + 2] = Vec2(1, 1);
+			uvs[i*4 + 3] = Vec2(0, 1);
+		}
+		std::vector<Vec3> triVertices, triNormals;
+		std::vector<Vec2> triUvs;
+		for (int f = 0; f < 6; ++f) {
+			int b = f * 4;
+			triVertices.insert(triVertices.end(), { vertices[b], vertices[b+1], vertices[b+2], vertices[b+2], vertices[b+3], vertices[b] });
+			triNormals.insert(triNormals.end(), { normals[b], normals[b+1], normals[b+2], normals[b+2], normals[b+3], normals[b] });
+			triUvs.insert(triUvs.end(), { uvs[b], uvs[b+1], uvs[b+2], uvs[b+2], uvs[b+3], uvs[b] });
+		}
+		return resourceManager.CreateResource<Mesh>(ID, triVertices, triUvs, triNormals);
+	}
+
 	Mesh* MeshFactory::CreateQuad(const std::string& ID, ResourceManager& resourceManager, int width, int height) {
         auto* mesh = resourceManager.GetResource<Mesh>(ID);
         if (mesh) {

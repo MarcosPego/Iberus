@@ -9,8 +9,17 @@ namespace Iberus {
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 		coreLogger = spdlog::stdout_color_mt("IBERUS");
 		coreLogger->set_level(spdlog::level::trace);
-	
+
 		clientLogger = spdlog::stdout_color_mt("APP");
+		clientLogger->set_level(spdlog::level::trace);
+	}
+
+	void Log::InitForTest(std::ostream& sink) {
+		spdlog::set_pattern("%^[%T] %n: %v%$");
+		auto ostreamSink = std::make_shared<spdlog::sinks::ostream_sink_mt>(sink);
+		coreLogger = std::make_shared<spdlog::logger>("IBERUS", ostreamSink);
+		coreLogger->set_level(spdlog::level::trace);
+		clientLogger = std::make_shared<spdlog::logger>("APP", ostreamSink);
 		clientLogger->set_level(spdlog::level::trace);
 	}
 }

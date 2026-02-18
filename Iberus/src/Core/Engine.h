@@ -9,6 +9,7 @@
 #include "InputManager.h"
 
 #include "FileSystemProvider.h"
+#include "ScriptHost.h"
 
 namespace Iberus {
 	class Window;
@@ -33,6 +34,8 @@ namespace Iberus {
 
 		FileSystemProvider& GetEngineProvider() { return *engineProvider.get(); }
 
+		ScriptHost& GetScriptHost() { return *scriptHost.get(); }
+
 		void SetCurrentWindow(Window* window);
 		Window* GetCurrentWindow() const;
 
@@ -48,8 +51,15 @@ namespace Iberus {
 		void SetCameraOverride(std::unique_ptr<CameraRenderCmd> cmd);
 		CameraRenderCmd* GetCameraOverride() { return cameraOverride.get(); }
 
-		void SetSceneSimulationEnabled(bool enabled) { sceneSimulationEnabled = enabled; }
+		void SetSceneSimulationEnabled(bool enabled);
 		bool IsSceneSimulationEnabled() const { return sceneSimulationEnabled; }
+
+		/// Script base dir: project root when a project is open, else exe dir. Used to resolve script assembly paths.
+		void SetScriptBaseDir(const std::string& dir) { scriptBaseDir = dir; }
+		const std::string& GetScriptBaseDir() const { return scriptBaseDir; }
+
+		/// Scans projectRoot/Assets/Scripts for *.csproj, copies Game.Scripts.dll, and builds each project.
+		void BuildProjectScripts(const std::string& projectRoot);
 
 		/// Returns effective render dimensions (editor viewport when active, else main window).
 		int GetEffectiveRenderWidth() const;
@@ -68,6 +78,7 @@ namespace Iberus {
 		std::unique_ptr<InputManager> inputManager;
 
 		std::unique_ptr<FileSystemProvider> engineProvider;
+		std::unique_ptr<ScriptHost> scriptHost;
 
 		unsigned int editorRenderTargetFBO{ 0 };
 		int editorRenderTargetWidth{ 0 };
@@ -78,6 +89,7 @@ namespace Iberus {
 
 		std::unique_ptr<CameraRenderCmd> cameraOverride;
 		bool sceneSimulationEnabled{ false };
+		std::string scriptBaseDir;
 	};
 }
 

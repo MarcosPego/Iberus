@@ -58,7 +58,8 @@ project "Iberus"
 		"%{prj.name}/dependencies/imgui/backends",
 		"%{prj.name}/dependencies/FastNoise2/include/",
 		"%{prj.name}/dependencies/FastNoise2/include/**",
-		"%{prj.name}/dependencies"
+		"%{prj.name}/dependencies",
+		"%{prj.name}/dependencies/dotnet-hosting"
 	}
 
 	libdirs {
@@ -187,6 +188,15 @@ project "Game"
 			"IB_DYNAMIC_LINK"
 		}
 
+		postbuildcommands {
+			("dotnet publish \"$(SolutionDir)Game\\Scripts\\ScriptHost\\ScriptHost.csproj\" -c Release -r win-x64 --self-contained true -o \"$(TargetDir)\" -p:PublishSingleFile=false || echo ScriptHost publish failed")
+		}
+		postbuildcommands {
+			("if exist \"$(SolutionDir)Game\\Scripts\\Game.Scripts.runtimeconfig.json\" copy /Y \"$(SolutionDir)Game\\Scripts\\Game.Scripts.runtimeconfig.json\" \"$(TargetDir)\"")
+		}
+		postbuildcommands {
+			("powershell -NoProfile -Command \"if(-not (Test-Path '$(TargetDir)nethost.dll')){ $paths=@('C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\\.dotnet\\packs\\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\\win-x64\\native\\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)' -Force; break } } } } }\"")
+		}
 		postbuildcommands {
 			("if exist \"$(SolutionDir)Iberus\\dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glew\\bin\\Release\\x64\\glew32.dll\" \"$(TargetDir)\"")
 		}

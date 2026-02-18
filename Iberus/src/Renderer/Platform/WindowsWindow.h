@@ -14,6 +14,7 @@ namespace Iberus {
 		virtual ~WindowsWindow() override;
 
 		void Update() override;
+		void PollEvents() override;
 
 		virtual void Shutdown();
 

@@ -8,8 +8,12 @@
 #include "Window.h"
 
 #include "MeshFactory.h"
+#include "ScriptHost.h"
+#include "BehaviourSystem.h"
 
 #include <chrono>
+#include <cstdlib>
+#include <filesystem>
 
 #define USE_DEFERRED 1
 
@@ -20,12 +24,49 @@ namespace Iberus {
 		return &engine;
 	}
 
+	void Engine::BuildProjectScripts(const std::string& projectRoot) {
+		std::filesystem::path scriptsDir = std::filesystem::path(projectRoot) / "Assets" / "Scripts";
+		if (!std::filesystem::exists(scriptsDir) || !std::filesystem::is_directory(scriptsDir)) {
+			return;
+		}
+		std::string exeDir = FileSystem::GetExeDirectory();
+		std::filesystem::path gameScriptsSrc = std::filesystem::path(exeDir) / "Game.Scripts.dll";
+		std::filesystem::path gameScriptsDst = scriptsDir / "Game.Scripts.dll";
+		if (std::filesystem::exists(gameScriptsSrc)) {
+			std::filesystem::copy_file(gameScriptsSrc, gameScriptsDst, std::filesystem::copy_options::overwrite_existing);
+		}
+		for (const auto& entry : std::filesystem::directory_iterator(scriptsDir)) {
+			if (!entry.is_regular_file() || entry.path().extension() != ".csproj") {
+				continue;
+			}
+			std::string csprojPath = entry.path().string();
+			std::string cmd = "dotnet build \"" + csprojPath + "\" -c Release -nologo -v q 2>nul";
+			std::system(cmd.c_str());
+		}
+	}
+
 	void Engine::Boot() {
 		resourceManager = std::make_unique<ResourceManager>();
 		sceneManager = std::make_unique<SceneManager>();
 		inputManager = std::make_unique<InputManager>();
 		engineProvider = std::make_unique<FileSystemProvider>();
 		engineProvider->SetWorkingDir(FileSystem::GetWorkingDir());
+
+		scriptHost = std::make_unique<ScriptHost>();
+		std::string exeDir = FileSystem::GetExeDirectory();
+		std::string scriptsConfig = exeDir + "/Game.Scripts.runtimeconfig.json";
+		bool configExists = std::filesystem::exists(scriptsConfig);
+		bool nethostExists = std::filesystem::exists(exeDir + "/nethost.dll");
+		bool dllExists = std::filesystem::exists(exeDir + "/Game.Scripts.dll");
+		IB_CORE_INFO("[Scripts] Exe dir: {} | runtimeconfig.json: {} | nethost.dll: {} | Game.Scripts.dll: {}",
+			exeDir, configExists, nethostExists, dllExists);
+		if (configExists) {
+			if (!scriptHost->Initialize(scriptsConfig)) {
+				IB_CORE_WARN("ScriptHost: Initialize failed (check nethost.dll and .NET runtime). C# scripts will not run.");
+			}
+		} else {
+			IB_CORE_WARN("ScriptHost: {} not found. Build Game project to generate C# output.", scriptsConfig);
+		}
 
 #ifdef USE_DEFERRED // Use deferred Pipeline
 			renderer = std::unique_ptr<Renderer>(Renderer::CreateDeferred());
@@ -93,7 +134,22 @@ namespace Iberus {
 		return editorRenderTargetFBO != 0 && editorRenderTargetWidth > 0 && editorRenderTargetHeight > 0;
 	}
 
+	void Engine::SetSceneSimulationEnabled(bool enabled) {
+		if (sceneSimulationEnabled && !enabled && scriptHost && scriptHost->IsInitialized()) {
+			scriptHost->UnloadAll();
+			BehaviourSystem::ClearScriptHandles();
+		}
+		if (enabled && !sceneSimulationEnabled) {
+			IB_CORE_INFO("[Scripts] Game mode started (F11) - scene simulation and C# scripts now run.");
+		}
+		sceneSimulationEnabled = enabled;
+	}
+
 	void Engine::OnSwitchedToGameMode() {
+		if (scriptHost && scriptHost->IsInitialized()) {
+			scriptHost->UnloadAll();
+			BehaviourSystem::ClearScriptHandles();
+		}
 		ClearEditorRenderTarget();
 		SyncRendererToOutput();
 	}

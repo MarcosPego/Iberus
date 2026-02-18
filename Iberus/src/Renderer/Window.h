@@ -40,6 +40,9 @@ namespace Iberus {
 
 		virtual void Update() = 0;
 
+		/// Poll input events. Call at frame start so behaviours/scripts see current key state.
+		virtual void PollEvents() {}
+
 		virtual void SetVSync(bool enabled) { windowProps.vsync = enabled; }
 		virtual bool IsVSync() const { return windowProps.vsync; }
 

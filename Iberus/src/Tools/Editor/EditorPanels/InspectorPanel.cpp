@@ -1,6 +1,7 @@
 #include "Enginepch.h"
 #include "InspectorPanel.h"
 #include "Editor.h"
+#include "Application.h"
 #include "Engine.h"
 #include "SceneManager.h"
 #include "Scene.h"
@@ -214,6 +215,25 @@ namespace Iberus {
 		}
 	}
 
+	static void DrawScriptComponent(World& world, EntityId entityId) {
+		auto* comp = world.GetComponent<ScriptComponent>(entityId);
+		if (!comp) {
+			return;
+		}
+		if (ImGui::CollapsingHeader("Script##ScriptHeader", ImGuiTreeNodeFlags_DefaultOpen)) {
+			char assemBuf[256];
+			snprintf(assemBuf, sizeof(assemBuf), "%s", comp->AssemblyPath.c_str());
+			if (ImGui::InputText("Assembly##ScriptAssembly", assemBuf, sizeof(assemBuf))) {
+				comp->AssemblyPath = assemBuf;
+			}
+			char typeBuf[256];
+			snprintf(typeBuf, sizeof(typeBuf), "%s", comp->TypeName.c_str());
+			if (ImGui::InputText("Type##ScriptType", typeBuf, sizeof(typeBuf))) {
+				comp->TypeName = typeBuf;
+			}
+		}
+	}
+
 	static void DrawTerrainComponent(World& world, EntityId entityId) {
 		auto* comp = world.GetComponent<TerrainComponent>(entityId);
 		if (!comp) {
@@ -306,6 +326,9 @@ namespace Iberus {
 		if (world.HasComponent<TerrainComponent>(entityId)) {
 			DrawTerrainComponent(world, entityId);
 		}
+		if (world.HasComponent<ScriptComponent>(entityId)) {
+			DrawScriptComponent(world, entityId);
+		}
 
 		ImGui::Separator();
 		if (ImGui::Button("Add Component##AddComponent")) {
@@ -329,6 +352,19 @@ namespace Iberus {
 				[&]() { scene->AddComponent<SDFComponent>(entityId); });
 			tryAdd("Terrain", "AddTerrain", world.HasComponent<TerrainComponent>(entityId),
 				[&]() { scene->AddComponent<TerrainComponent>(entityId); });
+			tryAdd("Script", "AddScript", world.HasComponent<ScriptComponent>(entityId),
+				[&]() {
+					auto* c = scene->AddComponent<ScriptComponent>(entityId);
+					if (c) {
+						auto* project = Iberus::Application::Get()->GetProject();
+						if (project && !project->GetName().empty()) {
+							c->AssemblyPath = "Assets/Scripts/" + project->GetName() + ".Scripts.dll";
+						} else {
+							c->AssemblyPath = "";
+						}
+						c->TypeName = "";
+					}
+				});
 			ImGui::EndPopup();
 		}
 

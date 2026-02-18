@@ -118,6 +118,11 @@ namespace Iberus {
 		Vec3 Direction{ 0, -1, 0 };
 	};
 
+	struct IBERUS_API ScriptComponent {
+		std::string AssemblyPath;
+		std::string TypeName;
+	};
+
 	struct IBERUS_API TerrainComponent {
 		int Width{ 65 };
 		int Height{ 65 };

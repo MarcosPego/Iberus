@@ -148,6 +148,9 @@
     <Filter Include="src\Scene\Serialization">
       <UniqueIdentifier>{17282D86-835F-751D-8C69-D940F81F9C16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Scripting">
+      <UniqueIdentifier>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Serialization">
       <UniqueIdentifier>{7A8EE480-E6A4-E216-2F1C-6E389B71B39E}</UniqueIdentifier>
     </Filter>
@@ -627,6 +630,12 @@
     <ClInclude Include="src\Scene\Serialization\SceneSerializer.h">
       <Filter>src\Scene\Serialization</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scripting\ScriptAPI.h">
+      <Filter>src\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scripting\ScriptHost.h">
+      <Filter>src\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\SceneInclude.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -922,6 +931,12 @@
     </ClCompile>
     <ClCompile Include="src\Scene\Serialization\SceneSerializer.cpp">
       <Filter>src\Scene\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\ScriptAPI.cpp">
+      <Filter>src\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\ScriptHost.cpp">
+      <Filter>src\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Serialization\JsonValue.cpp">
       <Filter>src\Serialization</Filter>

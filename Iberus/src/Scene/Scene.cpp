@@ -170,6 +170,10 @@ namespace Iberus {
 			copy.NeedsRegenerate = true;
 			*scene.AddComponent<TerrainComponent>(newId) = copy;
 		}
+		if (auto* srcSc = world.GetComponent<ScriptComponent>(sourceId)) {
+			ScriptComponent copy = *srcSc;
+			*scene.AddComponent<ScriptComponent>(newId) = copy;
+		}
 
 		// Copy children list before recursing to avoid iterator invalidation if storage reallocates
 		std::vector<EntityId> childIds;

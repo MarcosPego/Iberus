@@ -137,6 +137,13 @@ namespace Iberus {
 			outEntity.Set("sdf", partsArr);
 			}
 
+			if (auto* script = world.GetComponent<ScriptComponent>(entityId)) {
+				JsonValue scriptObj = JsonValue::Object();
+				scriptObj.Set("AssemblyPath", script->AssemblyPath);
+				scriptObj.Set("TypeName", script->TypeName);
+				outEntity.Set("script", scriptObj);
+			}
+
 			if (auto* terrain = world.GetComponent<TerrainComponent>(entityId)) {
 				JsonValue tObj = JsonValue::Object();
 				tObj.Set("Width", terrain->Width);
@@ -374,6 +381,15 @@ namespace Iberus {
 						part.MaterialId = partJson.Contains("MaterialId") ? partJson["MaterialId"].AsString() : std::string();
 						comp->Parts.push_back(part);
 					}
+				}
+			}
+
+			if (entityJson.Contains("script")) {
+				JsonValue scriptObj = entityJson["script"];
+				auto* comp = world.AddComponent<ScriptComponent>(entityId);
+				if (comp) {
+					comp->AssemblyPath = scriptObj.Contains("AssemblyPath") ? scriptObj["AssemblyPath"].AsString() : std::string();
+					comp->TypeName = scriptObj.Contains("TypeName") ? scriptObj["TypeName"].AsString() : std::string();
 				}
 			}
 

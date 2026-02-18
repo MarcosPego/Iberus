@@ -10,6 +10,9 @@ namespace Iberus {
 	class IBERUS_API BehaviourSystem {
 	public:
 		static void Update(World& world, Scene& scene, double deltaTime);
+
+		/// Call when ScriptHost::UnloadAll is invoked to clear cached handles.
+		static void ClearScriptHandles();
 	};
 
 }

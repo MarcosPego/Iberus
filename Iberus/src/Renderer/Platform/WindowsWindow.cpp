@@ -18,9 +18,12 @@ namespace Iberus {
 		Shutdown();
 	}
 
+	void WindowsWindow::PollEvents() {
+		glfwPollEvents();
+	}
+
 	void WindowsWindow::Update() {
 		glfwSwapBuffers(window);
-		glfwPollEvents();; // TODO(MPP) Fix window event manager!
 	}
 
 	void WindowsWindow::Shutdown() {

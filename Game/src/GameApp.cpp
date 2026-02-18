@@ -2,12 +2,10 @@
 
 #include "GameLayer.h"
 #include "EditorLayer.h"
-#include "CustomSceneCreator.h"
 #include "SceneViewerCameraBehaviour.h"
-#include "SandboxBehaviour2.h"
+#include "Maths/MathUtils.h"
 
 #include <filesystem>
-#include <functional>
 
 namespace {
 
@@ -17,31 +15,13 @@ namespace {
 		if (!scene) {
 			return;
 		}
-		if (auto* cam = scene->GetComponent<Iberus::TagComponent>(scene->GetActiveCameraId())) {
-			if (cam->Id == "Camera") {
-				scene->PushBehaviour(scene->GetActiveCameraId(), new Iberus::SceneViewerCameraBehaviour());
+		Iberus::EntityId cameraId = scene->GetActiveCameraId();
+		if (cameraId != Iberus::NullEntity) {
+			if (auto* transform = scene->GetComponent<Iberus::TransformComponent>(cameraId)) {
+				transform->Position = Math::Vec3(0, 0, -5);
+				transform->Rotation = Math::Vec3(0, 180, 0);
 			}
-		}
-		Iberus::EntityId sdfEntity = Iberus::NullEntity;
-		std::function<void(Iberus::EntityId)> findSdf = [&](Iberus::EntityId eid) {
-			if (auto* tag = scene->GetComponent<Iberus::TagComponent>(eid)) {
-				if (tag->Id == "SDFteste1" && scene->HasComponent<Iberus::SDFComponent>(eid)) {
-					sdfEntity = eid;
-					return;
-				}
-			}
-			if (auto* hierarchy = scene->GetComponent<Iberus::HierarchyComponent>(eid)) {
-				for (Iberus::EntityId cid : hierarchy->ChildrenIds) {
-					findSdf(cid);
-					if (sdfEntity != Iberus::NullEntity) {
-						return;
-					}
-				}
-			}
-		};
-		findSdf(scene->GetSceneRootId());
-		if (sdfEntity != Iberus::NullEntity) {
-			scene->PushBehaviour(sdfEntity, new SandboxBehaviour2());
+			scene->PushBehaviour(cameraId, new Iberus::SceneViewerCameraBehaviour());
 		}
 	}
 
@@ -50,8 +30,11 @@ namespace {
 			return;
 		}
 		std::string rootPath = project->GetRootPath();
+		Iberus::Engine::Instance()->SetScriptBaseDir(rootPath);
 		std::filesystem::current_path(rootPath);
 		Iberus::Engine::Instance()->GetEngineProvider().SetWorkingDir(rootPath);
+
+		Iberus::Engine::Instance()->BuildProjectScripts(rootPath);
 
 		std::string scenePath = project->GetCurrentScenePath();
 		if (scenePath.empty()) {
@@ -65,16 +48,11 @@ namespace {
 		}
 
 		auto* scene = Iberus::Engine::Instance()->GetSceneManager().CreateScene("TestScene", true);
-		Iberus::CustomSceneCreator::SetupResourcesAndMaterials(scene);
-
 		if (std::filesystem::exists(fullScenePath)) {
-			if (Iberus::SceneSerializer::LoadFromFile(*scene, fullScenePath)) {
-				SetupSceneWithBehaviours(scene);
-			} else {
-				Iberus::CustomSceneCreator::Create();
-			}
-		} else {
-			Iberus::CustomSceneCreator::Create();
+			Iberus::SceneSerializer::LoadFromFile(*scene, fullScenePath);
+		}
+		SetupSceneWithBehaviours(scene);
+		if (!std::filesystem::exists(fullScenePath)) {
 			std::filesystem::path scenesDir = std::filesystem::path(project->GetAssetsPath()) / "Scenes";
 			std::filesystem::create_directories(scenesDir);
 			Iberus::SceneSerializer::SaveToFile(*scene, fullScenePath);
@@ -107,6 +85,7 @@ public:
 
 	void OnCloseProject() override {
 		Iberus::Engine::Instance()->GetSceneManager().Clear();
+		Iberus::Engine::Instance()->SetScriptBaseDir("");
 		SetProject(nullptr);
 		SetCurrentScenePath("");
 		SetSceneDirty(false);

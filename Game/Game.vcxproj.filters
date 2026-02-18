@@ -6,18 +6,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\CustomSceneCreator.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SandboxBehaviour.h" />
-    <ClInclude Include="src\SandboxBehaviour2.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\Core\CustomSceneCreator.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameApp.cpp" />
-    <ClCompile Include="src\SandboxBehaviour.cpp" />
-    <ClCompile Include="src\SandboxBehaviour2.cpp" />
   </ItemGroup>
 </Project>

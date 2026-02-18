@@ -11,6 +11,8 @@
 #include "imgui.h"
 
 #include <filesystem>
+#include <fstream>
+#include <sstream>
 #include <cctype>
 
 namespace Iberus {
@@ -44,6 +46,35 @@ namespace Iberus {
 			std::filesystem::copy(demoAssets, newAssets, std::filesystem::copy_options::recursive);
 		} else {
 			std::filesystem::create_directories(newProjectDir / "Assets" / "Scenes");
+		}
+		std::filesystem::path demoScripts = projectsDir / "Demo" / "Assets" / "Scripts";
+		if (std::filesystem::exists(demoScripts) && std::filesystem::is_directory(demoScripts)) {
+			std::filesystem::path newScripts = newProjectDir / "Assets" / "Scripts";
+			std::filesystem::copy(demoScripts, newScripts, std::filesystem::copy_options::recursive);
+			std::filesystem::path oldCsproj = newScripts / "Demo.Scripts.csproj";
+			std::filesystem::path newCsproj = newScripts / (name + ".Scripts.csproj");
+			if (std::filesystem::exists(oldCsproj)) {
+				auto replaceInFile = [&](const std::filesystem::path& p) {
+					std::ifstream in(p);
+					if (!in) { return; }
+					std::ostringstream contents;
+					contents << in.rdbuf();
+					in.close();
+					std::string str = contents.str();
+					for (size_t pos = 0; (pos = str.find("Demo", pos)) != std::string::npos; pos += name.size()) {
+						str.replace(pos, 4, name);
+					}
+					std::ofstream out(p);
+					if (out) { out << str; }
+				};
+				replaceInFile(oldCsproj);
+				std::filesystem::rename(oldCsproj, newCsproj);
+				for (const auto& e : std::filesystem::directory_iterator(newScripts)) {
+					if (e.path().extension() == ".cs") {
+						replaceInFile(e.path());
+					}
+				}
+			}
 		}
 		auto project = std::make_unique<Project>(name);
 		project->SetRootPath(".");

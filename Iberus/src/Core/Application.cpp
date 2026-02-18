@@ -82,6 +82,9 @@ namespace Iberus {
 			double deltaTime = std::chrono::duration<double>(now - lastFrameTime).count();
 			lastFrameTime = now;
 
+			// Poll input events early so behaviours/scripts read current key state this frame
+			window->PollEvents();
+
 			// Process deferred destroys at frame start so render state is consistent before any UI or rendering
 			if (auto* scene = engine->GetSceneManager().GetActiveScene()) {
 				scene->FlushPendingDestroys();

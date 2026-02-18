@@ -27,7 +27,8 @@ namespace Iberus {
 
 		if (meshRenderer && localToWorld && !meshRenderer->MeshId.empty() && !meshRenderer->MaterialId.empty()) {
 			auto& resourceManager = Engine::Instance()->GetResourceManager();
-			Material* material = scene.GetOrCreateMaterial<Material>(meshRenderer->MaterialId);
+			auto* provider = &Engine::Instance()->GetEngineProvider();
+			Material* material = resourceManager.GetOrCreateResource<Material>(meshRenderer->MaterialId, provider);
 			Mesh* mesh = resourceManager.GetResource<Mesh>(meshRenderer->MeshId);
 			if (material && mesh) {
 				material->PushDraw(renderBatch);

@@ -6,15 +6,64 @@ namespace IberusScripts;
 
 /// <summary>
 /// Bridge between native host and script instances. Methods are called via P/Invoke
-/// from hostfxr load_assembly_and_get_function_pointer.
+/// from hostfxr load_assembly_and_get_function_pointer with UNMANAGEDCALLERSONLY_METHOD.
 /// </summary>
 public static class ScriptBridge
 {
     private static readonly Dictionary<IntPtr, Script> Instances = new();
     private static IntPtr _nextHandle = (IntPtr)1;
+    private static string? _scriptAssemblyDir;
+    private static bool _assemblyResolveRegistered;
 
-    /// <param name="assemblyPathPtr">Full path to script assembly (e.g. project's Demo.Scripts.dll).</param>
-    /// <param name="typeNamePtr">Full type name (e.g. Demo.BasicMovementController).</param>
+    private static void EnsureAssemblyResolve()
+    {
+        if (_assemblyResolveRegistered)
+        {
+            return;
+        }
+        _assemblyResolveRegistered = true;
+        var executingAsm = Assembly.GetExecutingAssembly();
+        AppDomain.CurrentDomain.AssemblyResolve += (_, args) =>
+        {
+            var aname = new AssemblyName(args.Name);
+            // Always return the already-loaded Iberus.Scripts (from App) so Script types match
+            if (string.Equals(aname.Name, "Iberus.Scripts", StringComparison.OrdinalIgnoreCase))
+            {
+                return executingAsm;
+            }
+            var dirs = new List<string?>();
+            if (!string.IsNullOrEmpty(_scriptAssemblyDir))
+            {
+                dirs.Add(_scriptAssemblyDir);
+            }
+            if (args.RequestingAssembly?.Location is string loc)
+            {
+                dirs.Add(Path.GetDirectoryName(loc));
+            }
+            var execDir = Path.GetDirectoryName(executingAsm.Location);
+            if (!string.IsNullOrEmpty(execDir))
+            {
+                dirs.Add(execDir);
+            }
+            foreach (var dir in dirs.Where(d => !string.IsNullOrEmpty(d)))
+            {
+                var path = Path.Combine(dir!, aname.Name + ".dll");
+                if (File.Exists(path))
+                {
+                    return Assembly.LoadFrom(path);
+                }
+            }
+            return null;
+        };
+    }
+
+    private static void Log(string msg)
+    {
+        try { NativeBindings.Iberus_Debug_Log("[ScriptBridge] " + msg); } catch { }
+    }
+
+    /// <param name="assemblyPathPtr">Full path to script assembly (UTF-8).</param>
+    /// <param name="typeNamePtr">Full type name (UTF-8).</param>
     [UnmanagedCallersOnly]
     public static IntPtr CreateInstance(IntPtr assemblyPathPtr, IntPtr typeNamePtr)
     {
@@ -25,48 +74,65 @@ public static class ScriptBridge
         string typeName = Marshal.PtrToStringUTF8(typeNamePtr) ?? "";
         if (string.IsNullOrEmpty(typeName))
         {
+            Log("CreateInstance: typeName empty");
             return IntPtr.Zero;
         }
         try
         {
-            Type? type;
-            if (assemblyPathPtr != IntPtr.Zero)
+            EnsureAssemblyResolve();
+            string? assemblyPath = assemblyPathPtr != IntPtr.Zero ? Marshal.PtrToStringUTF8(assemblyPathPtr) : null;
+            Log($"CreateInstance: assemblyPath={(assemblyPath ?? "(null)")} typeName={typeName}");
+            if (!string.IsNullOrEmpty(assemblyPath))
             {
-                string assemblyPath = Marshal.PtrToStringUTF8(assemblyPathPtr) ?? "";
-                if (!string.IsNullOrEmpty(assemblyPath))
+                if (!File.Exists(assemblyPath))
                 {
-                    var asm = Assembly.LoadFrom(assemblyPath);
-                    type = asm.GetType(typeName);
-                    if (type == null)
-                    {
-                        type = asm.GetExportedTypes().FirstOrDefault(t => t.FullName == typeName || t.Name == typeName);
-                    }
+                    Log($"CreateInstance: assembly file not found: {assemblyPath}");
+                    return IntPtr.Zero;
                 }
-                else
+                _scriptAssemblyDir = Path.GetDirectoryName(Path.GetFullPath(assemblyPath));
+                var asm = Assembly.LoadFrom(assemblyPath);
+                var type = asm.GetType(typeName)
+                    ?? asm.GetExportedTypes().FirstOrDefault(t => t.FullName == typeName || t.Name == typeName);
+                if (type == null)
                 {
-                    type = Type.GetType(typeName) ?? Type.GetType(typeName + ", Iberus.Scripts");
+                    var exported = string.Join(", ", asm.GetExportedTypes().Select(t => t.FullName ?? t.Name));
+                    Log($"CreateInstance: type '{typeName}' not found in assembly. Exported: [{exported}]");
+                    return IntPtr.Zero;
                 }
+                if (!typeof(Script).IsAssignableFrom(type))
+                {
+                    Log($"CreateInstance: type '{type.FullName}' is not assignable from Script");
+                    return IntPtr.Zero;
+                }
+                var script = (Script?)Activator.CreateInstance(type);
+                if (script == null)
+                {
+                    Log("CreateInstance: Activator.CreateInstance returned null");
+                    return IntPtr.Zero;
+                }
+                IntPtr handle = _nextHandle;
+                unchecked { _nextHandle = (IntPtr)((long)_nextHandle + 1); }
+                Instances[handle] = script;
+                return handle;
             }
-            else
-            {
-                type = Type.GetType(typeName) ?? Type.GetType(typeName + ", Iberus.Scripts");
-            }
-            if (type == null || !typeof(Script).IsAssignableFrom(type))
+            var fallbackType = Type.GetType(typeName) ?? Type.GetType(typeName + ", Iberus.Scripts");
+            if (fallbackType == null || !typeof(Script).IsAssignableFrom(fallbackType))
             {
                 return IntPtr.Zero;
             }
-            var script = (Script?)Activator.CreateInstance(type);
-            if (script == null)
+            var fbScript = (Script?)Activator.CreateInstance(fallbackType);
+            if (fbScript == null)
             {
                 return IntPtr.Zero;
             }
-            IntPtr handle = _nextHandle;
+            IntPtr h = _nextHandle;
             unchecked { _nextHandle = (IntPtr)((long)_nextHandle + 1); }
-            Instances[handle] = script;
-            return handle;
+            Instances[h] = fbScript;
+            return h;
         }
-        catch
+        catch (Exception ex)
         {
+            Log($"CreateInstance exception: {ex.GetType().Name}: {ex.Message}");
             return IntPtr.Zero;
         }
     }

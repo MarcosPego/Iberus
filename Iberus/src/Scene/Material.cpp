@@ -10,8 +10,7 @@
 
 namespace Iberus {
 
-	Material::Material(const std::string& inID) {
-		ID = inID;
+	Material::Material(const std::string& inID) : Resource(inID) {
 	}
 
 	void Material::SetShader(Shader* inboundShader) {

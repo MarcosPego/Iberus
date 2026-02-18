@@ -5,6 +5,8 @@
 #include "IProvider.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "Material.h"
+#include "MaterialSerializer.h"
 #include "Resource.h"
 
 namespace Iberus {
@@ -68,6 +70,28 @@ namespace Iberus {
 			auto* ptr = shader.get();
 			resources.emplace(id, std::move(shader));
 			return dynamic_cast<Shader*>(ptr);
+		}
+
+		template<>
+		Material* CreateResource(const std::string& id, IProvider* provider) {
+			if (!provider) {
+				return nullptr;
+			}
+
+			std::string path = "Assets/Materials/" + id + ".mat";
+			auto buffer = provider->GetRawFileBuffer(path);
+			if (buffer.Invalid()) {
+				return nullptr;
+			}
+
+			auto mat = MaterialSerializer::Deserialize(buffer, *this, provider);
+			if (!mat) {
+				return nullptr;
+			}
+
+			auto* ptr = mat.get();
+			resources[id] = std::move(mat);
+			return dynamic_cast<Material*>(ptr);
 		}
 
 	private:

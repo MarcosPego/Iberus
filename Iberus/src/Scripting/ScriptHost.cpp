@@ -167,7 +167,7 @@ namespace Iberus {
 			IB_ERROR("ScriptHost: Assembly not found: {}", fullAssemblyPath);
 			return nullptr;
 		}
-		// Bridge always comes from Iberus.Scripts (runtime) in exe dir
+		// Bridge from Iberus.Scripts. Use UNMANAGEDCALLERSONLY_METHOD - delegate types trigger COM activation crash.
 		if (impl->createInstance == nullptr) {
 			std::string appDir = FileSystem::GetAppDirectory();
 			std::string runtimePath = (std::filesystem::path(appDir) / "Iberus.Scripts.dll").string();
@@ -207,7 +207,12 @@ namespace Iberus {
 			}
 			impl->destroyInstance = (Impl::DestroyInstanceFn)destroyPtr;
 		}
-		void* handle = impl->createInstance(fullAssemblyPath.c_str(), typeName.c_str());
+		// C# Marshal.PtrToStringUTF8 expects UTF-8; use u8string for paths
+		auto fullPath = std::filesystem::path(fullAssemblyPath).u8string();
+		auto typeStr = std::string(typeName);
+		void* handle = impl->createInstance(
+			reinterpret_cast<const char*>(fullPath.c_str()),
+			typeStr.c_str());
 		if (handle) {
 			impl->activeHandles.insert(handle);
 		}

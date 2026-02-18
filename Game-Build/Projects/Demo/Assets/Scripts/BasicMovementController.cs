@@ -19,25 +19,13 @@ public class BasicMovementController : Script
     private const int KeyQ = 81;
     private const int KeyE = 69;
 
-    private int _frameCount;
-
     protected override void OnInit()
     {
-        Log($"BasicMovementController OnInit Entity={EntityId}");
     }
 
     protected override void OnUpdate(double deltaTime)
     {
-        _frameCount++;
         var (pos, rot, scale) = GetTransform();
-
-        // Debug: log every 60 frames with state
-        if (_frameCount % 60 == 1)
-        {
-            bool w = IsKeyPressed(KeyW), s = IsKeyPressed(KeyS), a = IsKeyPressed(KeyA);
-            bool d = IsKeyPressed(KeyD), q = IsKeyPressed(KeyQ), e = IsKeyPressed(KeyE);
-            Log($"BasicMovementController Update frame={_frameCount} pos=({pos.X:F2},{pos.Y:F2},{pos.Z:F2}) keys W={w} A={a} S={s} D={d} Q={q} E={e}");
-        }
 
         float dx = 0;
         float dy = 0;

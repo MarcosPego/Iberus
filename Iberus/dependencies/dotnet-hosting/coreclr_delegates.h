@@ -19,16 +19,20 @@ typedef char char_t;
 #define CORECLR_DELEGATE_CALLTYPE
 #endif
 
-// Special delegate type for [UnmanagedCallersOnly] methods
-#ifdef _WIN32
-#define UNMANAGEDCALLERSONLY_METHOD L"NativeAOT"
-#else
-#define UNMANAGEDCALLERSONLY_METHOD "NativeAOT"
-#endif
+// Special delegate type for [UnmanagedCallersOnly] methods - must be ((const char_t*)-1) per dotnet/runtime
+#define UNMANAGEDCALLERSONLY_METHOD ((const char_t*)-1)
 
+// Must match dotnet/runtime src/native/corehost/hostfxr.h - wrong values request COM activation!
 enum hostfxr_delegate_type {
-    hdt_load_assembly_and_get_function_pointer = 0,
-    hdt_get_function_pointer = 1
+    hdt_com_activation = 0,
+    hdt_load_in_memory_assembly = 1,
+    hdt_winrt_activation = 2,
+    hdt_com_register = 3,
+    hdt_com_unregister = 4,
+    hdt_load_assembly_and_get_function_pointer = 5,
+    hdt_get_function_pointer = 6,
+    hdt_load_assembly = 7,
+    hdt_load_assembly_bytes = 8,
 };
 
 typedef int (*load_assembly_and_get_function_pointer_fn)(

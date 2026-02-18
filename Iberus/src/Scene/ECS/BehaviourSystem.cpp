@@ -9,6 +9,7 @@
 #include "Log.h"
 
 #include <unordered_map>
+#include <unordered_set>
 
 namespace Iberus {
 
@@ -20,10 +21,12 @@ namespace Iberus {
 		};
 		std::unordered_map<EntityId, CSharpScriptState> scriptHandles;
 		static bool s_loggedScriptHostNotInit = false;
+		static std::unordered_set<std::string> s_loggedFailures;
 	}
 
 	void BehaviourSystem::ClearScriptHandles() {
 		s_loggedScriptHostNotInit = false;
+		s_loggedFailures.clear();
 		scriptHandles.clear();
 	}
 
@@ -85,25 +88,28 @@ namespace Iberus {
 				(it->second.assemblyPath != comp.AssemblyPath || it->second.typeName != comp.TypeName);
 
 			if (needReload) {
-				if (it != scriptHandles.end()) {
+				if (it != scriptHandles.end() && it->second.handle) {
 					scriptHost->UnloadScript(it->second.handle);
 					scriptHandles.erase(it);
 					it = scriptHandles.end();
 				}
 				std::string resolvedPath = resolveAssemblyPath(comp.AssemblyPath);
-			ScriptHost::ScriptHandle handle = scriptHost->LoadScript(resolvedPath, comp.TypeName, baseDir);
-				if (!handle) {
-					IB_CORE_WARN("[Scripts] LoadScript failed: {} / {} (baseDir={})", comp.AssemblyPath, comp.TypeName, baseDir);
-					continue;
-				}
+				ScriptHost::ScriptHandle handle = scriptHost->LoadScript(resolvedPath, comp.TypeName, baseDir);
 				CSharpScriptState state;
 				state.handle = handle;
 				state.assemblyPath = comp.AssemblyPath;
 				state.typeName = comp.TypeName;
-				scriptHost->CallInit(handle, static_cast<uint64_t>(entityId), &world);
 				scriptHandles[entityId] = std::move(state);
+				if (!handle) {
+					std::string failureKey = comp.AssemblyPath + "|" + comp.TypeName;
+					if (s_loggedFailures.insert(failureKey).second) {
+						IB_CORE_WARN("[Scripts] LoadScript failed: {} / {} (baseDir={})", comp.AssemblyPath, comp.TypeName, baseDir);
+					}
+					continue;
+				}
+				scriptHost->CallInit(handle, static_cast<uint64_t>(entityId), &world);
 				scriptHost->CallUpdate(handle, static_cast<uint64_t>(entityId), &world, deltaTime);
-			} else {
+			} else if (it->second.handle) {
 				scriptHost->CallUpdate(it->second.handle, static_cast<uint64_t>(entityId), &world, deltaTime);
 			}
 		}

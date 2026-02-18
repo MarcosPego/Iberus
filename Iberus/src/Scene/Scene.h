@@ -2,7 +2,6 @@
 
 #include "Core.h"
 #include "MathUtils.h"
-#include "Material.h"
 #include "Behaviour.h"
 #include "World.h"
 #include "EntityId.h"
@@ -67,15 +66,7 @@ namespace Iberus {
 		/// Generate a unique tag id from base (e.g. "Mesh" -> "Mesh_1" if "Mesh" exists).
 		std::string GenerateUniqueTagId(const std::string& base);
 
-		template<typename T = Material, typename... Args>
-		T* GetOrCreateMaterial(const std::string& ID, Args&&... args) {
-			if (materials.find(ID) == materials.end()) {
-				auto material = std::unique_ptr<T>(new T(ID, std::forward<Args>(args)...));
-				materials.emplace(ID, std::move(material));
-			}		
-			return dynamic_cast<T*>(materials.at(ID).get());
-		}
-
+	public:
 		template<typename T>
 		bool PushBehaviour(EntityId entityId, std::unique_ptr<T> behaviour) {
 			if (!behaviour || !world.IsAlive(entityId)) {
@@ -115,7 +106,6 @@ namespace Iberus {
 		EntityId sceneRootId{ NullEntity };
 		EntityId activeCameraId{ NullEntity };
 
-		std::unordered_map<std::string, std::unique_ptr<Material>> materials;
 		std::map<std::string, std::vector<std::pair<EntityId, std::unique_ptr<Behaviour>>>> registeredBehaviours;
 
 		std::vector<EntityId> pendingDestroys;

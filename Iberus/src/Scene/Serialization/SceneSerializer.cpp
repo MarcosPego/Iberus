@@ -4,8 +4,12 @@
 #include "World.h"
 #include "Components.h"
 #include "FileSystem.h"
+#include "Engine.h"
+#include "Material.h"
+#include "Mesh.h"
 
 #include <queue>
+#include <unordered_set>
 
 namespace Iberus {
 
@@ -178,6 +182,63 @@ namespace Iberus {
 						CollectEntitiesRecursive(world, childId, order, entityToTempId, nextTemp);
 					}
 				}
+			}
+		}
+
+		void PreloadSceneResources(World& world) {
+			auto* engine = Engine::Instance();
+			if (!engine) {
+				return;
+			}
+			auto& resourceManager = engine->GetResourceManager();
+			auto* provider = &engine->GetEngineProvider();
+			if (!provider) {
+				return;
+			}
+
+			std::unordered_set<std::string> meshIds;
+			std::unordered_set<std::string> materialIds;
+
+			auto* meshStorage = world.GetStorage<MeshRendererComponent>();
+			if (meshStorage) {
+				for (auto [entityId, comp] : *meshStorage) {
+					if (!comp.MeshId.empty()) {
+						// terrain_heightmap is procedural, created by TerrainSystem
+						if (comp.MeshId != "terrain_heightmap") {
+							meshIds.insert(comp.MeshId);
+						}
+					}
+					if (!comp.MaterialId.empty()) {
+						materialIds.insert(comp.MaterialId);
+					}
+				}
+			}
+
+			auto* sdfStorage = world.GetStorage<SDFComponent>();
+			if (sdfStorage) {
+				for (auto [entityId, comp] : *sdfStorage) {
+					for (const auto& part : comp.Parts) {
+						if (!part.MaterialId.empty()) {
+							materialIds.insert(part.MaterialId);
+						}
+					}
+				}
+			}
+
+			auto* terrainStorage = world.GetStorage<TerrainComponent>();
+			if (terrainStorage) {
+				for (auto [entityId, comp] : *terrainStorage) {
+					if (!comp.MaterialId.empty()) {
+						materialIds.insert(comp.MaterialId);
+					}
+				}
+			}
+
+			for (const auto& meshId : meshIds) {
+				resourceManager.GetOrCreateResource<Mesh>(meshId, provider);
+			}
+			for (const auto& materialId : materialIds) {
+				resourceManager.GetOrCreateResource<Material>(materialId, provider);
 			}
 		}
 
@@ -409,7 +470,8 @@ namespace Iberus {
 					comp->WorldSizeZ = terrain.Contains("WorldSizeZ") ? terrain["WorldSizeZ"].AsFloat() : 60.0f;
 					comp->MeshId = terrain.Contains("MeshId") ? terrain["MeshId"].AsString() : std::string("terrain_heightmap");
 					comp->MaterialId = terrain.Contains("MaterialId") ? terrain["MaterialId"].AsString() : std::string("PlaneMaterial");
-					comp->NeedsRegenerate = terrain.Contains("NeedsRegenerate") ? terrain["NeedsRegenerate"].AsBool() : true;
+					// Always regenerate on load so the procedural terrain mesh is created (mesh does not persist to file)
+				comp->NeedsRegenerate = true;
 				}
 			}
 		}
@@ -489,6 +551,8 @@ namespace Iberus {
 		if (newRoot == NullEntity) {
 			return false;
 		}
+
+		PreloadSceneResources(world);
 
 		scene.SetSceneRootId(newRoot);
 		scene.SetActiveCameraId(newActiveCamera);

@@ -2,6 +2,7 @@
 #include "SDFRenderSystem.h"
 #include "Components.h"
 #include "Scene.h"
+#include "Engine.h"
 #include "Material.h"
 #include "RenderBatch.h"
 #include "RenderCmd.h"
@@ -41,9 +42,11 @@ namespace Iberus {
 			}
 
 			Material* entityMaterial = nullptr;
+			auto& resourceManager = Engine::Instance()->GetResourceManager();
+			auto* provider = &Engine::Instance()->GetEngineProvider();
 			auto* meshRenderer = world.GetComponent<MeshRendererComponent>(entityId);
 			if (meshRenderer && !meshRenderer->MaterialId.empty()) {
-				entityMaterial = scene.GetOrCreateMaterial<Material>(meshRenderer->MaterialId);
+				entityMaterial = resourceManager.GetOrCreateResource<Material>(meshRenderer->MaterialId, provider);
 			}
 
 			constexpr int MAX_PARTS = 16; // Must match sdfPartBufferSize in shader
@@ -113,7 +116,7 @@ namespace Iberus {
 
 				Vec4 color = Vec4(1, 1, 1, 1);
 				if (!part.MaterialId.empty()) {
-					Material* partMat = scene.GetOrCreateMaterial<Material>(part.MaterialId);
+					Material* partMat = resourceManager.GetOrCreateResource<Material>(part.MaterialId, provider);
 					if (partMat) {
 						color = partMat->albedoColor;
 					}

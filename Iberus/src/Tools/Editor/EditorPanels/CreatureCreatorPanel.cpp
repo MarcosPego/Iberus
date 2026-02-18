@@ -23,8 +23,12 @@ namespace Iberus {
 			const float radius = 0.18f;
 			const std::string bodyMatId = "SDFMaterial1";
 			const std::string eyeMatId = "SDFMaterial2";
-			scene->GetOrCreateMaterial<Material>(bodyMatId);
-			scene->GetOrCreateMaterial<Material>(eyeMatId);
+			{
+				auto& rm = Engine::Instance()->GetResourceManager();
+				auto* prov = &Engine::Instance()->GetEngineProvider();
+				rm.GetOrCreateResource<Material>(bodyMatId, prov);
+				rm.GetOrCreateResource<Material>(eyeMatId, prov);
+			}
 
 			for (int i = 0; i < segCount; ++i) {
 				SDFPartData p;
@@ -60,9 +64,13 @@ namespace Iberus {
 			const std::string spineMatId = "SDFMaterial1";
 			const std::string headMatId = "SDFMaterial2";
 			const std::string eyeMatId = "SDFMaterial3";
-			scene->GetOrCreateMaterial<Material>(spineMatId);
-			scene->GetOrCreateMaterial<Material>(headMatId);
-			scene->GetOrCreateMaterial<Material>(eyeMatId);
+			{
+				auto& rm = Engine::Instance()->GetResourceManager();
+				auto* prov = &Engine::Instance()->GetEngineProvider();
+				rm.GetOrCreateResource<Material>(spineMatId, prov);
+				rm.GetOrCreateResource<Material>(headMatId, prov);
+				rm.GetOrCreateResource<Material>(eyeMatId, prov);
+			}
 
 			for (int i = 0; i < segs; ++i) {
 				SDFPartData p;
@@ -117,11 +125,15 @@ namespace Iberus {
 			const std::string headMatId = "SDFMaterial3";
 			const std::string wingMatId = "SDFMaterial2";
 			const std::string eyeMatId = "SDFMaterial3";
-			scene->GetOrCreateMaterial<Material>(bodyMatId);
-			scene->GetOrCreateMaterial<Material>(limbMatId);
-			scene->GetOrCreateMaterial<Material>(headMatId);
-			scene->GetOrCreateMaterial<Material>(wingMatId);
-			scene->GetOrCreateMaterial<Material>(eyeMatId);
+			{
+				auto& rm = Engine::Instance()->GetResourceManager();
+				auto* prov = &Engine::Instance()->GetEngineProvider();
+				rm.GetOrCreateResource<Material>(bodyMatId, prov);
+				rm.GetOrCreateResource<Material>(limbMatId, prov);
+				rm.GetOrCreateResource<Material>(headMatId, prov);
+				rm.GetOrCreateResource<Material>(wingMatId, prov);
+				rm.GetOrCreateResource<Material>(eyeMatId, prov);
+			}
 
 			// Body: elongated torso
 			SDFPartData body;

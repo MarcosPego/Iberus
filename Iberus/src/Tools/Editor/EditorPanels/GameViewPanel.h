@@ -9,14 +9,14 @@ namespace Iberus {
 
 	class Editor;
 
-	class SceneViewPanel {
+	class GameViewPanel {
 	public:
-		explicit SceneViewPanel(Editor& editor);
+		explicit GameViewPanel(Editor& editor);
 		void OnDraw(IGUIContext& gui);
 
 	private:
 		Editor& editor;
-		std::unique_ptr<SceneViewFBO> sceneFbo;
+		std::unique_ptr<SceneViewFBO> gameFbo;
 	};
 
 }

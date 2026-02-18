@@ -3,6 +3,7 @@
 #include "IGUIContext.h"
 #include "SceneTreePanel.h"
 #include "SceneViewPanel.h"
+#include "GameViewPanel.h"
 #include "InspectorPanel.h"
 #include "CreatureCreatorPanel.h"
 #include "FileSystemPanel.h"
@@ -11,6 +12,8 @@
 #include "EntityId.h"
 #include "MathUtils.h"
 #include "RenderCmd.h"
+#include "Buffer.h"
+#include "Matrix.h"
 
 #include <memory>
 #include <string>
@@ -20,6 +23,9 @@ namespace Iberus {
 	class Scene;
 
 	enum class EditorMode { Editor, Game };
+
+	enum class GizmoOperation { Translate, Rotate, Scale };
+	enum class GizmoMode { Local, World };
 
 	/// Editor camera - separate from scene, used to render the viewport in Edit mode. Not in scene tree, never serialized.
 	struct EditorCameraState {
@@ -50,14 +56,29 @@ namespace Iberus {
 		void SetSelectedAssetPath(const std::string& path) { selectedAssetPath = path; }
 		const std::string& GetSelectedAssetPath() const { return selectedAssetPath; }
 
-		void SetViewportFocused(bool focused) { viewportFocused = focused; }
-		bool IsViewportFocused() const { return viewportFocused; }
+		void SetSceneViewFocused(bool focused) { sceneViewFocused = focused; }
+		bool IsSceneViewFocused() const { return sceneViewFocused; }
+
+		bool IsPaused() const { return gamePaused; }
+		void SetPaused(bool paused) { gamePaused = paused; }
+
+		bool IsGameFullscreen() const { return gameFullscreen; }
+		void RequestStep() { stepRequested = true; }
+		bool ConsumeStepRequest() { bool v = stepRequested; stepRequested = false; return v; }
+
+		GizmoOperation GetGizmoOperation() const { return gizmoOperation; }
+		void SetGizmoOperation(GizmoOperation op) { gizmoOperation = op; }
+		GizmoMode GetGizmoMode() const { return gizmoMode; }
+		void SetGizmoMode(GizmoMode mode) { gizmoMode = mode; }
 
 		EditorCameraState& GetEditorCamera() { return editorCamera; }
 		const EditorCameraState& GetEditorCamera() const { return editorCamera; }
 
-		/// Returns CameraRenderCmd for editor viewport when in Edit mode, or nullopt when in Game mode.
-		std::unique_ptr<CameraRenderCmd> GetEditorCameraOverride() const;
+		/// Returns editor camera for the given aspect ratio. Used by Scene viewport.
+		std::unique_ptr<CameraRenderCmd> GetEditorCameraOverride(float aspectRatio) const;
+
+		/// Get view and projection matrices for editor camera (for picking). Returns false if not available.
+		bool GetEditorViewProjection(Math::Mat4& outView, Math::Mat4& outProj, float aspectRatio) const;
 
 	private:
 		void UpdateEditorCamera(double deltaTime);
@@ -65,6 +86,7 @@ namespace Iberus {
 		std::unique_ptr<WelcomePanel> welcomePanel;
 		std::unique_ptr<SceneTreePanel> sceneTreePanel;
 		std::unique_ptr<SceneViewPanel> sceneViewPanel;
+		std::unique_ptr<GameViewPanel> gameViewPanel;
 		std::unique_ptr<InspectorPanel> inspectorPanel;
 		std::unique_ptr<CreatureCreatorPanel> creatureCreatorPanel;
 		std::unique_ptr<FileSystemPanel> fileSystemPanel;
@@ -72,10 +94,17 @@ namespace Iberus {
 		EditorMode editorMode{ EditorMode::Editor };
 		std::string selectedAssetPath;
 		bool wasF11Down{ false };
+		bool wasPDown{ false };
 		EntityId selectedEntityId{ NullEntity };
 		EntityId copiedEntityId{ NullEntity };
-		bool viewportFocused{ false };
+		bool sceneViewFocused{ false };
 		EditorCameraState editorCamera;
+		Buffer playModeSnapshot;
+		bool gamePaused{ false };
+		bool gameFullscreen{ false };
+		bool stepRequested{ false };
+		GizmoOperation gizmoOperation{ GizmoOperation::Translate };
+		GizmoMode gizmoMode{ GizmoMode::World };
 
 		// Editor camera controller state
 		float editorCameraPitch{ 0 };

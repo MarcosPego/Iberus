@@ -110,7 +110,24 @@ namespace Iberus {
 		pendingDestroys.clear();
 	}
 
-	std::string Scene::GenerateUniqueTagId(const std::string& base) {
+		std::vector<std::string> Scene::GetBehavioursForEntity(EntityId entityId) const {
+			std::vector<std::string> types;
+			for (const auto& [typeName, list] : registeredBehaviours) {
+				for (const auto& [eid, _] : list) {
+					if (eid == entityId) {
+						types.push_back(typeName);
+						break;
+					}
+				}
+			}
+			return types;
+		}
+
+		void Scene::ClearRegisteredBehaviours() {
+			registeredBehaviours.clear();
+		}
+
+		std::string Scene::GenerateUniqueTagId(const std::string& base) {
 		std::string candidate = base;
 		int suffix = 1;
 		auto* tagStorage = world.GetStorage<TagComponent>();

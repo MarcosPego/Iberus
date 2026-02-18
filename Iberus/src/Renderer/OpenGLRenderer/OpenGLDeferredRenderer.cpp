@@ -62,7 +62,9 @@ namespace Iberus {
 		}
 
 		unsigned int blitTarget = outputFBO != 0 ? outputFBO : 0;
-		glBlitNamedFramebuffer(targetFBO->GetFBO(), blitTarget, 0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, targetFBO->GetFBO());
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, blitTarget);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

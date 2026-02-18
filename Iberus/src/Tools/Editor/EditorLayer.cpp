@@ -11,8 +11,12 @@ namespace Iberus {
 		IGUIContext* gui = app->GetGUIContext();
 		editor.OnUpdate(deltaTime, gui);
 		app->SetEditorMode(editor.GetMode() == EditorMode::Editor);
-		Engine::Instance()->SetSceneSimulationEnabled(editor.GetMode() == EditorMode::Game);
-		Engine::Instance()->SetCameraOverride(editor.GetEditorCameraOverride());
+		app->SetGameFullscreen(editor.IsGameFullscreen());
+		bool simulating = (editor.GetMode() == EditorMode::Game) && !editor.IsPaused();
+		Engine::Instance()->SetSceneSimulationEnabled(simulating);
+		if (editor.ConsumeStepRequest()) {
+			Engine::Instance()->RequestStepSimulation();
+		}
 	}
 
 }

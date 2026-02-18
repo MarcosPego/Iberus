@@ -234,6 +234,7 @@ namespace Iberus {
 
 	void CreatureCreatorPanel::OnDraw(IGUIContext& gui) {
 		if (!gui.BeginWindow("Creature Creator")) {
+			gui.EndWindow();
 			return;
 		}
 

@@ -11,6 +11,8 @@
 #include "FileSystemProvider.h"
 #include "ScriptHost.h"
 
+#include <vector>
+
 namespace Iberus {
 	class Window;
 
@@ -39,20 +41,23 @@ namespace Iberus {
 		void SetCurrentWindow(Window* window);
 		Window* GetCurrentWindow() const;
 
+		/// Single viewport mode (legacy). Prefer AddEditorView for multi-view.
 		void SetEditorRenderTarget(unsigned int fboId, int width, int height);
 		void ClearEditorRenderTarget();
 		bool HasEditorRenderTarget() const;
+
+		/// Multi-viewport: add a view to render this frame. Camera null = use scene active camera.
+		void AddEditorView(unsigned int fboId, int width, int height, std::unique_ptr<CameraRenderCmd> camera);
+
 		void OnSwitchedToGameMode();
 
 		/// Sync renderer to current effective output size (viewport in Editor, window in Game).
 		void SyncRendererToOutput();
 
-		/// When set, render uses this camera instead of scene's active camera. Target and camera are set by the orchestration layer.
-		void SetCameraOverride(std::unique_ptr<CameraRenderCmd> cmd);
-		CameraRenderCmd* GetCameraOverride() { return cameraOverride.get(); }
-
 		void SetSceneSimulationEnabled(bool enabled);
 		bool IsSceneSimulationEnabled() const { return sceneSimulationEnabled; }
+		void RequestStepSimulation();
+		bool ConsumeStepRequest();
 
 		/// Script base dir: project root when a project is open, else exe dir. Used to resolve script assembly paths.
 		void SetScriptBaseDir(const std::string& dir) { scriptBaseDir = dir; }
@@ -87,8 +92,15 @@ namespace Iberus {
 		int pendingResizeWidth{ 0 };
 		int pendingResizeHeight{ 0 };
 
-		std::unique_ptr<CameraRenderCmd> cameraOverride;
+		struct EditorView {
+			unsigned int fbo{ 0 };
+			int width{ 0 };
+			int height{ 0 };
+			std::unique_ptr<CameraRenderCmd> camera;
+		};
+		std::vector<EditorView> editorViews;
 		bool sceneSimulationEnabled{ false };
+		bool stepSimulationRequested{ false };
 		std::string scriptBaseDir;
 	};
 }

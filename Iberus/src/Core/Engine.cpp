@@ -89,27 +89,60 @@ namespace Iberus {
 		double deltaTime = std::chrono::duration<double>(now - lastFrameTime).count();
 		lastFrameTime = now;
 
-		auto frame = Frame();
 		auto* scene = sceneManager->GetActiveScene();
 		if (scene) {
-			if (sceneSimulationEnabled) {
+			bool shouldUpdate = sceneSimulationEnabled || ConsumeStepRequest();
+			if (shouldUpdate) {
 				scene->Update(deltaTime);
 			}
-			scene->PushDraw(frame, GetCameraOverride());
-			scene->PushDrawSDF(frame);
 		}
 
-		int renderWidth = currentWindow->GetWidth();
-		int renderHeight = currentWindow->GetHeight();
-		unsigned int outputFBO = 0;
-		if (editorRenderTargetFBO != 0 && editorRenderTargetWidth > 0 && editorRenderTargetHeight > 0) {
-			renderWidth = editorRenderTargetWidth;
-			renderHeight = editorRenderTargetHeight;
-			outputFBO = editorRenderTargetFBO;
+		const int minViewSize = 8;
+		if (!editorViews.empty()) {
+			for (auto& view : editorViews) {
+				if (view.fbo == 0 || view.width < minViewSize || view.height < minViewSize) {
+					continue;
+				}
+				// Clear the view FBO to avoid leftover scene content when resizing or when ImGui draws over it
+				glBindFramebuffer(GL_FRAMEBUFFER, view.fbo);
+				glViewport(0, 0, view.width, view.height);
+				glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+				editorRenderTargetFBO = view.fbo;
+				editorRenderTargetWidth = view.width;
+				editorRenderTargetHeight = view.height;
+				Frame frame;
+				frame.renderWidth = view.width;
+				frame.renderHeight = view.height;
+				if (scene) {
+					scene->PushDraw(frame, view.camera.get());
+					scene->PushDrawSDF(frame);
+				}
+				renderer->RenderFrame(frame, view.fbo, view.width, view.height);
+			}
+			editorViews.clear();
+			editorRenderTargetFBO = 0;
+			editorRenderTargetWidth = 0;
+			editorRenderTargetHeight = 0;
+		} else {
+			Frame frame;
+			if (scene) {
+				scene->PushDraw(frame, nullptr);
+				scene->PushDrawSDF(frame);
+			}
+			int renderWidth = currentWindow ? currentWindow->GetWidth() : 0;
+			int renderHeight = currentWindow ? currentWindow->GetHeight() : 0;
+			unsigned int outputFBO = 0;
+			if (editorRenderTargetFBO != 0 && editorRenderTargetWidth > 0 && editorRenderTargetHeight > 0) {
+				renderWidth = editorRenderTargetWidth;
+				renderHeight = editorRenderTargetHeight;
+				outputFBO = editorRenderTargetFBO;
+			}
+			frame.renderWidth = renderWidth;
+			frame.renderHeight = renderHeight;
+			renderer->RenderFrame(frame, outputFBO, renderWidth, renderHeight);
 		}
-		frame.renderWidth = renderWidth;
-		frame.renderHeight = renderHeight;
-		renderer->RenderFrame(frame, outputFBO, renderWidth, renderHeight);
 		inputManager->OnFrameEnd();
 	}
 
@@ -131,7 +164,33 @@ namespace Iberus {
 	}
 
 	bool Engine::HasEditorRenderTarget() const {
+		if (!editorViews.empty()) {
+			return true;
+		}
 		return editorRenderTargetFBO != 0 && editorRenderTargetWidth > 0 && editorRenderTargetHeight > 0;
+	}
+
+	void Engine::AddEditorView(unsigned int fboId, int width, int height, std::unique_ptr<CameraRenderCmd> camera) {
+		const int minSize = 8;
+		if (fboId == 0 || width < minSize || height < minSize) {
+			return;
+		}
+		EditorView view;
+		view.fbo = fboId;
+		view.width = width;
+		view.height = height;
+		view.camera = std::move(camera);
+		editorViews.push_back(std::move(view));
+	}
+
+	void Engine::RequestStepSimulation() {
+		stepSimulationRequested = true;
+	}
+
+	bool Engine::ConsumeStepRequest() {
+		bool v = stepSimulationRequested;
+		stepSimulationRequested = false;
+		return v;
 	}
 
 	void Engine::SetSceneSimulationEnabled(bool enabled) {
@@ -146,11 +205,6 @@ namespace Iberus {
 	}
 
 	void Engine::OnSwitchedToGameMode() {
-		if (scriptHost && scriptHost->IsInitialized()) {
-			scriptHost->UnloadAll();
-			BehaviourSystem::ClearScriptHandles();
-		}
-		ClearEditorRenderTarget();
 		SyncRendererToOutput();
 	}
 
@@ -160,10 +214,6 @@ namespace Iberus {
 		if (renderer && w > 0 && h > 0) {
 			renderer->Resize(w, h);
 		}
-	}
-
-	void Engine::SetCameraOverride(std::unique_ptr<CameraRenderCmd> cmd) {
-		cameraOverride = std::move(cmd);
 	}
 
 	int Engine::GetEffectiveRenderWidth() const {

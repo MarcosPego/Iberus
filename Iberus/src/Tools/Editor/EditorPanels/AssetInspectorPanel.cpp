@@ -76,6 +76,7 @@ namespace Iberus {
 
 	void AssetInspectorPanel::OnDraw(IGUIContext& gui) {
 		if (!gui.BeginWindow("Asset Inspector")) {
+			gui.EndWindow();
 			return;
 		}
 

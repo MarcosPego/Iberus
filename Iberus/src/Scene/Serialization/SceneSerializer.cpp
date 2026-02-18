@@ -7,6 +7,7 @@
 #include "Engine.h"
 #include "Material.h"
 #include "Mesh.h"
+#include "BehaviourRegistry.h"
 
 #include <queue>
 #include <unordered_set>
@@ -244,7 +245,7 @@ namespace Iberus {
 
 	} // namespace
 
-	Buffer SceneSerializer::Serialize(const World& world, EntityId sceneRootId, EntityId activeCameraId, EntityId rootId) {
+	Buffer SceneSerializer::Serialize(const World& world, EntityId sceneRootId, EntityId activeCameraId, EntityId rootId, const Scene* sceneForBehaviours) {
 		EntityId serializeRoot = (rootId != NullEntity) ? rootId : sceneRootId;
 		if (!world.IsAlive(serializeRoot)) {
 			return Buffer();
@@ -285,6 +286,17 @@ namespace Iberus {
 			JsonValue entityJson = JsonValue::Object();
 			SerializeEntity(world, entityId, tempId, parentTempId, childrenTempIds, entityJson);
 
+			if (sceneForBehaviours) {
+				auto behaviours = sceneForBehaviours->GetBehavioursForEntity(entityId);
+				if (!behaviours.empty()) {
+					JsonValue arr = JsonValue::Array();
+					for (const auto& t : behaviours) {
+						arr.Push(JsonValue::String(t));
+					}
+					entityJson.Set("behaviours", arr);
+				}
+			}
+
 			entitiesArr.Push(entityJson);
 		}
 		root.Set("entities", entitiesArr);
@@ -292,7 +304,11 @@ namespace Iberus {
 		return root.ToBuffer(true);
 	}
 
-	EntityId SceneSerializer::Deserialize(World& world, const Buffer& buffer, EntityId parentId, EntityId& outActiveCameraId) {
+	Buffer SceneSerializer::Serialize(const Scene& scene, EntityId rootId) {
+		return Serialize(scene.GetWorld(), scene.GetSceneRootId(), scene.GetActiveCameraId(), rootId, &scene);
+	}
+
+	EntityId SceneSerializer::Deserialize(World& world, const Buffer& buffer, EntityId parentId, EntityId& outActiveCameraId, Scene* sceneForBehaviours) {
 		JsonValue root = JsonValue::Parse(buffer);
 		if (!root.IsValid() || !root.IsObject()) {
 			outActiveCameraId = NullEntity;
@@ -474,6 +490,19 @@ namespace Iberus {
 				comp->NeedsRegenerate = true;
 				}
 			}
+
+			if (sceneForBehaviours && entityJson.Contains("behaviours")) {
+				JsonValue behavioursArr = entityJson["behaviours"];
+				if (behavioursArr.IsArray()) {
+					for (size_t bi = 0; bi < behavioursArr.Size(); ++bi) {
+						std::string typeName = behavioursArr[bi].AsString();
+						auto behaviour = BehaviourRegistry::Create(typeName);
+						if (behaviour) {
+							sceneForBehaviours->PushBehaviour(entityId, std::move(behaviour));
+						}
+					}
+				}
+			}
 		}
 
 		for (size_t i = 0; i < entitiesArr.Size(); ++i) {
@@ -523,7 +552,7 @@ namespace Iberus {
 	}
 
 	bool SceneSerializer::SaveToFile(const Scene& scene, const std::string& path) {
-		Buffer buf = Serialize(scene.GetWorld(), scene.GetSceneRootId(), scene.GetActiveCameraId(), NullEntity);
+		Buffer buf = Serialize(scene, NullEntity);
 		if (buf.Invalid()) {
 			return false;
 		}
@@ -543,10 +572,34 @@ namespace Iberus {
 
 		EntityId oldRoot = scene.GetSceneRootId();
 		scene.DestroyEntityWithDescendants(oldRoot);
+		scene.ClearRegisteredBehaviours();
 
 		World& world = scene.GetWorld();
 		EntityId newActiveCamera = NullEntity;
-		EntityId newRoot = Deserialize(world, buf, NullEntity, newActiveCamera);
+		EntityId newRoot = Deserialize(world, buf, NullEntity, newActiveCamera, &scene);
+
+		if (newRoot == NullEntity) {
+			return false;
+		}
+
+		PreloadSceneResources(world);
+
+		scene.SetSceneRootId(newRoot);
+		scene.SetActiveCameraId(newActiveCamera);
+		return true;
+	}
+
+	bool SceneSerializer::RestoreFromBuffer(Scene& scene, const Buffer& buffer) {
+		if (buffer.Invalid()) {
+			return false;
+		}
+		EntityId oldRoot = scene.GetSceneRootId();
+		scene.DestroyEntityWithDescendants(oldRoot);
+		scene.ClearRegisteredBehaviours();
+
+		World& world = scene.GetWorld();
+		EntityId newActiveCamera = NullEntity;
+		EntityId newRoot = Deserialize(world, buffer, NullEntity, newActiveCamera, &scene);
 
 		if (newRoot == NullEntity) {
 			return false;

@@ -7,6 +7,9 @@
 #include "EntityId.h"
 #include "Components.h"
 
+#include <string>
+#include <vector>
+
 using namespace Math;
 
 namespace Iberus {
@@ -66,6 +69,9 @@ namespace Iberus {
 		/// Generate a unique tag id from base (e.g. "Mesh" -> "Mesh_1" if "Mesh" exists).
 		std::string GenerateUniqueTagId(const std::string& base);
 
+		/// Get behaviour type names for an entity (for serialization).
+		std::vector<std::string> GetBehavioursForEntity(EntityId entityId) const;
+
 	public:
 		template<typename T>
 		bool PushBehaviour(EntityId entityId, std::unique_ptr<T> behaviour) {
@@ -98,6 +104,9 @@ namespace Iberus {
 
 		std::map<std::string, std::vector<std::pair<EntityId, std::unique_ptr<Behaviour>>>>& GetRegisteredBehaviours() { return registeredBehaviours; }
 		const std::map<std::string, std::vector<std::pair<EntityId, std::unique_ptr<Behaviour>>>>& GetRegisteredBehaviours() const { return registeredBehaviours; }
+
+		/// Clear all registered behaviours (e.g. before restore from snapshot).
+		void ClearRegisteredBehaviours();
 
 	private:
 		std::string ID;

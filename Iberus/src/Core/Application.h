@@ -34,6 +34,9 @@ namespace Iberus {
 		bool IsEditorMode() const { return editorMode; }
 		void SetEditorMode(bool value) { editorMode = value; }
 
+		bool IsGameFullscreen() const { return gameFullscreen; }
+		void SetGameFullscreen(bool value) { gameFullscreen = value; }
+
 		bool ShouldShowProjectScreen() const { return showProjectScreen; }
 		void DismissProjectScreen() { showProjectScreen = false; }
 		void RequestProjectScreen() { showProjectScreen = true; }
@@ -62,6 +65,7 @@ namespace Iberus {
 
 		bool running{ true };
 		bool editorMode{ true };
+		bool gameFullscreen{ false };
 		bool showProjectScreen{ true };
 		std::unique_ptr<Project> project;
 		std::string currentScenePath;

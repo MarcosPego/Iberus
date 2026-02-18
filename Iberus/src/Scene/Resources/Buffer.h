@@ -31,7 +31,7 @@ namespace Iberus {
 			size = inboundSize;
 		}
 
-		void CopyDataFrom(const TemplatedBuffer<T> inboundBuffer) {
+		void CopyDataFrom(const TemplatedBuffer<T>& inboundBuffer) {
 			data = std::make_unique<T[]>(inboundBuffer.GetSize());
 			size = inboundBuffer.GetSize();
 			memcpy(data.get(), inboundBuffer.GetData(), inboundBuffer.GetSize());

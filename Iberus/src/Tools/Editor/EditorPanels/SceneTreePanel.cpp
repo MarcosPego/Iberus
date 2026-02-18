@@ -182,7 +182,8 @@ namespace Iberus {
 	}
 
 	void SceneTreePanel::OnDraw(IGUIContext& gui) {
-		if (!gui.BeginWindow("Scene")) {
+		if (!gui.BeginWindow("Scene Tree")) {
+			gui.EndWindow();
 			return;
 		}
 		auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene();

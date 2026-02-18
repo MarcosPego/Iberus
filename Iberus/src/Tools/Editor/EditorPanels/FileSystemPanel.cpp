@@ -251,6 +251,7 @@ namespace Iberus {
 
 	void FileSystemPanel::OnDraw(IGUIContext& gui) {
 		if (!gui.BeginWindow("Project")) {
+			gui.EndWindow();
 			return;
 		}
 

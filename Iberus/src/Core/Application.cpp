@@ -96,7 +96,10 @@ namespace Iberus {
 				layerStack.ForEachLayerOverlaysFirst([deltaTime](Layer* layer) {
 					layer->OnUpdate(deltaTime);
 				});
-				guiContext->EndFrame(editorMode, engine->HasEditorRenderTarget());
+				bool renderGui = !gameFullscreen;
+				// Always clear before ImGui so we don't see leftovers from previous frame
+				bool clearBackdrop = renderGui || gameFullscreen;
+				guiContext->EndFrame(renderGui, clearBackdrop);
 			}
 
 			Update();

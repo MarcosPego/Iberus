@@ -456,6 +456,9 @@
     <ClInclude Include="src\Maths\Quaternions.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
+    <ClInclude Include="src\Maths\Ray.h">
+      <Filter>src\Maths</Filter>
+    </ClInclude>
     <ClInclude Include="src\Maths\Vector.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
@@ -544,6 +547,9 @@
       <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Behaviour.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\BehaviourRegistry.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\ECS\BehaviourSystem.h">
@@ -657,6 +663,9 @@
     <ClInclude Include="src\Tools\Editor\EditorPanels\FileSystemPanel.h">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\GameViewPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
     <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClInclude>
@@ -674,6 +683,9 @@
     </ClInclude>
     <ClInclude Include="src\Tools\Editor\EditorPanels\WelcomePanel.h">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPicking.h">
+      <Filter>src\Tools\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Tools\Editor\SceneViewerCameraBehaviour.h">
       <Filter>src\Tools\Editor</Filter>
@@ -762,6 +774,9 @@
       <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Quaternions.cpp">
+      <Filter>src\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Maths\Ray.cpp">
       <Filter>src\Maths</Filter>
     </ClCompile>
     <ClCompile Include="src\Maths\Vec2.cpp">
@@ -855,6 +870,9 @@
       <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Behaviour.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\BehaviourRegistry.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\ECS\BehaviourSystem.cpp">
@@ -956,6 +974,9 @@
     <ClCompile Include="src\Tools\Editor\EditorPanels\FileSystemPanel.cpp">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\GameViewPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClCompile>
@@ -973,6 +994,9 @@
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorPanels\WelcomePanel.cpp">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPicking.cpp">
+      <Filter>src\Tools\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\SceneViewerCameraBehaviour.cpp">
       <Filter>src\Tools\Editor</Filter>

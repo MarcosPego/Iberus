@@ -291,6 +291,7 @@ namespace Iberus {
 
 	void InspectorPanel::OnDraw(IGUIContext& gui) {
 		if (!gui.BeginWindow("Inspector")) {
+			gui.EndWindow();
 			return;
 		}
 		EntityId entityId = editor.GetSelectedEntityId();

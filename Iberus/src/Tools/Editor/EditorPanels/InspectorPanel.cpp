@@ -7,14 +7,129 @@
 #include "Scene.h"
 #include "Components.h"
 #include "MathUtils.h"
+#include "FileSystem.h"
+#include "MaterialSerializer.h"
+#include "ResourceManager.h"
+#include "FileSystemProvider.h"
+#include "Mesh.h"
+#include "Material.h"
 
 #include "imgui.h"
+
+#include <filesystem>
 
 using namespace Math;
 
 namespace Iberus {
 
 	InspectorPanel::InspectorPanel(Editor& editor) : editor(editor) {
+	}
+
+	namespace {
+		std::string ToForwardSlash(const std::string& s) {
+			std::string r = s;
+			for (char& c : r) {
+				if (c == '\\') {
+					c = '/';
+				}
+			}
+			return r;
+		}
+
+		std::string GetPathRelativeToWorkingDir(const std::string& fullPath) {
+			std::string work = ToForwardSlash(FileSystem::GetWorkingDir());
+			std::string full = ToForwardSlash(fullPath);
+			if (full.size() >= work.size() && full.compare(0, work.size(), work) == 0) {
+				std::string rel = full.substr(work.size());
+				if (!rel.empty() && rel[0] == '/') {
+					rel = rel.substr(1);
+				}
+				return rel;
+			}
+			return full;
+		}
+
+		bool TryResolveMeshIdFromPath(const std::string& fullPath, std::string& outMeshId) {
+			std::string ext = std::filesystem::path(fullPath).extension().string();
+			if (ext == ".obj" || ext == ".mesh") {
+				outMeshId = GetPathRelativeToWorkingDir(fullPath);
+				if (outMeshId.empty()) {
+					return false;
+				}
+				auto* engine = Engine::Instance();
+				Mesh* mesh = engine->GetResourceManager().GetOrCreateResource<Mesh>(outMeshId, &engine->GetEngineProvider());
+				return mesh != nullptr;
+			}
+			return false;
+		}
+
+		bool TryResolveMaterialIdFromPath(const std::string& fullPath, std::string& outMaterialId) {
+			std::string ext = std::filesystem::path(fullPath).extension().string();
+			if (ext != ".mat") {
+				return false;
+			}
+			std::string assetsPath = ToForwardSlash(FileSystem::GetAssetsPath());
+			std::string full = ToForwardSlash(fullPath);
+			std::string materialsPrefix = assetsPath + "/Materials/";
+			if (full.size() >= materialsPrefix.size() && full.compare(0, materialsPrefix.size(), materialsPrefix) == 0) {
+				std::string rel = full.substr(materialsPrefix.size());
+				size_t sep = rel.find_last_of('/');
+				if (sep != std::string::npos) {
+					rel = rel.substr(sep + 1);
+				}
+				outMaterialId = std::filesystem::path(rel).stem().string();
+				return !outMaterialId.empty();
+			}
+			std::string relToAssets = full;
+			if (full.size() >= assetsPath.size() && full.compare(0, assetsPath.size(), assetsPath) == 0) {
+				relToAssets = full.substr(assetsPath.size());
+				if (!relToAssets.empty() && relToAssets[0] == '/') {
+					relToAssets = relToAssets.substr(1);
+				}
+			}
+			std::string stem = std::filesystem::path(relToAssets).stem().string();
+			std::string dir = std::filesystem::path(relToAssets).parent_path().string();
+			outMaterialId = dir.empty() ? stem : (ToForwardSlash(dir) + "/" + stem);
+			auto* engine = Engine::Instance();
+			ResourceManager& rm = engine->GetResourceManager();
+			IProvider* provider = &engine->GetEngineProvider();
+			auto mat = MaterialSerializer::LoadFromFile(fullPath, rm, provider);
+			if (!mat) {
+				return false;
+			}
+			rm.RegisterResource<Material>(outMaterialId, std::move(mat));
+			return true;
+		}
+
+		bool TryAcceptAssetDrop(const char* slotId, bool wantMesh, bool wantMaterial, std::string* outMeshId, std::string* outMaterialId) {
+			if (!ImGui::BeginDragDropTarget()) {
+				return false;
+			}
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("IBERUS_ASSET_PATH");
+			ImGui::EndDragDropTarget();
+			if (!payload || !payload->Data) {
+				return false;
+			}
+			const char* pathStr = static_cast<const char*>(payload->Data);
+			std::string path(pathStr);
+			if (path.empty()) {
+				return false;
+			}
+			std::string meshId, materialId;
+			if (wantMesh && TryResolveMeshIdFromPath(path, meshId)) {
+				if (outMeshId) {
+					*outMeshId = meshId;
+				}
+				return true;
+			}
+			if (wantMaterial && TryResolveMaterialIdFromPath(path, materialId)) {
+				if (outMaterialId) {
+					*outMaterialId = materialId;
+				}
+				return true;
+			}
+			return false;
+		}
 	}
 
 	static void DrawTransformComponent(World& world, EntityId entityId) {
@@ -82,10 +197,19 @@ namespace Iberus {
 			if (ImGui::InputText("Mesh##MeshRendererMesh", meshBuf, sizeof(meshBuf))) {
 				comp->MeshId = meshBuf;
 			}
+			std::string dropMeshId;
+			if (TryAcceptAssetDrop("##MeshRendererMeshDrop", true, false, &dropMeshId, nullptr)) {
+				comp->MeshId = dropMeshId;
+			}
+
 			char matBuf[256];
 			snprintf(matBuf, sizeof(matBuf), "%s", comp->MaterialId.c_str());
 			if (ImGui::InputText("Material##MeshRendererMaterial", matBuf, sizeof(matBuf))) {
 				comp->MaterialId = matBuf;
+			}
+			std::string dropMatId;
+			if (TryAcceptAssetDrop("##MeshRendererMaterialDrop", false, true, nullptr, &dropMatId)) {
+				comp->MaterialId = dropMatId;
 			}
 		}
 	}
@@ -160,6 +284,10 @@ namespace Iberus {
 					snprintf(matBuf, sizeof(matBuf), "%s", part.MaterialId.c_str());
 					if (ImGui::InputText("Material Override##SDFPartMaterial", matBuf, sizeof(matBuf))) {
 						part.MaterialId = matBuf;
+					}
+					std::string dropPartMatId;
+					if (TryAcceptAssetDrop("##SDFPartMaterialDrop", false, true, nullptr, &dropPartMatId)) {
+						part.MaterialId = dropPartMatId;
 					}
 					ImGui::TreePop();
 				}
@@ -277,10 +405,20 @@ namespace Iberus {
 				comp->MeshId = meshBuf;
 				setDirty();
 			}
+			std::string dropTerrainMeshId;
+			if (TryAcceptAssetDrop("##TerrainMeshDrop", true, false, &dropTerrainMeshId, nullptr)) {
+				comp->MeshId = dropTerrainMeshId;
+				setDirty();
+			}
 			char matBuf[256];
 			snprintf(matBuf, sizeof(matBuf), "%s", comp->MaterialId.c_str());
 			if (ImGui::InputText("Material Id##TerrainMaterialId", matBuf, sizeof(matBuf))) {
 				comp->MaterialId = matBuf;
+				setDirty();
+			}
+			std::string dropTerrainMatId;
+			if (TryAcceptAssetDrop("##TerrainMaterialDrop", false, true, nullptr, &dropTerrainMatId)) {
+				comp->MaterialId = dropTerrainMatId;
 				setDirty();
 			}
 			if (ImGui::Button("Regenerate##TerrainRegenerate")) {

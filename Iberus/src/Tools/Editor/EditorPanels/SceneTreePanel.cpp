@@ -6,10 +6,44 @@
 #include "SceneManager.h"
 #include "World.h"
 #include "Components.h"
+#include "PrefabSerializer.h"
+#include "PrefabAsset.h"
+#include "FileSystem.h"
+#include "ResourceManager.h"
+#include "FileSystemProvider.h"
+#include "Mesh.h"
+#include "Material.h"
 
 #include "imgui.h"
 
+#include <filesystem>
+
 namespace Iberus {
+
+	namespace {
+		std::string ToForwardSlash(const std::string& s) {
+			std::string r = s;
+			for (char& c : r) {
+				if (c == '\\') {
+					c = '/';
+				}
+			}
+			return r;
+		}
+
+		std::string GetPathRelativeToWorkingDir(const std::string& fullPath) {
+			std::string work = ToForwardSlash(FileSystem::GetWorkingDir());
+			std::string full = ToForwardSlash(fullPath);
+			if (full.size() >= work.size() && full.compare(0, work.size(), work) == 0) {
+				std::string rel = full.substr(work.size());
+				if (!rel.empty() && rel[0] == '/') {
+					rel = rel.substr(1);
+				}
+				return rel;
+			}
+			return full;
+		}
+	}
 
 	static void DrawEntityContextMenu(Scene* scene, EntityId entityId, EntityId parentId, Editor& editor) {
 		if (!scene || entityId == NullEntity || !scene->GetWorld().IsAlive(entityId)) {
@@ -108,6 +142,81 @@ namespace Iberus {
 		}
 	}
 
+	static bool IsDescendantOf(World& world, EntityId entityId, EntityId potentialAncestor) {
+		if (entityId == NullEntity || potentialAncestor == NullEntity) {
+			return false;
+		}
+		EntityId current = entityId;
+		while (current != NullEntity) {
+			auto* hier = world.GetComponent<HierarchyComponent>(current);
+			if (!hier) {
+				break;
+			}
+			current = hier->ParentId;
+			if (current == potentialAncestor) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	static void ReparentEntity(Scene* scene, EntityId entityId, EntityId newParentId, Editor& editor) {
+		if (!scene || entityId == NullEntity || newParentId == NullEntity) {
+			return;
+		}
+		World& world = scene->GetWorld();
+		if (!world.IsAlive(entityId) || !world.IsAlive(newParentId)) {
+			return;
+		}
+		if (entityId == newParentId || IsDescendantOf(world, newParentId, entityId)) {
+			return;
+		}
+		auto* hier = world.GetComponent<HierarchyComponent>(entityId);
+		EntityId oldParentId = hier ? hier->ParentId : NullEntity;
+		if (oldParentId == newParentId) {
+			return;
+		}
+		if (oldParentId != NullEntity) {
+			scene->RemoveChildFromParent(oldParentId, entityId);
+		}
+		auto* tag = world.GetComponent<TagComponent>(entityId);
+		scene->AddChildECS(newParentId, entityId, tag ? tag->Id : "Entity");
+	}
+
+	static void HandleAssetDropOnSceneTree(Scene* scene, EntityId parentId, const std::string& fullPath, Editor& editor) {
+		if (!scene || parentId == NullEntity || !scene->GetWorld().IsAlive(parentId)) {
+			return;
+		}
+		std::string ext = std::filesystem::path(fullPath).extension().string();
+		if (ext == ".prefab") {
+			PrefabAsset prefab = PrefabSerializer::LoadFromFile(fullPath);
+			if (prefab.IsValid()) {
+				EntityId instanced = PrefabSerializer::Instantiate(prefab, scene->GetWorld(), parentId);
+				if (instanced != NullEntity) {
+					auto* tag = scene->GetWorld().GetComponent<TagComponent>(instanced);
+					editor.SetSelectedEntity(instanced);
+				}
+			}
+		} else if (ext == ".obj" || ext == ".mesh") {
+			std::string meshId = GetPathRelativeToWorkingDir(fullPath);
+			if (!meshId.empty()) {
+				auto* engine = Engine::Instance();
+				Mesh* mesh = engine->GetResourceManager().GetOrCreateResource<Mesh>(meshId, &engine->GetEngineProvider());
+				if (mesh) {
+					std::string tagId = scene->GenerateUniqueTagId("Mesh");
+					EntityId newId = scene->CreateEntityECS(tagId);
+					auto* comp = scene->AddComponent<MeshRendererComponent>(newId);
+					if (comp) {
+						comp->MeshId = meshId;
+						comp->MaterialId = "SDFMaterial1";
+					}
+					scene->AddChildECS(parentId, newId, tagId);
+					editor.SetSelectedEntity(newId);
+				}
+			}
+		}
+	}
+
 	static void DrawEntityTree(Scene* scene, World& world, EntityId entityId, EntityId parentId, Editor& editor) {
 		if (entityId == NullEntity || !world.IsAlive(entityId)) {
 			return;
@@ -128,6 +237,27 @@ namespace Iberus {
 		if (ImGui::BeginPopupContextItem()) {
 			DrawEntityContextMenu(scene, entityId, parentId, editor);
 			ImGui::EndPopup();
+		}
+		if (ImGui::BeginDragDropTarget()) {
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("IBERUS_ASSET_PATH");
+			if (payload && payload->Data) {
+				std::string path(static_cast<const char*>(payload->Data));
+				HandleAssetDropOnSceneTree(scene, entityId, path, editor);
+			}
+			payload = ImGui::AcceptDragDropPayload("IBERUS_ENTITY");
+			if (payload && payload->Data && payload->DataSize >= sizeof(EntityId)) {
+				EntityId draggedId = *static_cast<const EntityId*>(payload->Data);
+				EntityId rootId = scene->GetSceneRootId();
+				if (draggedId != NullEntity && scene->GetWorld().IsAlive(draggedId) && draggedId != rootId) {
+					ReparentEntity(scene, draggedId, entityId, editor);
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+			ImGui::SetDragDropPayload("IBERUS_ENTITY", &entityId, sizeof(EntityId));
+			ImGui::TextUnformatted(name);
+			ImGui::EndDragDropSource();
 		}
 		if (opened) {
 			auto* hierarchy = world.GetComponent<HierarchyComponent>(entityId);
@@ -196,6 +326,22 @@ namespace Iberus {
 					for (EntityId childId : hierarchy->ChildrenIds) {
 						DrawEntityTree(scene, scene->GetWorld(), childId, rootId, editor);
 					}
+				}
+				ImGui::Dummy(ImVec2(-1, ImGui::GetContentRegionAvail().y));
+				if (ImGui::BeginDragDropTarget()) {
+					const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("IBERUS_ASSET_PATH");
+					if (payload && payload->Data) {
+						std::string path(static_cast<const char*>(payload->Data));
+						HandleAssetDropOnSceneTree(scene, rootId, path, editor);
+					}
+					payload = ImGui::AcceptDragDropPayload("IBERUS_ENTITY");
+					if (payload && payload->Data && payload->DataSize >= sizeof(EntityId)) {
+						EntityId draggedId = *static_cast<const EntityId*>(payload->Data);
+						if (draggedId != NullEntity && scene->GetWorld().IsAlive(draggedId) && draggedId != rootId) {
+							ReparentEntity(scene, draggedId, rootId, editor);
+						}
+					}
+					ImGui::EndDragDropTarget();
 				}
 				if (ImGui::BeginPopupContextWindow("SceneTreeContext", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems)) {
 					DrawEmptyContextMenu(scene, editor);

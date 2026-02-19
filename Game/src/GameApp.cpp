@@ -17,10 +17,6 @@ namespace {
 		}
 		Iberus::EntityId cameraId = scene->GetActiveCameraId();
 		if (cameraId != Iberus::NullEntity) {
-			if (auto* transform = scene->GetComponent<Iberus::TransformComponent>(cameraId)) {
-				transform->Position = Math::Vec3(0, 0, -5);
-				transform->Rotation = Math::Vec3(0, 180, 0);
-			}
 			scene->PushBehaviour(cameraId, new Iberus::SceneViewerCameraBehaviour());
 		}
 	}

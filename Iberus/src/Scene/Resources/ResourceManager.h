@@ -94,6 +94,17 @@ namespace Iberus {
 			return dynamic_cast<Material*>(ptr);
 		}
 
+		/// Register an already-created resource (e.g. material loaded from arbitrary path via MaterialSerializer).
+		template<typename T>
+		T* RegisterResource(const std::string& id, std::unique_ptr<T> resource) {
+			if (!resource) {
+				return nullptr;
+			}
+			T* ptr = resource.get();
+			resources[id] = std::move(resource);
+			return dynamic_cast<T*>(ptr);
+		}
+
 	private:
 
 		template<typename T = Resource, typename... Args>

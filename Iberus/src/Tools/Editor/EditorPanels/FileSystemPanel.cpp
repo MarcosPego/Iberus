@@ -182,7 +182,12 @@ namespace Iberus {
 						editor.SetSelectedAssetPath(fullPath);
 					}
 				}
-						if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
+				if (!e.isDirectory && ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+					ImGui::SetDragDropPayload("IBERUS_ASSET_PATH", fullPath.c_str(), fullPath.size() + 1);
+					ImGui::TextUnformatted(e.name.c_str());
+					ImGui::EndDragDropSource();
+				}
+				if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 					if (e.isDirectory) {
 						currentPath = fullPath;
 						contentDirty = true;
@@ -230,6 +235,11 @@ namespace Iberus {
 					} else {
 						editor.SetSelectedAssetPath(fullPath);
 					}
+				}
+				if (!e.isDirectory && ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+					ImGui::SetDragDropPayload("IBERUS_ASSET_PATH", fullPath.c_str(), fullPath.size() + 1);
+					ImGui::TextUnformatted(e.name.c_str());
+					ImGui::EndDragDropSource();
 				}
 				if (ImGui::BeginPopupContextItem()) {
 					if (ImGui::MenuItem("Select##SelectAssetList")) {

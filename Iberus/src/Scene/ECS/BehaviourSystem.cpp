@@ -30,6 +30,17 @@ namespace Iberus {
 		scriptHandles.clear();
 	}
 
+	void BehaviourSystem::NotifyEntityChanged(World& world, EntityId entityId) {
+		auto* scriptHost = &Engine::Instance()->GetScriptHost();
+		if (!scriptHost->IsInitialized()) {
+			return;
+		}
+		auto it = scriptHandles.find(entityId);
+		if (it != scriptHandles.end() && it->second.handle && world.IsAlive(entityId)) {
+			scriptHost->CallOnEntityChanged(it->second.handle, static_cast<uint64_t>(entityId), &world);
+		}
+	}
+
 	void BehaviourSystem::Update(World& world, Scene& scene, double deltaTime) {
 		for (auto& [type, list] : scene.GetRegisteredBehaviours()) {
 			for (auto& [entityId, behaviour] : list) {

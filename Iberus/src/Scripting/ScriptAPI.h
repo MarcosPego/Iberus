@@ -49,8 +49,12 @@ IB_SCRIPT_API int Iberus_Input_IsKeyPressed(int keyCode);
 /// SDF component access
 IB_SCRIPT_API int Iberus_World_HasComponent_SDF(void* worldPtr, uint64_t entityId);
 IB_SCRIPT_API int Iberus_World_GetSDFPartCount(void* worldPtr, uint64_t entityId);
+IB_SCRIPT_API int Iberus_World_GetSDFPartType(void* worldPtr, uint64_t entityId, int partIndex);
 IB_SCRIPT_API int Iberus_World_GetSDFPartPosition(void* worldPtr, uint64_t entityId, int partIndex, Iberus_Vec3* outPos);
 IB_SCRIPT_API void Iberus_World_SetSDFPartPosition(void* worldPtr, uint64_t entityId, int partIndex, const Iberus_Vec3* pos);
+IB_SCRIPT_API int Iberus_World_GetSDFPartEndpoint(void* worldPtr, uint64_t entityId, int partIndex, Iberus_Vec3* outEndpoint);
+IB_SCRIPT_API void Iberus_World_SetSDFPartEndpoint(void* worldPtr, uint64_t entityId, int partIndex, const Iberus_Vec3* endpoint);
+IB_SCRIPT_API float Iberus_World_GetSDFPartRadius(void* worldPtr, uint64_t entityId, int partIndex);
 
 /// Debug: log message from C# scripts (shows in engine console/logger).
 IB_SCRIPT_API void Iberus_Debug_Log(const char* message);

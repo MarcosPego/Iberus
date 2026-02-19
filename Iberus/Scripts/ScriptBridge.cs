@@ -1,12 +1,15 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Loader;
 
 namespace IberusScripts;
 
 /// <summary>
 /// Bridge between native host and script instances. Methods are called via P/Invoke
 /// from hostfxr load_assembly_and_get_function_pointer with UNMANAGEDCALLERSONLY_METHOD.
+/// Uses a collectible AssemblyLoadContext for script assemblies so they can be unloaded
+/// and reloaded when the DLL is rebuilt.
 /// </summary>
 public static class ScriptBridge
 {
@@ -14,6 +17,33 @@ public static class ScriptBridge
     private static IntPtr _nextHandle = (IntPtr)1;
     private static string? _scriptAssemblyDir;
     private static bool _assemblyResolveRegistered;
+
+    private sealed class ScriptLoadContext : AssemblyLoadContext
+    {
+        public ScriptLoadContext() : base(isCollectible: true) { }
+    }
+
+    private static ScriptLoadContext? _scriptAlc;
+
+    private static ScriptLoadContext GetOrCreateScriptAlc()
+    {
+        if (_scriptAlc == null)
+        {
+            _scriptAlc = new ScriptLoadContext();
+        }
+        return _scriptAlc;
+    }
+
+    /// <summary>Called by native before reload (after UnloadAll). Unloads the script ALC so next load reads fresh from disk.</summary>
+    [UnmanagedCallersOnly]
+    public static void PrepareForScriptReload()
+    {
+        if (_scriptAlc != null)
+        {
+            _scriptAlc.Unload();
+            _scriptAlc = null;
+        }
+    }
 
     private static void EnsureAssemblyResolve()
     {
@@ -26,7 +56,6 @@ public static class ScriptBridge
         AppDomain.CurrentDomain.AssemblyResolve += (_, args) =>
         {
             var aname = new AssemblyName(args.Name);
-            // Always return the already-loaded Iberus.Scripts (from App) so Script types match
             if (string.Equals(aname.Name, "Iberus.Scripts", StringComparison.OrdinalIgnoreCase))
             {
                 return executingAsm;
@@ -90,7 +119,8 @@ public static class ScriptBridge
                     return IntPtr.Zero;
                 }
                 _scriptAssemblyDir = Path.GetDirectoryName(Path.GetFullPath(assemblyPath));
-                var asm = Assembly.LoadFrom(assemblyPath);
+                var alc = GetOrCreateScriptAlc();
+                var asm = alc.LoadFromAssemblyPath(Path.GetFullPath(assemblyPath));
                 var type = asm.GetType(typeName)
                     ?? asm.GetExportedTypes().FirstOrDefault(t => t.FullName == typeName || t.Name == typeName);
                 if (type == null)
@@ -155,6 +185,16 @@ public static class ScriptBridge
             return;
         }
         script.__Update(deltaTime);
+    }
+
+    [UnmanagedCallersOnly]
+    public static void OnEntityChanged(IntPtr handle, ulong entityId, IntPtr worldPtr)
+    {
+        if (handle == IntPtr.Zero || !Instances.TryGetValue(handle, out var script))
+        {
+            return;
+        }
+        script.__OnEntityChanged();
     }
 
     [UnmanagedCallersOnly]

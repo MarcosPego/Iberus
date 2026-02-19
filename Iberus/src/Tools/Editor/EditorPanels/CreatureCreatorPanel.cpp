@@ -257,18 +257,22 @@ namespace Iberus {
 			ImGui::Text("Presets");
 			if (ImGui::Button("Worm##PresetWorm")) {
 				ApplyWorm(*sdf, scene);
+				scene->NotifyEntityChanged(entityId);
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Snake##PresetSnake")) {
 				ApplySnake(*sdf, scene);
+				scene->NotifyEntityChanged(entityId);
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Dragon Base##PresetDragon")) {
 				ApplyDragonBase(*sdf, scene);
+				scene->NotifyEntityChanged(entityId);
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Clear##PresetClear")) {
 				ApplyClear(*sdf);
+				scene->NotifyEntityChanged(entityId);
 			}
 
 			ImGui::Separator();
@@ -283,23 +287,27 @@ namespace Iberus {
 				if (ImGui::Button("Up##SDFPartUp")) {
 					if (i > 0) {
 						std::swap(sdf->Parts[i], sdf->Parts[i - 1]);
+						scene->NotifyEntityChanged(entityId);
 					}
 				}
 				ImGui::SameLine();
 				if (ImGui::Button("Down##SDFPartDown")) {
 					if (i + 1 < sdf->Parts.size()) {
 						std::swap(sdf->Parts[i], sdf->Parts[i + 1]);
+						scene->NotifyEntityChanged(entityId);
 					}
 				}
 				ImGui::SameLine();
 				if (ImGui::Button("Remove##SDFPartRemove")) {
 					sdf->Parts.erase(sdf->Parts.begin() + static_cast<std::ptrdiff_t>(i));
+					scene->NotifyEntityChanged(entityId);
 					ImGui::PopID();
 					break;
 				}
 				ImGui::SameLine();
 				if (ImGui::Button("Duplicate##SDFPartDuplicate")) {
 					sdf->Parts.insert(sdf->Parts.begin() + static_cast<std::ptrdiff_t>(i) + 1, part);
+					scene->NotifyEntityChanged(entityId);
 				}
 
 				ImGui::PopID();
@@ -313,6 +321,7 @@ namespace Iberus {
 					p.Radius = 0.5f;
 					p.MaterialId = "SDFMaterial1";
 					sdf->Parts.push_back(p);
+					scene->NotifyEntityChanged(entityId);
 				}
 				if (ImGui::MenuItem("Box##AddBox")) {
 					SDFPartData p;
@@ -320,6 +329,7 @@ namespace Iberus {
 					p.Radius = 0.5f;
 					p.MaterialId = "SDFMaterial1";
 					sdf->Parts.push_back(p);
+					scene->NotifyEntityChanged(entityId);
 				}
 				if (ImGui::MenuItem("Capsule##AddCapsule")) {
 					SDFPartData p;
@@ -329,6 +339,7 @@ namespace Iberus {
 					p.Radius = 0.25f;
 					p.MaterialId = "SDFMaterial1";
 					sdf->Parts.push_back(p);
+					scene->NotifyEntityChanged(entityId);
 				}
 				ImGui::EndMenu();
 			}

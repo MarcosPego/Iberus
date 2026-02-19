@@ -22,8 +22,16 @@ public abstract class Script
         OnUpdate(deltaTime);
     }
 
+    internal void __OnEntityChanged()
+    {
+        OnEntityChanged();
+    }
+
     protected virtual void OnInit() { }
     protected virtual void OnUpdate(double deltaTime) { }
+
+    /// <summary>Called when the entity's structure was changed externally (e.g. creature creator preset applied).</summary>
+    protected virtual void OnEntityChanged() { }
 
     protected (IberusVec3 pos, IberusVec3 rot, IberusVec3 scale) GetTransform()
     {
@@ -56,6 +64,8 @@ public abstract class Script
 
     protected int GetSDFPartCount() => NativeBindings.Iberus_World_GetSDFPartCount(WorldPtr, EntityId);
 
+    protected int GetSDFPartType(int partIndex) => NativeBindings.Iberus_World_GetSDFPartType(WorldPtr, EntityId, partIndex);
+
     protected IberusVec3 GetSDFPartPosition(int partIndex)
     {
         NativeBindings.Iberus_World_GetSDFPartPosition(WorldPtr, EntityId, partIndex, out var pos);
@@ -66,6 +76,20 @@ public abstract class Script
     {
         NativeBindings.Iberus_World_SetSDFPartPosition(WorldPtr, EntityId, partIndex, ref pos);
     }
+
+    protected IberusVec3 GetSDFPartEndpoint(int partIndex)
+    {
+        NativeBindings.Iberus_World_GetSDFPartEndpoint(WorldPtr, EntityId, partIndex, out var endpoint);
+        return endpoint;
+    }
+
+    protected void SetSDFPartEndpoint(int partIndex, IberusVec3 endpoint)
+    {
+        NativeBindings.Iberus_World_SetSDFPartEndpoint(WorldPtr, EntityId, partIndex, ref endpoint);
+    }
+
+    protected float GetSDFPartRadius(int partIndex) =>
+        NativeBindings.Iberus_World_GetSDFPartRadius(WorldPtr, EntityId, partIndex);
 
     /// <summary>Log a debug message to the engine console.</summary>
     protected void Log(string message)

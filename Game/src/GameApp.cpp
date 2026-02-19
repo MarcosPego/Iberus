@@ -8,18 +8,7 @@
 #include <filesystem>
 
 namespace {
-
 	void OpenProject(Iberus::Project* project);
-
-	void SetupSceneWithBehaviours(Iberus::Scene* scene) {
-		if (!scene) {
-			return;
-		}
-		Iberus::EntityId cameraId = scene->GetActiveCameraId();
-		if (cameraId != Iberus::NullEntity) {
-			scene->PushBehaviour(cameraId, new Iberus::SceneViewerCameraBehaviour());
-		}
-	}
 
 	void OpenProject(Iberus::Project* project) {
 		if (!project) {
@@ -47,7 +36,6 @@ namespace {
 		if (std::filesystem::exists(fullScenePath)) {
 			Iberus::SceneSerializer::LoadFromFile(*scene, fullScenePath);
 		}
-		SetupSceneWithBehaviours(scene);
 		if (!std::filesystem::exists(fullScenePath)) {
 			std::filesystem::path scenesDir = std::filesystem::path(project->GetAssetsPath()) / "Scenes";
 			std::filesystem::create_directories(scenesDir);
@@ -55,7 +43,6 @@ namespace {
 		}
 		Iberus::Application::Get()->SetCurrentScenePath(fullScenePath);
 	}
-
 }
 
 class Game : public Iberus::Application {

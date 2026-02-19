@@ -3,7 +3,7 @@ using IberusScripts;
 namespace Demo;
 
 /// <summary>
-/// WASD + Q/E movement controller for SDF entities.
+/// WASD (XZ ground plane) + Q/E (Y up/down) movement controller for SDF entities.
 /// Moves the root and updates SDF part positions with tension-based follow.
 /// </summary>
 public class BasicMovementController : Script
@@ -30,12 +30,12 @@ public class BasicMovementController : Script
         float dx = 0;
         float dy = 0;
         float dz = 0;
-        if (IsKeyPressed(KeyW)) dy += 1;
-        if (IsKeyPressed(KeyS)) dy -= 1;
+        if (IsKeyPressed(KeyW)) dz += 1;
+        if (IsKeyPressed(KeyS)) dz -= 1;
         if (IsKeyPressed(KeyA)) dx += 1;
         if (IsKeyPressed(KeyD)) dx -= 1;
-        if (IsKeyPressed(KeyQ)) dz += 1;
-        if (IsKeyPressed(KeyE)) dz -= 1;
+        if (IsKeyPressed(KeyQ)) dy -= 1;
+        if (IsKeyPressed(KeyE)) dy += 1;
 
         float len = MathF.Sqrt(dx * dx + dy * dy + dz * dz);
         if (len > 0)
@@ -52,6 +52,7 @@ public class BasicMovementController : Script
             return;
         }
 
+        const int CapsuleType = 3;
         int partCount = GetSDFPartCount();
         float lastX = pos.X;
         float lastY = pos.Y;
@@ -72,10 +73,22 @@ public class BasicMovementController : Script
             if (dist > MaxTension)
             {
                 float inv = MoveSpeed / dist;
-                partPos.X += diffX * inv;
-                partPos.Y += diffY * inv;
-                partPos.Z += diffZ * inv;
+                float deltaX = diffX * inv;
+                float deltaY = diffY * inv;
+                float deltaZ = diffZ * inv;
+                partPos.X += deltaX;
+                partPos.Y += deltaY;
+                partPos.Z += deltaZ;
                 SetSDFPartPosition(i, partPos);
+
+                if (GetSDFPartType(i) == CapsuleType)
+                {
+                    var endpoint = GetSDFPartEndpoint(i);
+                    SetSDFPartEndpoint(i, new IberusVec3(
+                        endpoint.X + deltaX,
+                        endpoint.Y + deltaY,
+                        endpoint.Z + deltaZ));
+                }
             }
 
             lastX = pos.X + partPos.X;

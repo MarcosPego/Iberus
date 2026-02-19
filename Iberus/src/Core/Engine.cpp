@@ -40,8 +40,12 @@ namespace Iberus {
 				continue;
 			}
 			std::string csprojPath = entry.path().string();
-			std::string cmd = "dotnet build \"" + csprojPath + "\" -c Release -nologo -v q 2>nul";
-			std::system(cmd.c_str());
+			IB_CORE_INFO("[Scripts] Building {} (--no-incremental)", csprojPath);
+			std::string cmd = "dotnet build \"" + csprojPath + "\" -c Release --no-incremental -nologo";
+			int ret = std::system(cmd.c_str());
+			if (ret != 0) {
+				IB_CORE_WARN("[Scripts] Build returned {} for {}", ret, csprojPath);
+			}
 		}
 	}
 
@@ -205,6 +209,12 @@ namespace Iberus {
 	}
 
 	void Engine::OnSwitchedToGameMode() {
+		// Unload scripts first to release DLL file lock, then rebuild so C# edits are picked up
+		if (!scriptBaseDir.empty()) {
+			scriptHost->UnloadAll();
+			BehaviourSystem::ClearScriptHandles();
+			BuildProjectScripts(scriptBaseDir);
+		}
 		SyncRendererToOutput();
 	}
 

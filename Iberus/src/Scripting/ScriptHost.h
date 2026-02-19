@@ -38,6 +38,9 @@ namespace Iberus {
 		/// Call Update on the script instance.
 		void CallUpdate(ScriptHandle handle, uint64_t entityId, World* world, double deltaTime);
 
+		/// Call OnEntityChanged on the script instance (e.g. when creature creator applies preset).
+		void CallOnEntityChanged(ScriptHandle handle, uint64_t entityId, World* world);
+
 		/// Release a script instance. Call when entity is destroyed or script unloaded.
 		void UnloadScript(ScriptHandle handle);
 

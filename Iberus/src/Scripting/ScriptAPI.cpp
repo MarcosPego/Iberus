@@ -115,6 +115,18 @@ int Iberus_World_GetSDFPartCount(void* worldPtr, uint64_t entityId) {
     return sdf ? static_cast<int>(sdf->Parts.size()) : 0;
 }
 
+int Iberus_World_GetSDFPartType(void* worldPtr, uint64_t entityId, int partIndex) {
+    if (!worldPtr) {
+        return 0;
+    }
+    auto* world = static_cast<Iberus::World*>(worldPtr);
+    auto* sdf = world->GetComponent<Iberus::SDFComponent>(static_cast<Iberus::EntityId>(entityId));
+    if (!sdf || partIndex < 0 || static_cast<size_t>(partIndex) >= sdf->Parts.size()) {
+        return 0;
+    }
+    return sdf->Parts[static_cast<size_t>(partIndex)].Type;
+}
+
 int Iberus_World_GetSDFPartPosition(void* worldPtr, uint64_t entityId, int partIndex, Iberus_Vec3* outPos) {
     if (!worldPtr || !outPos) {
         return 0;
@@ -144,6 +156,49 @@ void Iberus_World_SetSDFPartPosition(void* worldPtr, uint64_t entityId, int part
     part.Transform.Position.x = pos->x;
     part.Transform.Position.y = pos->y;
     part.Transform.Position.z = pos->z;
+}
+
+int Iberus_World_GetSDFPartEndpoint(void* worldPtr, uint64_t entityId, int partIndex, Iberus_Vec3* outEndpoint) {
+    if (!worldPtr || !outEndpoint) {
+        return 0;
+    }
+    auto* world = static_cast<Iberus::World*>(worldPtr);
+    auto* sdf = world->GetComponent<Iberus::SDFComponent>(static_cast<Iberus::EntityId>(entityId));
+    if (!sdf || partIndex < 0 || static_cast<size_t>(partIndex) >= sdf->Parts.size()) {
+        return 0;
+    }
+    const auto& part = sdf->Parts[static_cast<size_t>(partIndex)];
+    outEndpoint->x = part.Endpoint.x;
+    outEndpoint->y = part.Endpoint.y;
+    outEndpoint->z = part.Endpoint.z;
+    return 1;
+}
+
+void Iberus_World_SetSDFPartEndpoint(void* worldPtr, uint64_t entityId, int partIndex, const Iberus_Vec3* endpoint) {
+    if (!worldPtr || !endpoint) {
+        return;
+    }
+    auto* world = static_cast<Iberus::World*>(worldPtr);
+    auto* sdf = world->GetComponent<Iberus::SDFComponent>(static_cast<Iberus::EntityId>(entityId));
+    if (!sdf || partIndex < 0 || static_cast<size_t>(partIndex) >= sdf->Parts.size()) {
+        return;
+    }
+    auto& part = sdf->Parts[static_cast<size_t>(partIndex)];
+    part.Endpoint.x = endpoint->x;
+    part.Endpoint.y = endpoint->y;
+    part.Endpoint.z = endpoint->z;
+}
+
+float Iberus_World_GetSDFPartRadius(void* worldPtr, uint64_t entityId, int partIndex) {
+    if (!worldPtr) {
+        return 0.0f;
+    }
+    auto* world = static_cast<Iberus::World*>(worldPtr);
+    auto* sdf = world->GetComponent<Iberus::SDFComponent>(static_cast<Iberus::EntityId>(entityId));
+    if (!sdf || partIndex < 0 || static_cast<size_t>(partIndex) >= sdf->Parts.size()) {
+        return 0.0f;
+    }
+    return sdf->Parts[static_cast<size_t>(partIndex)].Radius;
 }
 
 void Iberus_Debug_Log(const char* message) {

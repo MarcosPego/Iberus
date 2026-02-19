@@ -52,12 +52,16 @@ namespace Iberus {
 		using CreateInstanceFn = void* (*)(const char* assemblyPath, const char* typeName);
 		using InitFn = void (*)(void* handle, uint64_t entityId, void* worldPtr);
 		using UpdateFn = void (*)(void* handle, uint64_t entityId, void* worldPtr, double deltaTime);
+		using OnEntityChangedFn = void (*)(void* handle, uint64_t entityId, void* worldPtr);
 		using DestroyInstanceFn = void (*)(void* handle);
+		using PrepareForScriptReloadFn = void (*)();
 
 		CreateInstanceFn createInstance{ nullptr };
 		InitFn scriptInit{ nullptr };
 		UpdateFn scriptUpdate{ nullptr };
+		OnEntityChangedFn scriptOnEntityChanged{ nullptr };
 		DestroyInstanceFn destroyInstance{ nullptr };
+		PrepareForScriptReloadFn prepareForScriptReload{ nullptr };
 
 		std::string baseDir;
 		std::unordered_set<void*> activeHandles;
@@ -199,6 +203,13 @@ namespace Iberus {
 				return nullptr;
 			}
 			impl->scriptUpdate = (Impl::UpdateFn)updatePtr;
+			void* onEntityChangedPtr = nullptr;
+			rc = impl->loadAssembly(runtimePathW.c_str(), bridgeTypeW, L"OnEntityChanged",
+				UNMANAGEDCALLERSONLY_METHOD, nullptr, &onEntityChangedPtr);
+			if (rc != 0 || !onEntityChangedPtr) {
+				return nullptr;
+			}
+			impl->scriptOnEntityChanged = (Impl::OnEntityChangedFn)onEntityChangedPtr;
 			void* destroyPtr = nullptr;
 			rc = impl->loadAssembly(runtimePathW.c_str(), bridgeTypeW, L"DestroyInstance",
 				UNMANAGEDCALLERSONLY_METHOD, nullptr, &destroyPtr);
@@ -206,6 +217,12 @@ namespace Iberus {
 				return nullptr;
 			}
 			impl->destroyInstance = (Impl::DestroyInstanceFn)destroyPtr;
+			void* prepareReloadPtr = nullptr;
+			rc = impl->loadAssembly(runtimePathW.c_str(), bridgeTypeW, L"PrepareForScriptReload",
+				UNMANAGEDCALLERSONLY_METHOD, nullptr, &prepareReloadPtr);
+			if (rc == 0 && prepareReloadPtr) {
+				impl->prepareForScriptReload = (Impl::PrepareForScriptReloadFn)prepareReloadPtr;
+			}
 		}
 		// C# Marshal.PtrToStringUTF8 expects UTF-8; use u8string for paths
 		auto fullPath = std::filesystem::path(fullAssemblyPath).u8string();
@@ -231,6 +248,12 @@ namespace Iberus {
 		}
 	}
 
+	void ScriptHost::CallOnEntityChanged(ScriptHandle handle, uint64_t entityId, World* world) {
+		if (handle && impl->scriptOnEntityChanged && world) {
+			impl->scriptOnEntityChanged(handle, entityId, world);
+		}
+	}
+
 	void ScriptHost::UnloadScript(ScriptHandle handle) {
 		if (handle && impl->destroyInstance) {
 			impl->destroyInstance(handle);
@@ -244,6 +267,9 @@ namespace Iberus {
 				impl->destroyInstance(h);
 			}
 			impl->activeHandles.clear();
+		}
+		if (impl->prepareForScriptReload) {
+			impl->prepareForScriptReload();
 		}
 	}
 
@@ -268,7 +294,9 @@ namespace Iberus {
 		impl->createInstance = nullptr;
 		impl->scriptInit = nullptr;
 		impl->scriptUpdate = nullptr;
+		impl->scriptOnEntityChanged = nullptr;
 		impl->destroyInstance = nullptr;
+		impl->prepareForScriptReload = nullptr;
 		initialized = false;
 	}
 

@@ -72,6 +72,9 @@ namespace Iberus {
 		/// Get behaviour type names for an entity (for serialization).
 		std::vector<std::string> GetBehavioursForEntity(EntityId entityId) const;
 
+		/// Notify scripts on entity that its structure changed (e.g. creature creator preset).
+		void NotifyEntityChanged(EntityId entityId);
+
 	public:
 		template<typename T>
 		bool PushBehaviour(EntityId entityId, std::unique_ptr<T> behaviour) {

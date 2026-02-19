@@ -56,10 +56,22 @@ internal static class NativeBindings
     public static extern int Iberus_World_GetSDFPartCount(IntPtr worldPtr, ulong entityId);
 
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    public static extern int Iberus_World_GetSDFPartType(IntPtr worldPtr, ulong entityId, int partIndex);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
     public static extern int Iberus_World_GetSDFPartPosition(IntPtr worldPtr, ulong entityId, int partIndex, out IberusVec3 outPos);
 
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
     public static extern void Iberus_World_SetSDFPartPosition(IntPtr worldPtr, ulong entityId, int partIndex, ref IberusVec3 pos);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    public static extern int Iberus_World_GetSDFPartEndpoint(IntPtr worldPtr, ulong entityId, int partIndex, out IberusVec3 outEndpoint);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void Iberus_World_SetSDFPartEndpoint(IntPtr worldPtr, ulong entityId, int partIndex, ref IberusVec3 endpoint);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    public static extern float Iberus_World_GetSDFPartRadius(IntPtr worldPtr, ulong entityId, int partIndex);
 
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     public static extern void Iberus_Debug_Log(string message);

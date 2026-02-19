@@ -212,6 +212,13 @@ namespace Iberus {
 		return CloneEntityRecursive(*this, sourceId, NullEntity, "");
 	}
 
+	void Scene::NotifyEntityChanged(EntityId entityId) {
+		if (entityId == NullEntity || !world.IsAlive(entityId)) {
+			return;
+		}
+		BehaviourSystem::NotifyEntityChanged(world, entityId);
+	}
+
 	void Scene::Update(double deltaTime) {
 		BehaviourSystem::Update(world, *this, deltaTime);
 	}

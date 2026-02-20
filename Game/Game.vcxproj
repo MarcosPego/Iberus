@@ -100,8 +100,6 @@ if exist "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" copy /
 powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)App\nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\' -Force; break } } } } }"
 if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)App\"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"
-if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
-if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
 if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" "$(TargetDir)App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -135,8 +133,6 @@ if exist "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" copy /
 powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)App\nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\' -Force; break } } } } }"
 if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)App\"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"
-if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
-if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
 if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)App\"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"</Command>
     </PostBuildEvent>
@@ -171,8 +167,6 @@ if exist "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" copy /
 powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)App\nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\' -Force; break } } } } }"
 if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)App\"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"
-if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
-if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
 if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)App\"
 if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"</Command>
     </PostBuildEvent>

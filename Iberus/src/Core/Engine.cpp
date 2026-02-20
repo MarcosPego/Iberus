@@ -14,6 +14,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <filesystem>
+#include <thread>
 
 #define USE_DEFERRED 1
 
@@ -29,22 +30,98 @@ namespace Iberus {
 		if (!std::filesystem::exists(scriptsDir) || !std::filesystem::is_directory(scriptsDir)) {
 			return;
 		}
+		std::filesystem::path scriptsContextDir = scriptsDir / "ScriptsContext";
+		std::filesystem::path runDir = scriptsContextDir / "run";
+		std::filesystem::create_directories(scriptsContextDir);
+		std::filesystem::create_directories(runDir);
+
 		std::string appDir = FileSystem::GetAppDirectory();
 		std::filesystem::path scriptsSrc = std::filesystem::path(appDir) / "Iberus.Scripts.dll";
-		std::filesystem::path scriptsDst = scriptsDir / "Iberus.Scripts.dll";
+		std::filesystem::path scriptsDst = scriptsContextDir / "Iberus.Scripts.dll";
 		if (std::filesystem::exists(scriptsSrc)) {
 			std::filesystem::copy_file(scriptsSrc, scriptsDst, std::filesystem::copy_options::overwrite_existing);
 		}
+
 		for (const auto& entry : std::filesystem::directory_iterator(scriptsDir)) {
 			if (!entry.is_regular_file() || entry.path().extension() != ".csproj") {
 				continue;
 			}
-			std::string csprojPath = entry.path().string();
-			IB_CORE_INFO("[Scripts] Building {} (--no-incremental)", csprojPath);
-			std::string cmd = "dotnet build \"" + csprojPath + "\" -c Release --no-incremental -nologo";
-			int ret = std::system(cmd.c_str());
-			if (ret != 0) {
-				IB_CORE_WARN("[Scripts] Build returned {} for {}", ret, csprojPath);
+			std::filesystem::path csprojPath = entry.path();
+			std::string assemblyName = csprojPath.stem().string();
+			std::filesystem::path outputDll = scriptsContextDir / (assemblyName + ".dll");
+
+			// Change detection: skip build if output DLL exists and is newer than all .cs and .csproj in scripts dir
+			std::filesystem::file_time_type latestSource = std::filesystem::file_time_type::min();
+			for (const auto& f : std::filesystem::directory_iterator(scriptsDir)) {
+				if (!f.is_regular_file()) {
+					continue;
+				}
+				std::string ext = f.path().extension().string();
+				if (ext == ".cs" || (ext == ".csproj" && f.path().filename() == csprojPath.filename())) {
+					auto t = std::filesystem::last_write_time(f.path());
+					if (t > latestSource) {
+						latestSource = t;
+					}
+				}
+			}
+			bool outputExists = std::filesystem::exists(outputDll);
+			bool needBuild = !outputExists ||
+				(outputExists && std::filesystem::last_write_time(outputDll) < latestSource);
+
+			if (needBuild) {
+				IB_CORE_INFO("[Scripts] Building {} (--no-incremental)", csprojPath.string());
+				std::string cmd = "dotnet build \"" + csprojPath.string() + "\" -c Release --no-incremental -nologo";
+				int ret = std::system(cmd.c_str());
+				if (ret != 0) {
+					IB_CORE_WARN("[Scripts] Build returned {} for {}", ret, csprojPath.string());
+					continue;
+				}
+			} else {
+				IB_CORE_INFO("[Scripts] Skipping build for {} (no changes)", csprojPath.string());
+			}
+
+			// Ensure run folder has latest DLLs: copy from ScriptsContext so we load from run (avoids build overwriting in-use file)
+			if (std::filesystem::exists(outputDll)) {
+				std::filesystem::path runDll = runDir / (assemblyName + ".dll");
+				std::filesystem::copy_file(outputDll, runDll, std::filesystem::copy_options::overwrite_existing);
+				std::filesystem::path depsPath = scriptsContextDir / (assemblyName + ".deps.json");
+				if (std::filesystem::exists(depsPath)) {
+					std::filesystem::copy_file(depsPath, runDir / (assemblyName + ".deps.json"), std::filesystem::copy_options::overwrite_existing);
+				}
+			}
+		}
+
+		// Copy Iberus.Scripts.dll and deps to run so runtime can load from run/
+		if (std::filesystem::exists(scriptsDst)) {
+			std::filesystem::path runIberus = runDir / "Iberus.Scripts.dll";
+			std::filesystem::copy_file(scriptsDst, runIberus, std::filesystem::copy_options::overwrite_existing);
+			std::filesystem::path iberusDeps = scriptsContextDir / "Iberus.Scripts.deps.json";
+			if (std::filesystem::exists(iberusDeps)) {
+				std::filesystem::copy_file(iberusDeps, runDir / "Iberus.Scripts.deps.json", std::filesystem::copy_options::overwrite_existing);
+			}
+		}
+	}
+
+	void Engine::DeleteProjectScriptsContext(const std::string& projectRoot) {
+		if (projectRoot.empty()) {
+			return;
+		}
+		std::filesystem::path scriptsContextDir = std::filesystem::path(projectRoot) / "Assets" / "Scripts" / "ScriptsContext";
+		if (!std::filesystem::exists(scriptsContextDir) || !std::filesystem::is_directory(scriptsContextDir)) {
+			return;
+		}
+		const int maxAttempts = 5;
+		const int delayMs = 50;
+		for (int attempt = 0; attempt < maxAttempts; ++attempt) {
+			std::error_code ec;
+			std::filesystem::remove_all(scriptsContextDir, ec);
+			if (!ec) {
+				return;
+			}
+			if (attempt < maxAttempts - 1) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+			} else {
+				IB_CORE_WARN("[Scripts] Failed to delete ScriptsContext folder after {} attempts: {}", maxAttempts, ec.message());
 			}
 		}
 	}

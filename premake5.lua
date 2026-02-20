@@ -216,12 +216,6 @@ project "Game"
 		postbuildcommands {
 			("if exist \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" copy /Y \"$(SolutionDir)Iberus\\dependencies\\glfw\\lib-vc2019\\glfw3.dll\" \"$(TargetDir)App\\\"")
 		}
-		postbuildcommands {
-			("if exist \"$(SolutionDir)bin\" rmdir /s /q \"$(SolutionDir)bin\"")
-		}
-		postbuildcommands {
-			("if exist \"$(SolutionDir)bin-int\" rmdir /s /q \"$(SolutionDir)bin-int\"")
-		}
 
 	filter "configurations:Debug"
 		defines "IB_DEBUG"

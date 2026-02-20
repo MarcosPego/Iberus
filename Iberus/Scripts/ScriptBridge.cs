@@ -24,6 +24,7 @@ public static class ScriptBridge
     }
 
     private static ScriptLoadContext? _scriptAlc;
+    private static ScriptLoadContext? _scriptAlcPendingUnload;
 
     private static ScriptLoadContext GetOrCreateScriptAlc()
     {
@@ -34,14 +35,39 @@ public static class ScriptBridge
         return _scriptAlc;
     }
 
-    /// <summary>Called by native before reload (after UnloadAll). Unloads the script ALC so next load reads fresh from disk.</summary>
+    /// <summary>Called by native first (after destroying instances). Clears state and marks the current ALC for unload; does not call Unload() here.</summary>
     [UnmanagedCallersOnly]
     public static void PrepareForScriptReload()
     {
+        Instances.Clear();
+        _nextHandle = (IntPtr)1;
+        _scriptAssemblyDir = null;
         if (_scriptAlc != null)
         {
-            _scriptAlc.Unload();
+            _scriptAlcPendingUnload = _scriptAlc;
             _scriptAlc = null;
+        }
+    }
+
+    /// <summary>Called by native immediately after PrepareForScriptReload. Runs Unload() on the pending ALC in a separate managed invocation so the DLL file is released and the run folder can be deleted.</summary>
+    [UnmanagedCallersOnly]
+    public static void CompleteScriptReload()
+    {
+        if (_scriptAlcPendingUnload != null)
+        {
+            try
+            {
+                _scriptAlcPendingUnload.Unload();
+                // Force collection so the ALC is actually unloaded and OS releases DLL file handles before native tries to delete the folder.
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
+            catch
+            {
+                // Ignore; ALC may already be unloaded or in a bad state
+            }
+            _scriptAlcPendingUnload = null;
         }
     }
 

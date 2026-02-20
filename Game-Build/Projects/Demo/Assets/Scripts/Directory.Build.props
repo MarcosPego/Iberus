@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>ScriptsContext\obj\</BaseIntermediateOutputPath>
+    <OutputPath>ScriptsContext\</OutputPath>
+  </PropertyGroup>
+</Project>

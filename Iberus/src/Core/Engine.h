@@ -66,6 +66,9 @@ namespace Iberus {
 		/// Scans projectRoot/Assets/Scripts for *.csproj, copies Iberus.Scripts.dll, and builds each project.
 		void BuildProjectScripts(const std::string& projectRoot);
 
+		/// Deletes projectRoot/Assets/Scripts/ScriptsContext. Call after UnloadAll() so the run folder is released.
+		void DeleteProjectScriptsContext(const std::string& projectRoot);
+
 		/// Returns effective render dimensions (editor viewport when active, else main window).
 		int GetEffectiveRenderWidth() const;
 		int GetEffectiveRenderHeight() const;

@@ -5,7 +5,13 @@ This folder contains the **engine scripting runtime** for Iberus: Script base cl
 ## Build
 
 1. Build the solution. The Game project post-build publishes `Iberus/Scripts/ScriptHost` (a stub exe referencing Iberus.Scripts) with `dotnet publish` → `Game-Build/`. Requires .NET 9 installed.
-2. When you open a project, the engine scans `Assets/Scripts/` for `.csproj`, copies `Iberus.Scripts.dll` into that folder, and runs `dotnet build` per project.
+2. When you open a project (or enter Game mode), the engine scans `Assets/Scripts/` for `.csproj`, copies `Iberus.Scripts.dll` into `Assets/Scripts/ScriptsContext/`, and runs `dotnet build` per project. Build output goes to `ScriptsContext/`; a copy is placed in `ScriptsContext/run/` so the runtime loads from there and the build never overwrites an in-use DLL. The build is skipped when no `.cs` or `.csproj` files have changed (change detection).
+
+### ScriptsContext layout (per project)
+
+- **`Assets/Scripts/`** – Source only: your `.cs` files and `.csproj`. No DLLs here.
+- **`Assets/Scripts/ScriptsContext/`** – Build output: `{Project}.Scripts.dll`, `Iberus.Scripts.dll`, `obj/`, `.deps.json`, etc. Safe to delete to force a full rebuild or clean the folder.
+- **`Assets/Scripts/ScriptsContext/run/`** – Runtime copy: the engine loads assemblies from here so that rebuilding never overwrites a file that is currently loaded. If this folder (or ScriptsContext) is empty when you enter Game mode, the engine regenerates it by building and copying.
 
 ## Usage
 
@@ -38,4 +44,4 @@ public class MyBehaviour : Script
 
 ## Hot-Reload
 
-Scripts are unloaded when leaving Game mode (F11) and reloaded when entering again. Edit scripts, switch modes to test changes.
+Scripts are unloaded when leaving Game mode (F11) and reloaded when entering again. Edit scripts, switch modes to test changes. Rebuild runs only when source files have changed, so play–stop–play without edits does not trigger a build and avoids DLL file locks.

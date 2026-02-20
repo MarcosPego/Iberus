@@ -1,4 +1,5 @@
 #include <Iberus.h>
+#include "BehaviourSystem.h"
 
 #include "GameLayer.h"
 #include "EditorLayer.h"
@@ -67,6 +68,12 @@ public:
 	}
 
 	void OnCloseProject() override {
+		std::string projectRoot = Iberus::Engine::Instance()->GetScriptBaseDir();
+		if (!projectRoot.empty()) {
+			Iberus::Engine::Instance()->GetScriptHost().UnloadAll();
+			Iberus::BehaviourSystem::ClearScriptHandles();
+			Iberus::Engine::Instance()->DeleteProjectScriptsContext(projectRoot);
+		}
 		Iberus::Engine::Instance()->GetSceneManager().Clear();
 		Iberus::Engine::Instance()->SetScriptBaseDir("");
 		SetProject(nullptr);

@@ -52,6 +52,7 @@ namespace Iberus {
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& event) {
+		OnCloseProject();
 		running = false;
 		return true;
 	}

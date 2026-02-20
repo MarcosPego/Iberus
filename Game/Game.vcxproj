@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Dist|x64">
+      <Configuration>Dist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7FA9857C-6BE0-860D-14CD-6C1000E3020F}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Game</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)Game-Build\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-x86_64\Game\</IntDir>
+    <TargetName>Game</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)Game-Build\</OutDir>
+    <IntDir>..\bin-int\Release-windows-x86_64\Game\</IntDir>
+    <TargetName>Game</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)Game-Build\</OutDir>
+    <IntDir>..\bin-int\Dist-windows-x86_64\Game\</IntDir>
+    <TargetName>Game</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Project;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Scripting;..\Iberus\src\Serialization;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\ECS;..\Iberus\src\Scene\Resources;..\Iberus\src\Scene\Serialization;..\Iberus\src\Tools\Editor;..\Iberus\src\Tools\GUI;..\Iberus\src\Tools\Editor\EditorPanels;..\Iberus\src\Tools\GUI\Imgui;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;delayimp.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Debug-windows-x86_64\Iberus;..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/DELAYLOAD:Iberus.dll %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(TargetDir)App" mkdir "$(TargetDir)App"
+if exist "$(TargetDir)Iberus.dll" move /Y "$(TargetDir)Iberus.dll" "$(TargetDir)App\"
+dotnet publish "$(SolutionDir)Iberus\Scripts\ScriptHost\ScriptHost.csproj" -c Release -r win-x64 --self-contained false -o "$(TargetDir)App" -p:PublishSingleFile=false || echo ScriptHost publish failed
+if exist "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" copy /Y "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" "$(TargetDir)App\"
+powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)App\nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\' -Force; break } } } } }"
+if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
+if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
+if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoiseD.dll" "$(TargetDir)App\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Project;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Scripting;..\Iberus\src\Serialization;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\ECS;..\Iberus\src\Scene\Resources;..\Iberus\src\Scene\Serialization;..\Iberus\src\Tools\Editor;..\Iberus\src\Tools\GUI;..\Iberus\src\Tools\Editor\EditorPanels;..\Iberus\src\Tools\GUI\Imgui;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;delayimp.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Release-windows-x86_64\Iberus;..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/DELAYLOAD:Iberus.dll %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(TargetDir)App" mkdir "$(TargetDir)App"
+if exist "$(TargetDir)Iberus.dll" move /Y "$(TargetDir)Iberus.dll" "$(TargetDir)App\"
+dotnet publish "$(SolutionDir)Iberus\Scripts\ScriptHost\ScriptHost.csproj" -c Release -r win-x64 --self-contained false -o "$(TargetDir)App" -p:PublishSingleFile=false || echo ScriptHost publish failed
+if exist "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" copy /Y "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" "$(TargetDir)App\"
+powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)App\nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\' -Force; break } } } } }"
+if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
+if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
+if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Iberus\dependencies\glfw\include\GLFW;..\Iberus\dependencies\glew\include\GL;..\Iberus\dependencies\glew\include\stb_image;..\Iberus\dependencies\spdlog\include;..\Iberus\dependencies\imgui;..\Iberus\dependencies\FastNoise2\include;..\Iberus\src\BuiltInBehaviors;..\Iberus\src\Core;..\Iberus\src\Events;..\Iberus\src\FileSystem;..\Iberus\src\Logging;..\Iberus\src\Maths;..\Iberus\src\Platform;..\Iberus\src\Project;..\Iberus\src\Renderer;..\Iberus\src\Scene;..\Iberus\src\Scripting;..\Iberus\src\Serialization;..\Iberus\src\Tools;..\Iberus\src\Core\Input;..\Iberus\src\Core\Types;..\Iberus\src\Platform\GLFW;..\Iberus\src\Renderer\OpenGLRenderer;..\Iberus\src\Renderer\Platform;..\Iberus\src\Renderer\OpenGLRenderer\OpenGLPasses;..\Iberus\src\Scene\ECS;..\Iberus\src\Scene\Resources;..\Iberus\src\Scene\Serialization;..\Iberus\src\Tools\Editor;..\Iberus\src\Tools\GUI;..\Iberus\src\Tools\Editor\EditorPanels;..\Iberus\src\Tools\GUI\Imgui;..\Iberus\src;src\Core;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;delayimp.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\bin\Dist-windows-x86_64\Iberus;..\Iberus\dependencies\glfw\lib-vc2019;..\Iberus\dependencies\glew\lib\Release\x64;..\Iberus\dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/DELAYLOAD:Iberus.dll %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(TargetDir)App" mkdir "$(TargetDir)App"
+if exist "$(TargetDir)Iberus.dll" move /Y "$(TargetDir)Iberus.dll" "$(TargetDir)App\"
+dotnet publish "$(SolutionDir)Iberus\Scripts\ScriptHost\ScriptHost.csproj" -c Release -r win-x64 --self-contained false -o "$(TargetDir)App" -p:PublishSingleFile=false || echo ScriptHost publish failed
+if exist "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" copy /Y "$(SolutionDir)Iberus\Scripts\Iberus.Scripts.runtimeconfig.json" "$(TargetDir)App\"
+powershell -NoProfile -Command "if(-not (Test-Path '$(TargetDir)App\nethost.dll')){ $paths=@('C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64','$env:USERPROFILE\.dotnet\packs\Microsoft.NETCore.App.Host.win-x64'); foreach($p in $paths){ if(Test-Path $p){ $d=Get-ChildItem $p -Directory|Sort-Object Name -Descending|Select-Object -First 1; if($d){ $src=Join-Path $d.FullName 'runtimes\win-x64\native\nethost.dll'; if(Test-Path $src){ Copy-Item $src '$(TargetDir)App\' -Force; break } } } } }"
+if exist "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glew\bin\Release\x64\glew32.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)bin" rmdir /s /q "$(SolutionDir)bin"
+if exist "$(SolutionDir)bin-int" rmdir /s /q "$(SolutionDir)bin-int"
+if exist "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(SolutionDir)Iberus\dependencies\FastNoise2\bin\FastNoise.dll" "$(TargetDir)App\"
+if exist "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(SolutionDir)Iberus\dependencies\glfw\lib-vc2019\glfw3.dll" "$(TargetDir)App\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\GameApp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Iberus\Iberus.vcxproj">
+      <Project>{CF524EB9-BBF4-788F-A4AF-8CE390F0FFDF}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

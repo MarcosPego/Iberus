@@ -18,6 +18,8 @@ namespace Iberus {
 
 		Scene* GetScene(const std::string& sceneID) const;
 
+		void Clear();
+
 	private:
 
 		Scene* activeScene{ nullptr };

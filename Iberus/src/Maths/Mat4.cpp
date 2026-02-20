@@ -36,7 +36,9 @@ namespace Math {
 
 	void Mat4::clean() {
 		for (int i = 0; i < this->array_size; i++) {
-			if (fabs(this->data[i]) < EPSILON) this->data[i] = 0.0f;
+			if (fabs(this->data[i]) < EPSILON) {
+				this->data[i] = 0.0f;
+			}
 		}
 	}
 
@@ -80,8 +82,9 @@ namespace Math {
 
 		float det = m.data[0] * new_matrix.data[0] + m.data[1] * new_matrix.data[4] + m.data[2] * new_matrix.data[8] + m.data[3] * new_matrix.data[12];
 
-		if (det == 0)
-			return false;
+		if (fabs(det) < 1e-10f) {
+			return Mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+		}
 
 		det = 1.f / det;
 
@@ -170,10 +173,10 @@ namespace Math {
 
 	const Vec4 operator * (const Mat4& m, const Vec4& v) {
 		Vec4 new_vector = Vec4();
-		new_vector.x = v.x * m.data[0] + v.y * m.data[4] + v.z * m.data[8] + v.z * m.data[12];
-		new_vector.y = v.x * m.data[1] + v.y * m.data[5] + v.z * m.data[9] + v.z * m.data[13];
-		new_vector.z = v.x * m.data[2] + v.y * m.data[6] + v.z * m.data[10] + v.z * m.data[14];
-		new_vector.w = v.x * m.data[3] + v.y * m.data[7] + v.z * m.data[11] + v.z * m.data[15];
+		new_vector.x = v.x * m.data[0] + v.y * m.data[4] + v.z * m.data[8] + v.w * m.data[12];
+		new_vector.y = v.x * m.data[1] + v.y * m.data[5] + v.z * m.data[9] + v.w * m.data[13];
+		new_vector.z = v.x * m.data[2] + v.y * m.data[6] + v.z * m.data[10] + v.w * m.data[14];
+		new_vector.w = v.x * m.data[3] + v.y * m.data[7] + v.z * m.data[11] + v.w * m.data[15];
 
 		return new_vector;
 	};

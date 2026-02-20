@@ -2,6 +2,7 @@
 
 #include "Enginepch.h"
 #include "MathUtils.h"
+#include <vector>
 
 #ifdef min
 #undef min
@@ -32,6 +33,9 @@ namespace Math {
 		static Noise* Instance();
 
 		NoiseSample GetNoise(const Vec3& start, const Vec3& offset, int seed, float frequency, int octaves);
+
+		void GetHeightMap2D(std::vector<float>& outHeights, int width, int height, float xOffset, float zOffset,
+			float frequency, int seed, int octaves, bool normalizeToZeroOne = true);
 
 		Iberus::Buffer SampleToTextureBuffer(NoiseSample& noiseSample, int channel = 4);
 

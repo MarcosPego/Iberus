@@ -1,5 +1,6 @@
 #include "Enginepch.h"
 #include "WindowsWindow.h"
+#include "Platform/GLFW/InputTranslationGLFW.h"
 
 namespace Iberus {
 	static void GLFWErrorCallback(int error, const char* description) {
@@ -17,9 +18,12 @@ namespace Iberus {
 		Shutdown();
 	}
 
+	void WindowsWindow::PollEvents() {
+		glfwPollEvents();
+	}
+
 	void WindowsWindow::Update() {
 		glfwSwapBuffers(window);
-		glfwPollEvents();; // TODO(MPP) Fix window event manager!
 	}
 
 	void WindowsWindow::Shutdown() {
@@ -104,16 +108,28 @@ namespace Iberus {
 
 		window = win;
 		glfwMakeContextCurrent(window);
+		windowData.owner = this;
 		glfwSetWindowUserPointer(window, &windowData);
 		SetVSync(true);
+
+		int fbWidth, fbHeight;
+		glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+		windowProps.resolution.x = static_cast<float>(fbWidth);
+		windowProps.resolution.y = static_cast<float>(fbHeight);
+		windowData.resolution.x = static_cast<float>(fbWidth);
+		windowData.resolution.y = static_cast<float>(fbHeight);
 
 		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 		/// Set Callbacks
 		glfwSetWindowSizeCallback(window, [](GLFWwindow* glfwWindow, int width, int height) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
-			data.resolution.x = width;
-			data.resolution.y = height;
+			data.resolution.x = static_cast<float>(width);
+			data.resolution.y = static_cast<float>(height);
+			if (data.owner) {
+				data.owner->windowProps.resolution.x = static_cast<float>(width);
+				data.owner->windowProps.resolution.y = static_cast<float>(height);
+			}
 
 			WindowResizeEvent event({ (uint32_t)width, (uint32_t)height });
 			data.EventCallback(event);
@@ -128,18 +144,20 @@ namespace Iberus {
 
 		glfwSetKeyCallback(window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+			auto keyCode = InputTranslationGLFW::FromGLFWKey(key);
+			auto modifiers = InputTranslationGLFW::FromGLFWMods(mods);
 
 			switch (action) {
 				case GLFW_PRESS: {
-					KeyPressedEvent event(key, 0);
+					KeyPressedEvent event(keyCode, 0, modifiers);
 					data.EventCallback(event);
 				} break;
 				case GLFW_RELEASE: {
-					KeyReleasedEvent event(key);
+					KeyReleasedEvent event(keyCode, modifiers);
 					data.EventCallback(event);
 				} break;
 				case GLFW_REPEAT: {
-					KeyPressedEvent event(key, 1);
+					KeyPressedEvent event(keyCode, 1, modifiers);
 					data.EventCallback(event);
 				} break;
 				default:
@@ -149,18 +167,19 @@ namespace Iberus {
 
 		glfwSetMouseButtonCallback(window, [](GLFWwindow* glfwWindow, int button, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(glfwWindow);
+			auto mouseCode = InputTranslationGLFW::FromGLFWMouseButton(button);
 
 			switch (action) {
 				case GLFW_PRESS: {
-					MouseButtonPressedEvent event(button);
+					MouseButtonPressedEvent event(mouseCode);
 					data.EventCallback(event);
 				} break;
 				case GLFW_RELEASE: {
-					MouseButtonReleasedEvent event(button);
+					MouseButtonReleasedEvent event(mouseCode);
 					data.EventCallback(event);
 				} break;
 				case GLFW_REPEAT: {
-					MouseButtonPressedEvent event(button);
+					MouseButtonPressedEvent event(mouseCode);
 					data.EventCallback(event);
 				} break;
 				default:

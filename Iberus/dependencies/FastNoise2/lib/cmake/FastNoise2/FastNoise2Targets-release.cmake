@@ -15,14 +15,14 @@ set_target_properties(FastNoise2::FastNoise PROPERTIES
 list(APPEND _cmake_import_check_targets FastNoise2::FastNoise )
 list(APPEND _cmake_import_check_files_for_FastNoise2::FastNoise "${_IMPORT_PREFIX}/lib/FastNoise.lib" "${_IMPORT_PREFIX}/bin/FastNoise.dll" )
 
-# Import target "FastNoise2::NoiseTool" for configuration "Release"
-set_property(TARGET FastNoise2::NoiseTool APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
-set_target_properties(FastNoise2::NoiseTool PROPERTIES
-  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/NoiseTool.exe"
+# Import target "FastNoise2::NodeEditor" for configuration "Release"
+set_property(TARGET FastNoise2::NodeEditor APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(FastNoise2::NodeEditor PROPERTIES
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/NodeEditor.exe"
   )
 
-list(APPEND _cmake_import_check_targets FastNoise2::NoiseTool )
-list(APPEND _cmake_import_check_files_for_FastNoise2::NoiseTool "${_IMPORT_PREFIX}/bin/NoiseTool.exe" )
+list(APPEND _cmake_import_check_targets FastNoise2::NodeEditor )
+list(APPEND _cmake_import_check_files_for_FastNoise2::NodeEditor "${_IMPORT_PREFIX}/bin/NodeEditor.exe" )
 
 # Commands beyond this point should not need to know the version.
 set(CMAKE_IMPORT_FILE_VERSION)

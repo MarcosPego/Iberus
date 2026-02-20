@@ -3,6 +3,7 @@
 #include "Enginepch.h"
 
 #include "SceneInclude.h"
+#include "ProjectInclude.h"
 #include "Application.h"
 
 #include "EntryPoint.h"

@@ -5,6 +5,8 @@
 #include "IProvider.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "Material.h"
+#include "MaterialSerializer.h"
 #include "Resource.h"
 
 namespace Iberus {
@@ -64,20 +66,53 @@ namespace Iberus {
 			auto vertexBuffer = provider->GetRawFileBuffer(id + ".vert");
 			auto fragBuffer = provider->GetRawFileBuffer(id + ".frag");
 
-			auto* shader = new Shader(id, std::move(vertexBuffer), std::move(fragBuffer));
+			auto shader = std::make_unique<Shader>(id, std::move(vertexBuffer), std::move(fragBuffer));
+			auto* ptr = shader.get();
+			resources.emplace(id, std::move(shader));
+			return dynamic_cast<Shader*>(ptr);
+		}
 
-			resources.emplace(id, shader);
-			return dynamic_cast<Shader*>(resources.at(id).get());
+		template<>
+		Material* CreateResource(const std::string& id, IProvider* provider) {
+			if (!provider) {
+				return nullptr;
+			}
+
+			std::string path = "Assets/Materials/" + id + ".mat";
+			auto buffer = provider->GetRawFileBuffer(path);
+			if (buffer.Invalid()) {
+				return nullptr;
+			}
+
+			auto mat = MaterialSerializer::Deserialize(buffer, *this, provider);
+			if (!mat) {
+				return nullptr;
+			}
+
+			auto* ptr = mat.get();
+			resources[id] = std::move(mat);
+			return dynamic_cast<Material*>(ptr);
+		}
+
+		/// Register an already-created resource (e.g. material loaded from arbitrary path via MaterialSerializer).
+		template<typename T>
+		T* RegisterResource(const std::string& id, std::unique_ptr<T> resource) {
+			if (!resource) {
+				return nullptr;
+			}
+			T* ptr = resource.get();
+			resources[id] = std::move(resource);
+			return dynamic_cast<T*>(ptr);
 		}
 
 	private:
 
 		template<typename T = Resource, typename... Args>
 		T* InitializeResource(const std::string& id, Args&&... args) {
-			auto* resource = new T(id, std::forward<Args>(args)...);
-			resources.emplace(id, resource);
-
-			return dynamic_cast<T*>(resources.at(id).get());
+			auto resource = std::make_unique<T>(id, std::forward<Args>(args)...);
+			auto* ptr = resource.get();
+			resources[id] = std::move(resource);
+			return dynamic_cast<T*>(ptr);
 		}
 
 		/*template<typename T = Resource, typename... Args>

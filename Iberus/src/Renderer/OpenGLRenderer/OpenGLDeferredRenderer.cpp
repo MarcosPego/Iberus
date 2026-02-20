@@ -38,8 +38,20 @@ namespace Iberus {
 		std::swap(sourceFBO, targetFBO);
 	}
 
-	void OpenGLDeferredRenderer::RenderFrame(Frame& frame) {
+	void OpenGLDeferredRenderer::RenderFrame(Frame& frame, unsigned int outputFBO, int outputWidth, int outputHeight) {
 		ExecuteAndFlushCmdQueue();
+
+		auto* window = Engine::Instance()->GetCurrentWindow();
+		int width = outputWidth > 0 ? outputWidth : window->GetWidth();
+		int height = outputHeight > 0 ? outputHeight : window->GetHeight();
+
+		if (width != currentWidth || height != currentHeight) {
+			Resize(width, height);
+			currentWidth = width;
+			currentHeight = height;
+		}
+
+		glViewport(0, 0, width, height);
 
 		auto _renderBatchCommands = [&](Frame& frame, ShaderApi* globalShader) {
 			RenderBatchCommands(frame, globalShader);
@@ -49,10 +61,22 @@ namespace Iberus {
 			pass->ExecutePass(frame, _renderBatchCommands);
 		}
 
-		/// Blit the final target fbo to the default frame buffer
-		auto* window = Engine::Instance()->GetCurrentWindow();
-		auto width = window->GetWidth();
-		auto height = window->GetWidth();
-		glBlitNamedFramebuffer(targetFBO->GetFBO(), 0, 0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);	
+		unsigned int blitTarget = outputFBO != 0 ? outputFBO : 0;
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, targetFBO->GetFBO());
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, blitTarget);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void OpenGLDeferredRenderer::Resize(int width, int height) {
+		currentWidth = width;
+		currentHeight = height;
+		glViewport(0, 0, width, height);
+		if (sourceFBO) {
+			sourceFBO->ResizeAttachments(width, height);
+		}
+		if (targetFBO) {
+			targetFBO->ResizeAttachments(width, height);
+		}
 	}
 }

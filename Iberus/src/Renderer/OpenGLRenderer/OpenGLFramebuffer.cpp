@@ -11,6 +11,7 @@ namespace Iberus {
 		textures = inTextures;
 
 		glGenFramebuffers(1, &fbo);
+		glGenTextures(1, &depthTexture);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 
 		for (unsigned int i = 0; i < textures.size(); i++) {
@@ -37,6 +38,14 @@ namespace Iberus {
 
 		glDrawBuffers(4, DrawBuffers);
 
+		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
+		glBindTexture(GL_TEXTURE_2D, depthTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, currentWindow->GetWidth(), currentWindow->GetHeight(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
 		GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
 		if (Status != GL_FRAMEBUFFER_COMPLETE) {
@@ -50,6 +59,9 @@ namespace Iberus {
 	OpenGLFramebuffer::~OpenGLFramebuffer() {
 		if (fbo != 0) {
 			glDeleteFramebuffers(1, &fbo);
+		}
+		if (depthTexture != 0) {
+			glDeleteTextures(1, &depthTexture);
 		}
 	}
 
@@ -86,6 +98,25 @@ namespace Iberus {
 	}
 
 	void OpenGLFramebuffer::Unbind() const {
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	}
+
+	void OpenGLFramebuffer::BindDepthTexture(int textureUnit) const {
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, depthTexture);
+	}
+
+	void OpenGLFramebuffer::ResizeAttachments(int width, int height) {
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		for (unsigned int i = 0; i < textures.size(); i++) {
+			textures[i]->Bind();
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, nullptr);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		}
+		glBindTexture(GL_TEXTURE_2D, depthTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
 

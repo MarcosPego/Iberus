@@ -42,6 +42,7 @@ namespace Iberus {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_BLEND);
+		glDisable(GL_CULL_FACE);
 
 		renderFrame(frame, shaderPass);
 
@@ -49,6 +50,7 @@ namespace Iberus {
 		// depends on it, but it does not write to it.
 		glDepthMask(GL_FALSE);
 		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
 
 	
 #ifdef DEBUG_FBO

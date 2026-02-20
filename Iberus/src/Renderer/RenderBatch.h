@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
 namespace Iberus {
 	class CameraRenderCmd;
 	class RenderCmd;
@@ -13,33 +16,31 @@ namespace Iberus {
 
 	class RenderBatch {
 	public:
-		~RenderBatch();
-
-		void PushRenderCmdToQueue(RenderCmd* inboundRenderCmd, CMDQueue queue = CMDQueue::Default);
+		void PushRenderCmdToQueue(std::unique_ptr<RenderCmd> inboundRenderCmd, CMDQueue queue = CMDQueue::Default);
 	
-		const std::vector<RenderCmd*>& GetLightRenderCmd() const {
+		const std::vector<std::unique_ptr<RenderCmd>>& GetLightRenderCmd() const {
 			return lightRenderCmds;
 		}
 
-		const std::vector<RenderCmd*>& GetSDFRenderCmds() const {
+		const std::vector<std::unique_ptr<RenderCmd>>& GetSDFRenderCmds() const {
 			return sdfRenderCmds;
 		}
 
 		const CameraRenderCmd* GetCameraRenderCmd() const {
-			return cameraCmd;
+			return cameraCmd.get();
 		}
 
-		const std::vector<RenderCmd*>& GetRenderCmds() const {
+		const std::vector<std::unique_ptr<RenderCmd>>& GetRenderCmds() const {
 			return renderCmds;
 		}
 
 	private:
-		std::vector<RenderCmd*> renderCmds;
+		std::vector<std::unique_ptr<RenderCmd>> renderCmds;
 
-		std::vector<RenderCmd*> sdfRenderCmds;
-		std::vector<RenderCmd*> lightRenderCmds;
+		std::vector<std::unique_ptr<RenderCmd>> sdfRenderCmds;
+		std::vector<std::unique_ptr<RenderCmd>> lightRenderCmds;
 
-		CameraRenderCmd* cameraCmd{ nullptr };
+		std::unique_ptr<CameraRenderCmd> cameraCmd;
 	};
 }
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -26,19 +26,19 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -80,21 +80,26 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>dependencies\glfw\lib-vc2019;dependencies\glew\lib\Release\x64;dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Debug-windows-x86_64\Iberus\Iberus.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Iberus\Iberus.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Iberus\Iberus.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Iberus\Iberus.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>if not exist "$(SolutionDir)Game-Build" mkdir "$(SolutionDir)Game-Build"
+if not exist "$(SolutionDir)Game-Build/App" mkdir "$(SolutionDir)Game-Build/App"
+copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" "$(SolutionDir)Game-Build/App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -103,25 +108,31 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>dependencies\glfw\lib-vc2019;dependencies\glew\lib\Release\x64;dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release-windows-x86_64\Iberus\Iberus.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-x86_64\Iberus\Iberus.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Iberus\Iberus.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Iberus\Iberus.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>if not exist "$(SolutionDir)Game-Build" mkdir "$(SolutionDir)Game-Build"
+if not exist "$(SolutionDir)Game-Build/App" mkdir "$(SolutionDir)Game-Build/App"
+copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -130,37 +141,42 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Renderer;src\Scene;src\Tools;src\Core\Types;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\Resources;src;dependencies\spdlog\include;dependencies\glfw\include\GLFW;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;FastNoiseD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;glfw3_mt.lib;FastNoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>dependencies\glfw\lib-vc2019;dependencies\glew\lib\Release\x64;dependencies\FastNoise2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Dist-windows-x86_64\Iberus\Iberus.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist-windows-x86_64\Iberus\Iberus.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\Iberus\Iberus.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\Iberus\Iberus.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>if not exist "$(SolutionDir)Game-Build" mkdir "$(SolutionDir)Game-Build"
+if not exist "$(SolutionDir)Game-Build/App" mkdir "$(SolutionDir)Game-Build/App"
+copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)Game-Build/App\"
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_C.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_Config.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_Export.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\BasicGenerators.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Blends.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Cellular.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarp.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarpFractal.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarpSimplex.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Fractal.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Generator.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Modifiers.h" />
@@ -168,13 +184,15 @@
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Simplex.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Value.h" />
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Metadata.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\SmartNode.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_Config.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_Export.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FunctionList.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\InlInclude.h" />
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\SIMDTypeList.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Utility\Config.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Utility\Export.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Utility\SmartNode.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\DispatchClass.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_FastNoise_config.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\ArchDetect.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\Export.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\FeatureEnums.h" />
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\FeatureSetList.h" />
     <ClInclude Include="dependencies\glew\include\GL\eglew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glew.h" />
     <ClInclude Include="dependencies\glew\include\GL\glxew.h" />
@@ -190,12 +208,15 @@
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_glut.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_metal.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_null.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl2.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_osx.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdl2.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdl3.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlgpu3.h" />
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlgpu3_shaders.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlrenderer2.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlrenderer3.h" />
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_vulkan.h" />
@@ -216,13 +237,16 @@
     <ClInclude Include="dependencies\imgui\misc\freetype\imgui_freetype.h" />
     <ClInclude Include="dependencies\imgui\misc\single_file\imgui_single_file.h" />
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.h" />
     <ClInclude Include="src\BuiltInBehaviors\CameraController.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Core\Enginepch.h" />
     <ClInclude Include="src\Core\EntryPoint.h" />
+    <ClInclude Include="src\Core\GameLayer.h" />
+    <ClInclude Include="src\Core\Input\KeyCode.h" />
+    <ClInclude Include="src\Core\Input\ModifierFlags.h" />
+    <ClInclude Include="src\Core\Input\MouseCode.h" />
     <ClInclude Include="src\Core\InputManager.h" />
     <ClInclude Include="src\Core\Layer.h" />
     <ClInclude Include="src\Core\LayerStack.h" />
@@ -233,13 +257,19 @@
     <ClInclude Include="src\Events\KeyEvent.h" />
     <ClInclude Include="src\Events\MouseEvent.h" />
     <ClInclude Include="src\FileSystem\FileSystem.h" />
+    <ClInclude Include="src\FileSystem\FileWatcher.h" />
     <ClInclude Include="src\Iberus.h" />
     <ClInclude Include="src\Logging\Log.h" />
     <ClInclude Include="src\Maths\MathUtils.h" />
     <ClInclude Include="src\Maths\Matrix.h" />
     <ClInclude Include="src\Maths\Noise.h" />
     <ClInclude Include="src\Maths\Quaternions.h" />
+    <ClInclude Include="src\Maths\Ray.h" />
     <ClInclude Include="src\Maths\Vector.h" />
+    <ClInclude Include="src\Platform\GLFW\InputTranslationGLFW.h" />
+    <ClInclude Include="src\Project\Project.h" />
+    <ClInclude Include="src\Project\ProjectSerializer.h" />
+    <ClInclude Include="src\ProjectInclude.h" />
     <ClInclude Include="src\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Renderer\MeshApi.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.h" />
@@ -248,6 +278,7 @@
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLDeferredLightPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
@@ -264,38 +295,91 @@
     <ClInclude Include="src\Renderer\TextureApi.h" />
     <ClInclude Include="src\Renderer\Window.h" />
     <ClInclude Include="src\Scene\Behaviour.h" />
-    <ClInclude Include="src\Scene\Camera.h" />
-    <ClInclude Include="src\Scene\Entity.h" />
-    <ClInclude Include="src\Scene\Light.h" />
+    <ClInclude Include="src\Scene\BehaviourRegistry.h" />
+    <ClInclude Include="src\Scene\ECS\BehaviourSystem.h" />
+    <ClInclude Include="src\Scene\ECS\CameraSystem.h" />
+    <ClInclude Include="src\Scene\ECS\ComponentStorage.h" />
+    <ClInclude Include="src\Scene\ECS\Components.h" />
+    <ClInclude Include="src\Scene\ECS\EntityId.h" />
+    <ClInclude Include="src\Scene\ECS\LightSystem.h" />
+    <ClInclude Include="src\Scene\ECS\MeshRenderSystem.h" />
+    <ClInclude Include="src\Scene\ECS\SDFRenderSystem.h" />
+    <ClInclude Include="src\Scene\ECS\TerrainSystem.h" />
+    <ClInclude Include="src\Scene\ECS\TransformSystem.h" />
+    <ClInclude Include="src\Scene\ECS\World.h" />
     <ClInclude Include="src\Scene\Material.h" />
     <ClInclude Include="src\Scene\Resources\Buffer.h" />
     <ClInclude Include="src\Scene\Resources\FileSystemProvider.h" />
     <ClInclude Include="src\Scene\Resources\IProvider.h" />
     <ClInclude Include="src\Scene\Resources\Mesh.h" />
     <ClInclude Include="src\Scene\Resources\MeshFactory.h" />
+    <ClInclude Include="src\Scene\Resources\ProjectPaths.h" />
     <ClInclude Include="src\Scene\Resources\Resource.h" />
     <ClInclude Include="src\Scene\Resources\ResourceManager.h" />
     <ClInclude Include="src\Scene\Resources\Shader.h" />
     <ClInclude Include="src\Scene\Resources\Texture.h" />
-    <ClInclude Include="src\Scene\SDFEntity.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
+    <ClInclude Include="src\Scene\Serialization\MaterialSerializer.h" />
+    <ClInclude Include="src\Scene\Serialization\PrefabAsset.h" />
+    <ClInclude Include="src\Scene\Serialization\PrefabSerializer.h" />
+    <ClInclude Include="src\Scene\Serialization\SceneSerializer.h" />
     <ClInclude Include="src\SceneInclude.h" />
-    <ClInclude Include="src\Tools\Editor.h" />
+    <ClInclude Include="src\Scripting\ScriptAPI.h" />
+    <ClInclude Include="src\Scripting\ScriptHost.h" />
+    <ClInclude Include="src\Serialization\JsonValue.h" />
+    <ClInclude Include="src\Tools\Editor\Editor.h" />
+    <ClInclude Include="src\Tools\Editor\EditorLayer.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\CreatureCreatorPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\FileSystemPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\GameViewPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneTreePanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewFBO.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\ThumbnailCache.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\WelcomePanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPicking.h" />
+    <ClInclude Include="src\Tools\Editor\SceneViewerCameraBehaviour.h" />
+    <ClInclude Include="src\Tools\GUI\IGUIContext.h" />
+    <ClInclude Include="src\Tools\GUI\Imgui\ImguiContext.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.cpp" />
+    <ClCompile Include="dependencies\imgui\backends\imgui_impl_glfw.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\backends\imgui_impl_opengl3.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_demo.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_draw.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_tables.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_widgets.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\BuiltInBehaviors\CameraController.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
     <ClCompile Include="src\Core\Enginepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Core\GameLayer.cpp" />
     <ClCompile Include="src\Core\InputManager.cpp" />
     <ClCompile Include="src\Core\Layer.cpp" />
     <ClCompile Include="src\Core\LayerStack.cpp" />
     <ClCompile Include="src\Core\Types\Color.cpp" />
     <ClCompile Include="src\FileSystem\FileSystem.cpp" />
+    <ClCompile Include="src\FileSystem\FileWatcher.cpp" />
     <ClCompile Include="src\Logging\Log.cpp" />
     <ClCompile Include="src\Maths\Mat2.cpp" />
     <ClCompile Include="src\Maths\Mat3.cpp" />
@@ -304,9 +388,13 @@
     <ClCompile Include="src\Maths\MatrixFactory.cpp" />
     <ClCompile Include="src\Maths\Noise.cpp" />
     <ClCompile Include="src\Maths\Quaternions.cpp" />
+    <ClCompile Include="src\Maths\Ray.cpp" />
     <ClCompile Include="src\Maths\Vec2.cpp" />
     <ClCompile Include="src\Maths\Vec3.cpp" />
     <ClCompile Include="src\Maths\Vec4.cpp" />
+    <ClCompile Include="src\Platform\GLFW\InputTranslationGLFW.cpp" />
+    <ClCompile Include="src\Project\Project.cpp" />
+    <ClCompile Include="src\Project\ProjectSerializer.cpp" />
     <ClCompile Include="src\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Renderer\MeshApi.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLDeferredRenderer.cpp" />
@@ -315,6 +403,7 @@
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLDeferredLightPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />
@@ -331,23 +420,50 @@
     <ClCompile Include="src\Renderer\TextureApi.cpp" />
     <ClCompile Include="src\Renderer\Window.cpp" />
     <ClCompile Include="src\Scene\Behaviour.cpp" />
-    <ClCompile Include="src\Scene\Camera.cpp" />
-    <ClCompile Include="src\Scene\Entity.cpp" />
-    <ClCompile Include="src\Scene\Light.cpp" />
+    <ClCompile Include="src\Scene\BehaviourRegistry.cpp" />
+    <ClCompile Include="src\Scene\ECS\BehaviourSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\CameraSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\LightSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\MeshRenderSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\SDFRenderSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\TerrainSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\TransformSystem.cpp" />
+    <ClCompile Include="src\Scene\ECS\World.cpp" />
     <ClCompile Include="src\Scene\Material.cpp" />
     <ClCompile Include="src\Scene\Resources\Buffer.cpp" />
     <ClCompile Include="src\Scene\Resources\FileSystemProvider.cpp" />
     <ClCompile Include="src\Scene\Resources\IProvider.cpp" />
     <ClCompile Include="src\Scene\Resources\Mesh.cpp" />
     <ClCompile Include="src\Scene\Resources\MeshFactory.cpp" />
+    <ClCompile Include="src\Scene\Resources\ProjectPaths.cpp" />
     <ClCompile Include="src\Scene\Resources\Resource.cpp" />
     <ClCompile Include="src\Scene\Resources\ResourceManager.cpp" />
     <ClCompile Include="src\Scene\Resources\Shader.cpp" />
     <ClCompile Include="src\Scene\Resources\Texture.cpp" />
-    <ClCompile Include="src\Scene\SDFEntity.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
-    <ClCompile Include="src\Tools\Editor.cpp" />
+    <ClCompile Include="src\Scene\Serialization\MaterialSerializer.cpp" />
+    <ClCompile Include="src\Scene\Serialization\PrefabAsset.cpp" />
+    <ClCompile Include="src\Scene\Serialization\PrefabSerializer.cpp" />
+    <ClCompile Include="src\Scene\Serialization\SceneSerializer.cpp" />
+    <ClCompile Include="src\Scripting\ScriptAPI.cpp" />
+    <ClCompile Include="src\Scripting\ScriptHost.cpp" />
+    <ClCompile Include="src\Serialization\JsonValue.cpp" />
+    <ClCompile Include="src\Tools\Editor\Editor.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorLayer.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\CreatureCreatorPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\FileSystemPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\GameViewPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneTreePanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewFBO.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\ThumbnailCache.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\WelcomePanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPicking.cpp" />
+    <ClCompile Include="src\Tools\Editor\SceneViewerCameraBehaviour.cpp" />
+    <ClCompile Include="src\Tools\GUI\Imgui\ImguiContext.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -14,12 +14,15 @@ namespace Iberus {
 		virtual ~WindowsWindow() override;
 
 		void Update() override;
+		void PollEvents() override;
 
 		virtual void Shutdown();
 
 		void SetVSync(bool enabled) override;
 
 		void SetEventCallback(const EventCallbackFn& eventCallback) override;
+
+		void* GetNativeWindow() const override { return window; }
 
 	private: // Window internal setup
 
@@ -36,6 +39,7 @@ namespace Iberus {
 			bool vsync{ true };
 
 			EventCallbackFn EventCallback;
+			WindowsWindow* owner{ nullptr };
 		};
 
 		WindowData windowData;

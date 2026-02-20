@@ -78,7 +78,7 @@ namespace Math {
 
 	};
 
-	struct Mat4 {
+	struct IBERUS_API Mat4 {
 		GLfloat data[16];
 		float array_size = (sizeof(data) / sizeof(*data));
 

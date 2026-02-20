@@ -14,6 +14,7 @@ namespace Iberus {
 		MeshApi* quadMesh{ nullptr };
 
 		std::vector<int> texturesIdxs{ 4, 5, 6, 7 };
+		static constexpr int depthTextureIdx = 8;
 	};
 
 }

@@ -1,3 +1,6 @@
 [submodule "Iberus/dependencies/spdlog"]
 	path = Iberus/dependencies/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "Iberus/dependencies/imgui"]
+	path = Iberus/dependencies/imgui
+	url = https://github.com/ocornut/imgui

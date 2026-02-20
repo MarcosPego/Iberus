@@ -80,11 +80,17 @@ namespace Iberus {
 				else {
 					for (int i = 0; i < 3; i++) {
 						std::getline(sline, token, '/');
-						if (token.size() > 0) vertexIdx.push_back(std::stoi(token));
+						if (token.size() > 0) {
+							vertexIdx.push_back(std::stoi(token));
+						}
 						std::getline(sline, token, '/');
-						if (token.size() > 0) uvIdx.push_back(std::stoi(token));
+						if (token.size() > 0) {
+							uvIdx.push_back(std::stoi(token));
+						}
 						std::getline(sline, token, ' ');
-						if (token.size() > 0) normalIdx.push_back(std::stoi(token));
+						if (token.size() > 0) {
+							normalIdx.push_back(std::stoi(token));
+						}
 					}
 				}
 			}

@@ -61,8 +61,8 @@ namespace Iberus {
 
 	Texture::~Texture() {
 		auto& renderer = Engine::Instance()->GetRenderer();
-		auto deleteTextrure = new DeleteTextureRenderCmd(ID);
-		renderer.PushRenderCmd(deleteTextrure);
+		auto deleteTexture = new DeleteTextureRenderCmd(ID);
+		renderer.PushRenderCmd(deleteTexture);
 	}
 
 	bool Texture::Load(Buffer inboundBuffer) {

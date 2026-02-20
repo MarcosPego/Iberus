@@ -5,36 +5,23 @@
 
 namespace Iberus {
 
-	RenderBatch::~RenderBatch() {
-		if (cameraCmd) {
-			delete cameraCmd;
-		}
-
-
-		for (auto* renderCmd : renderCmds) {
-			delete renderCmd;
-		}
-	}
-
-	void RenderBatch::PushRenderCmdToQueue(RenderCmd* inboundRenderCmd, CMDQueue queue) {
+	void RenderBatch::PushRenderCmdToQueue(std::unique_ptr<RenderCmd> inboundRenderCmd, CMDQueue queue) {
 		switch (queue)
 		{
 		case Iberus::CMDQueue::Default:
-			renderCmds.push_back(inboundRenderCmd);
+			renderCmds.push_back(std::move(inboundRenderCmd));
 			break;
 		case Iberus::CMDQueue::Camera:
-			cameraCmd = dynamic_cast<CameraRenderCmd*>(inboundRenderCmd);
+			cameraCmd.reset(dynamic_cast<CameraRenderCmd*>(inboundRenderCmd.release()));
 			break;
 		case Iberus::CMDQueue::SDF:
-			sdfRenderCmds.push_back(inboundRenderCmd);
+			sdfRenderCmds.push_back(std::move(inboundRenderCmd));
 			break;
 		case Iberus::CMDQueue::Light:
-			lightRenderCmds.push_back(inboundRenderCmd);
+			lightRenderCmds.push_back(std::move(inboundRenderCmd));
 			break;
 		default:
 			break;
 		}
-
-		
 	}
 }

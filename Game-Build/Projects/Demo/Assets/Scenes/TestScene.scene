@@ -1,0 +1,765 @@
+{
+  "activeCameraId": "ent_1",
+  "entities": [
+    {
+      "active": true,
+      "children": [
+        "ent_1",
+        "ent_2",
+        "ent_3",
+        "ent_4",
+        "ent_5",
+        "ent_6",
+        "ent_7",
+        "ent_8",
+        "ent_9"
+      ],
+      "id": "ent_0",
+      "tag": {
+        "Id": "__rootEntity",
+        "Name": "Scene Root"
+      },
+      "transform": {
+        "Position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "active": true,
+      "behaviours": [
+        "b_scene_viewer_camera"
+      ],
+      "camera": {
+        "Aspect": 1.3221982717514038,
+        "FarZ": 8000.0,
+        "Fovy": 60.0,
+        "NearZ": 0.10000000149011612,
+        "OrthoBottom": -1.0,
+        "OrthoFar": 1.0,
+        "OrthoLeft": -1.0,
+        "OrthoNear": -1.0,
+        "OrthoRight": 1.0,
+        "OrthoTop": 1.0,
+        "ProjectionType": 2
+      },
+      "id": "ent_1",
+      "parent": "ent_0",
+      "tag": {
+        "Id": "Camera",
+        "Name": "Camera"
+      },
+      "transform": {
+        "Position": [
+          0.0,
+          28.700000762939453,
+          0.699999988079071
+        ],
+        "Rotation": [
+          36.0,
+          180.0,
+          -1.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "active": true,
+      "id": "ent_2",
+      "light": {
+        "Color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "Constant": 1.0,
+        "Direction": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "Intensity": 1.0,
+        "Linear": 0.09000000357627869,
+        "Quadratic": 0.03200000151991844,
+        "Range": 50.0,
+        "SpotAngle": 45.0,
+        "Type": 3
+      },
+      "parent": "ent_0",
+      "tag": {
+        "Id": "Light",
+        "Name": "Light"
+      },
+      "transform": {
+        "Position": [
+          15.0,
+          15.0,
+          25.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "active": true,
+      "id": "ent_3",
+      "meshRenderer": {
+        "MaterialId": "SDFMaterial1",
+        "MeshId": ""
+      },
+      "parent": "ent_0",
+      "script": {
+        "AssemblyPath": "Assets/Scripts/Demo.Scripts.dll",
+        "TypeName": "Demo.ProceduralMovementController"
+      },
+      "sdf": [
+        {
+          "Endpoint": [
+            -1.600000023841858,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              -2.0,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            -1.2000000476837158,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              -1.600000023841858,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            -0.7999999523162842,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              -1.2000000476837158,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            -0.3999999761581421,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              -0.7999999523162842,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              -0.3999999761581421,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            0.40000009536743164,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            0.7999999523162842,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              0.40000009536743164,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            1.2000000476837158,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              0.7999999523162842,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            1.5999999046325684,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              1.2000000476837158,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial1",
+          "Radius": 0.07999999821186066,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              1.5999999046325684,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial2",
+          "Radius": 0.11999999731779099,
+          "Type": 1,
+          "transform": {
+            "Position": [
+              2.0999999046325684,
+              0.07999999821186066,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial3",
+          "Radius": 0.07000000029802322,
+          "Type": 1,
+          "transform": {
+            "Position": [
+              2.200000047683716,
+              0.18000000715255737,
+              0.07999999821186066
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "MaterialId": "SDFMaterial3",
+          "Radius": 0.07000000029802322,
+          "Type": 1,
+          "transform": {
+            "Position": [
+              2.200000047683716,
+              0.18000000715255737,
+              -0.07999999821186066
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            2.450000047683716,
+            0.019999999552965164,
+            0.03999999910593033
+          ],
+          "MaterialId": "SDFMaterial2",
+          "Radius": 0.019999999552965164,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              2.25,
+              0.05000000074505806,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "Endpoint": [
+            2.450000047683716,
+            0.019999999552965164,
+            -0.03999999910593033
+          ],
+          "MaterialId": "SDFMaterial2",
+          "Radius": 0.019999999552965164,
+          "Type": 3,
+          "transform": {
+            "Position": [
+              2.25,
+              0.05000000074505806,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        }
+      ],
+      "tag": {
+        "Id": "SDFteste1",
+        "Name": "SDFteste1"
+      },
+      "transform": {
+        "Position": [
+          0.0,
+          15.199999809265137,
+          20.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "active": true,
+      "id": "ent_4",
+      "meshRenderer": {
+        "MaterialId": "CubeMaterial1",
+        "MeshId": "assets/meshes/cube.obj"
+      },
+      "parent": "ent_0",
+      "tag": {
+        "Id": "Cube1",
+        "Name": "Cube1"
+      },
+      "transform": {
+        "Position": [
+          -3.5950000286102295,
+          14.199999809265137,
+          7.400000095367432
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "active": true,
+      "id": "ent_5",
+      "meshRenderer": {
+        "MaterialId": "CubeMaterial2",
+        "MeshId": "assets/meshes/cube.obj"
+      },
+      "parent": "ent_0",
+      "tag": {
+        "Id": "Cube2",
+        "Name": "Cube2"
+      },
+      "transform": {
+        "Position": [
+          12.699999809265137,
+          14.600000381469727,
+          22.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "active": true,
+      "id": "ent_6",
+      "meshRenderer": {
+        "MaterialId": "CubeMaterial1",
+        "MeshId": "assets/meshes/cube.obj"
+      },
+      "parent": "ent_0",
+      "tag": {
+        "Id": "Cube3",
+        "Name": "Cube3"
+      },
+      "transform": {
+        "Position": [
+          2.4000000953674316,
+          14.5,
+          25.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "active": true,
+      "id": "ent_7",
+      "meshRenderer": {
+        "MaterialId": "CubeMaterial3",
+        "MeshId": "assets/meshes/cube.obj"
+      },
+      "parent": "ent_0",
+      "tag": {
+        "Id": "Cube4",
+        "Name": "Cube4"
+      },
+      "transform": {
+        "Position": [
+          11.199999809265137,
+          14.300000190734863,
+          10.5
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "active": true,
+      "id": "ent_8",
+      "meshRenderer": {
+        "MaterialId": "CubeMaterial2",
+        "MeshId": "assets/meshes/cube.obj"
+      },
+      "parent": "ent_0",
+      "tag": {
+        "Id": "Cube5",
+        "Name": "Cube5"
+      },
+      "transform": {
+        "Position": [
+          -10.0,
+          16.0,
+          20.0
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "active": true,
+      "id": "ent_9",
+      "meshRenderer": {
+        "MaterialId": "PlaneMaterial",
+        "MeshId": "terrain_heightmap"
+      },
+      "parent": "ent_0",
+      "tag": {
+        "Id": "Terrain",
+        "Name": "Terrain"
+      },
+      "terrain": {
+        "Frequency": 0.009999999776482582,
+        "Height": 65,
+        "HeightScale": 6.5,
+        "MaterialId": "PlaneMaterial",
+        "MeshId": "terrain_heightmap",
+        "NeedsRegenerate": false,
+        "Octaves": 2,
+        "Seed": 1337,
+        "Width": 65,
+        "WorldSizeX": 60.0,
+        "WorldSizeZ": 60.0,
+        "XOffset": 0.0,
+        "ZOffset": 0.0
+      },
+      "transform": {
+        "Position": [
+          0.0,
+          11.600000381469727,
+          23.799999237060547
+        ],
+        "Rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    }
+  ],
+  "version": 1
+}

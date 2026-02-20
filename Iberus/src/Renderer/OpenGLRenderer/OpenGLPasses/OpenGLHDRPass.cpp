@@ -2,8 +2,8 @@
 #include "OpenGLHDRPass.h"
 
 #include "Engine.h"
-#include "Window.h"
 #include "Framebuffer.h"
+#include "Matrix.h"
 #include "ShaderBindings.h"
 #include "OpenGLShader.h"
 
@@ -35,7 +35,7 @@ namespace Iberus {
 
 		ShaderBindings::SetUniform<float>(programID, "exposure", exposure);
 		ShaderBindings::SetUniform<float>(programID, "gamma", gamma);
-		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuad"));
+		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuadNDC"));
 	}
 
 	void OpenGLHDRPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
@@ -52,22 +52,11 @@ namespace Iberus {
 			programID = openGLShader->GetProgramID();
 		}
 
-		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
-		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(currentWindow->GetWidth(), currentWindow->GetHeight()));
+		int effW = frame.renderWidth > 0 ? frame.renderWidth : Engine::Instance()->GetEffectiveRenderWidth();
+		int effH = frame.renderHeight > 0 ? frame.renderHeight : Engine::Instance()->GetEffectiveRenderHeight();
+		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(effW), static_cast<float>(effH)));
 
-		for (const RenderBatch& renderBatch : frame.renderBatches) {
-			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
-			if (cameraRenderCmd) {
-				ShaderBindings::SetUniform<Mat4>(programID, "ViewMatrix", cameraRenderCmd->viewMatrix);
-				ShaderBindings::SetUniform<Mat4>(programID, "ProjectionMatrix", cameraRenderCmd->projectionMatrix);
-				ShaderBindings::SetUniform<Vec3>(programID, "cameraPos", cameraRenderCmd->cameraPos);
-			}
-		}
-
-		static const auto modelMatrix = MatrixFactory::CreateModelMatrix({ -currentWindow->GetWidth() * 0.5f, -currentWindow->GetHeight() * 0.5f, 0.0 }, { 0,0,0 }, { 1,1,1 });
-
-		// RenderQuad 
-		ShaderBindings::SetUniform<Mat4>(programID, "ModelMatrix", modelMatrix);
+		glDisable(GL_CULL_FACE);
 		quadMesh->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)quadMesh->VertexSize());
 		if (glGetError() != GL_NO_ERROR) {

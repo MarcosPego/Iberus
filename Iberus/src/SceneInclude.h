@@ -11,8 +11,6 @@
 #include "Texture.h"
 #include "MeshFactory.h"
 
-#include "SDFEntity.h"
-
 #include "Behaviour.h"
 
 #include "Engine.h"

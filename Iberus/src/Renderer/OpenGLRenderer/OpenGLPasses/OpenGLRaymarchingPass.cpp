@@ -2,10 +2,11 @@
 #include "OpenGLRaymarchingPass.h"
 
 #include "Engine.h"
-#include "Window.h"
 #include "Framebuffer.h"
+#include "Matrix.h"
 #include "ShaderBindings.h"
 #include "OpenGLShader.h"
+#include "OpenGLFramebuffer.h"
 
 #include "ShaderApi.h"
 #include "TextureApi.h"
@@ -43,7 +44,7 @@ namespace Iberus {
 		}
 		targetBuffer = renderer.CreateFramebuffer("raymarchFBO", texturesAPI);*/
 
-		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuad"));
+		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuadNDC"));
 	}
 
 	void OpenGLRaymarchingPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
@@ -57,17 +58,26 @@ namespace Iberus {
 
 		shaderPass->Bind();
 		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), texturesIdxs);
+		if (auto* glFbo = dynamic_cast<OpenGLFramebuffer*>(sourceBuffer)) {
+			glFbo->BindDepthTexture(depthTextureIdx);
+		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		int w = frame.renderWidth > 0 ? frame.renderWidth : 1;
+		int h = frame.renderHeight > 0 ? frame.renderHeight : 1;
+		glViewport(0, 0, w, h);
 
 		GLuint programID{ 0 };
 		if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderPass); openGLShader) {
 			programID = openGLShader->GetProgramID();
 		}
 
-		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
-		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(currentWindow->GetWidth(), currentWindow->GetHeight()));
+		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(w), static_cast<float>(h)));
+		ShaderBindings::SetUniform<int>(programID, "depthIn", depthTextureIdx);
+		// debugRayMode: 0=normal, 1=rayDir, 2=rayOrigin, 3=hitMiss, 4=sdfAtOrigin, 5=ndc
+		ShaderBindings::SetUniform<int>(programID, "debugRayMode", 0);
 
-		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
+		auto& renderer = Engine::Instance()->GetRenderer();
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
 			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
 			if (cameraRenderCmd) {
@@ -76,22 +86,16 @@ namespace Iberus {
 				ShaderBindings::SetUniform<Vec3>(programID, "cameraPos", cameraRenderCmd->cameraPos);
 				ShaderBindings::SetUniform<Mat4>(programID, "cameraToWorld", cameraRenderCmd->cameraToWorld);
 			}
-
 			for (const auto& renderCmd : renderBatch.GetSDFRenderCmds()) {
-				renderer.PushUniform(renderCmd, programID);
-			}		
+				renderer.PushUniform(renderCmd.get(), programID);
+			}
 		}
 
-		static const auto modelMatrix = MatrixFactory::CreateModelMatrix({ -currentWindow->GetWidth() * 0.5f, -currentWindow->GetHeight() * 0.5f, 0.0 }, { 0,0,0 }, { 1,1,1 });
-
-		// RenderQuad 
-		ShaderBindings::SetUniform<Mat4>(programID, "ModelMatrix", modelMatrix);
-
+		glDisable(GL_CULL_FACE);
 		quadMesh->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)quadMesh->VertexSize());
 		if (glGetError() != GL_NO_ERROR) {
 			//std::cout << "Error in Mesh" << std::endl;
 		}
-
 	}
 }

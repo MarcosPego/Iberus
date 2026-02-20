@@ -16,8 +16,14 @@
     <Filter Include="dependencies\FastNoise2\include\FastNoise\Generators">
       <UniqueIdentifier>{D032CF7E-BC71-79FA-65F4-552C51122F65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dependencies\FastNoise2\include\FastNoise\Utility">
+      <UniqueIdentifier>{4A890E7C-B64F-6B98-FFAA-F9FA6BB0D9FC}</UniqueIdentifier>
+    </Filter>
     <Filter Include="dependencies\FastNoise2\include\FastSIMD">
       <UniqueIdentifier>{D6DFF092-C25C-E4D5-EBD9-E4E9D7B58069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dependencies\FastNoise2\include\FastSIMD\Utility">
+      <UniqueIdentifier>{1914D24E-05BD-397E-2E53-55FD1A5B54BF}</UniqueIdentifier>
     </Filter>
     <Filter Include="dependencies\glew">
       <UniqueIdentifier>{AAD8926A-16EF-9000-5F66-1C22CBBB6188}</UniqueIdentifier>
@@ -91,6 +97,9 @@
     <Filter Include="src\Core">
       <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Core\Input">
+      <UniqueIdentifier>{64EB8104-50B9-750A-394D-E63025BA516F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Core\Types">
       <UniqueIdentifier>{09FF4E05-F5CC-420B-DE60-B331CACD1E70}</UniqueIdentifier>
     </Filter>
@@ -105,6 +114,15 @@
     </Filter>
     <Filter Include="src\Maths">
       <UniqueIdentifier>{599964B3-C503-192A-0E42-CACF7AEBF67E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\GLFW">
+      <UniqueIdentifier>{0002C6D8-6C18-C46E-B58F-4F9021E594F6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Project">
+      <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Renderer">
       <UniqueIdentifier>{73D1DFBF-5F34-6F64-08BA-A71AF4FB3AE7}</UniqueIdentifier>
@@ -121,11 +139,35 @@
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Scene\ECS">
+      <UniqueIdentifier>{54EF34BA-C0AF-B0F0-89EA-F96DF569F5CC}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Scene\Resources">
       <UniqueIdentifier>{F4BFD167-6021-AF75-E98E-F52755EFE534}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Scene\Serialization">
+      <UniqueIdentifier>{17282D86-835F-751D-8C69-D940F81F9C16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scripting">
+      <UniqueIdentifier>{6FBC2D98-DB7C-A9CE-A4B7-F24B1037EEAA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Serialization">
+      <UniqueIdentifier>{7A8EE480-E6A4-E216-2F1C-6E389B71B39E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Tools">
       <UniqueIdentifier>{6DDDEAB3-D947-9F2A-2286-50D08E2F7D7F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Tools\Editor">
+      <UniqueIdentifier>{031EAA1F-EF16-C971-1849-AEF604A1A87D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Tools\Editor\EditorPanels">
+      <UniqueIdentifier>{7C6116C3-E879-FDEC-B126-8D861DFE9186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Tools\GUI">
+      <UniqueIdentifier>{01CBE03F-6D8B-5C76-36C6-A5F3A245A152}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Tools\GUI\Imgui">
+      <UniqueIdentifier>{0B4510D6-77A6-EDE3-0014-34966C7424A3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -133,12 +175,6 @@
       <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_C.h">
-      <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_Config.h">
-      <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
-    </ClInclude>
-    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\FastNoise_Export.h">
       <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\BasicGenerators.h">
@@ -154,6 +190,9 @@
       <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarpFractal.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\DomainWarpSimplex.h">
       <Filter>dependencies\FastNoise2\include\FastNoise\Generators</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Generators\Fractal.h">
@@ -177,26 +216,32 @@
     <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Metadata.h">
       <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\SmartNode.h">
-      <Filter>dependencies\FastNoise2\include\FastNoise</Filter>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Utility\Config.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD.h">
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Utility\Export.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastNoise\Utility\SmartNode.h">
+      <Filter>dependencies\FastNoise2\include\FastNoise\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\DispatchClass.h">
       <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_Config.h">
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_FastNoise_config.h">
       <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FastSIMD_Export.h">
-      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\ArchDetect.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\FunctionList.h">
-      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\Export.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\InlInclude.h">
-      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\FeatureEnums.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\SIMDTypeList.h">
-      <Filter>dependencies\FastNoise2\include\FastSIMD</Filter>
+    <ClInclude Include="dependencies\FastNoise2\include\FastSIMD\Utility\FeatureSetList.h">
+      <Filter>dependencies\FastNoise2\include\FastSIMD\Utility</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\glew\include\GL\eglew.h">
       <Filter>dependencies\glew\include\GL</Filter>
@@ -243,6 +288,9 @@
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_metal.h">
       <Filter>dependencies\imgui\backends</Filter>
     </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_null.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl2.h">
       <Filter>dependencies\imgui\backends</Filter>
     </ClInclude>
@@ -259,6 +307,12 @@
       <Filter>dependencies\imgui\backends</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdl3.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlgpu3.h">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlgpu3_shaders.h">
       <Filter>dependencies\imgui\backends</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\imgui\backends\imgui_impl_sdlrenderer2.h">
@@ -339,6 +393,18 @@
     <ClInclude Include="src\Core\EntryPoint.h">
       <Filter>src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\GameLayer.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Input\KeyCode.h">
+      <Filter>src\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Input\ModifierFlags.h">
+      <Filter>src\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Input\MouseCode.h">
+      <Filter>src\Core\Input</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\InputManager.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -369,6 +435,9 @@
     <ClInclude Include="src\FileSystem\FileSystem.h">
       <Filter>src\FileSystem</Filter>
     </ClInclude>
+    <ClInclude Include="src\FileSystem\FileWatcher.h">
+      <Filter>src\FileSystem</Filter>
+    </ClInclude>
     <ClInclude Include="src\Iberus.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -387,8 +456,23 @@
     <ClInclude Include="src\Maths\Quaternions.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
+    <ClInclude Include="src\Maths\Ray.h">
+      <Filter>src\Maths</Filter>
+    </ClInclude>
     <ClInclude Include="src\Maths\Vector.h">
       <Filter>src\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\GLFW\InputTranslationGLFW.h">
+      <Filter>src\Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Project\Project.h">
+      <Filter>src\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Project\ProjectSerializer.h">
+      <Filter>src\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ProjectInclude.h">
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\Framebuffer.h">
       <Filter>src\Renderer</Filter>
@@ -412,6 +496,9 @@
       <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.h">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.h">
       <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
     </ClInclude>
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.h">
@@ -462,14 +549,41 @@
     <ClInclude Include="src\Scene\Behaviour.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Camera.h">
+    <ClInclude Include="src\Scene\BehaviourRegistry.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Entity.h">
-      <Filter>src\Scene</Filter>
+    <ClInclude Include="src\Scene\ECS\BehaviourSystem.h">
+      <Filter>src\Scene\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Light.h">
-      <Filter>src\Scene</Filter>
+    <ClInclude Include="src\Scene\ECS\CameraSystem.h">
+      <Filter>src\Scene\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ECS\ComponentStorage.h">
+      <Filter>src\Scene\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ECS\Components.h">
+      <Filter>src\Scene\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ECS\EntityId.h">
+      <Filter>src\Scene\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ECS\LightSystem.h">
+      <Filter>src\Scene\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ECS\MeshRenderSystem.h">
+      <Filter>src\Scene\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ECS\SDFRenderSystem.h">
+      <Filter>src\Scene\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ECS\TerrainSystem.h">
+      <Filter>src\Scene\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ECS\TransformSystem.h">
+      <Filter>src\Scene\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\ECS\World.h">
+      <Filter>src\Scene\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Material.h">
       <Filter>src\Scene</Filter>
@@ -489,6 +603,9 @@
     <ClInclude Include="src\Scene\Resources\MeshFactory.h">
       <Filter>src\Scene\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Resources\ProjectPaths.h">
+      <Filter>src\Scene\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Resources\Resource.h">
       <Filter>src\Scene\Resources</Filter>
     </ClInclude>
@@ -501,24 +618,107 @@
     <ClInclude Include="src\Scene\Resources\Texture.h">
       <Filter>src\Scene\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\SDFEntity.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\Serialization\MaterialSerializer.h">
+      <Filter>src\Scene\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Serialization\PrefabAsset.h">
+      <Filter>src\Scene\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Serialization\PrefabSerializer.h">
+      <Filter>src\Scene\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\Serialization\SceneSerializer.h">
+      <Filter>src\Scene\Serialization</Filter>
+    </ClInclude>
     <ClInclude Include="src\SceneInclude.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tools\Editor.h">
-      <Filter>src\Tools</Filter>
+    <ClInclude Include="src\Scripting\ScriptAPI.h">
+      <Filter>src\Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.h" />
+    <ClInclude Include="src\Scripting\ScriptHost.h">
+      <Filter>src\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Serialization\JsonValue.h">
+      <Filter>src\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\Editor.h">
+      <Filter>src\Tools\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorLayer.h">
+      <Filter>src\Tools\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\CreatureCreatorPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\FileSystemPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\GameViewPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneTreePanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewFBO.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\ThumbnailCache.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\WelcomePanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPicking.h">
+      <Filter>src\Tools\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\Editor\SceneViewerCameraBehaviour.h">
+      <Filter>src\Tools\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\GUI\IGUIContext.h">
+      <Filter>src\Tools\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tools\GUI\Imgui\ImguiContext.h">
+      <Filter>src\Tools\GUI\Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dependencies\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>dependencies\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_demo.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_draw.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_tables.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_widgets.cpp">
+      <Filter>dependencies\imgui</Filter>
+    </ClCompile>
     <ClCompile Include="src\BuiltInBehaviors\CameraController.cpp">
       <Filter>src\BuiltInBehaviors</Filter>
     </ClCompile>
@@ -529,6 +729,9 @@
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Enginepch.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\GameLayer.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\InputManager.cpp">
@@ -544,6 +747,9 @@
       <Filter>src\Core\Types</Filter>
     </ClCompile>
     <ClCompile Include="src\FileSystem\FileSystem.cpp">
+      <Filter>src\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\FileWatcher.cpp">
       <Filter>src\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\Logging\Log.cpp">
@@ -570,6 +776,9 @@
     <ClCompile Include="src\Maths\Quaternions.cpp">
       <Filter>src\Maths</Filter>
     </ClCompile>
+    <ClCompile Include="src\Maths\Ray.cpp">
+      <Filter>src\Maths</Filter>
+    </ClCompile>
     <ClCompile Include="src\Maths\Vec2.cpp">
       <Filter>src\Maths</Filter>
     </ClCompile>
@@ -578,6 +787,15 @@
     </ClCompile>
     <ClCompile Include="src\Maths\Vec4.cpp">
       <Filter>src\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\GLFW\InputTranslationGLFW.cpp">
+      <Filter>src\Platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\Project.cpp">
+      <Filter>src\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\ProjectSerializer.cpp">
+      <Filter>src\Project</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\Framebuffer.cpp">
       <Filter>src\Renderer</Filter>
@@ -601,6 +819,9 @@
       <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.cpp">
+      <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.cpp">
       <Filter>src\Renderer\OpenGLRenderer\OpenGLPasses</Filter>
     </ClCompile>
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.cpp">
@@ -651,14 +872,32 @@
     <ClCompile Include="src\Scene\Behaviour.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Camera.cpp">
+    <ClCompile Include="src\Scene\BehaviourRegistry.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Entity.cpp">
-      <Filter>src\Scene</Filter>
+    <ClCompile Include="src\Scene\ECS\BehaviourSystem.cpp">
+      <Filter>src\Scene\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Light.cpp">
-      <Filter>src\Scene</Filter>
+    <ClCompile Include="src\Scene\ECS\CameraSystem.cpp">
+      <Filter>src\Scene\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\ECS\LightSystem.cpp">
+      <Filter>src\Scene\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\ECS\MeshRenderSystem.cpp">
+      <Filter>src\Scene\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\ECS\SDFRenderSystem.cpp">
+      <Filter>src\Scene\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\ECS\TerrainSystem.cpp">
+      <Filter>src\Scene\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\ECS\TransformSystem.cpp">
+      <Filter>src\Scene\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\ECS\World.cpp">
+      <Filter>src\Scene\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Material.cpp">
       <Filter>src\Scene</Filter>
@@ -678,6 +917,9 @@
     <ClCompile Include="src\Scene\Resources\MeshFactory.cpp">
       <Filter>src\Scene\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scene\Resources\ProjectPaths.cpp">
+      <Filter>src\Scene\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Resources\Resource.cpp">
       <Filter>src\Scene\Resources</Filter>
     </ClCompile>
@@ -690,18 +932,77 @@
     <ClCompile Include="src\Scene\Resources\Texture.cpp">
       <Filter>src\Scene\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\SDFEntity.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tools\Editor.cpp">
-      <Filter>src\Tools</Filter>
+    <ClCompile Include="src\Scene\Serialization\MaterialSerializer.cpp">
+      <Filter>src\Scene\Serialization</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.cpp" />
+    <ClCompile Include="src\Scene\Serialization\PrefabAsset.cpp">
+      <Filter>src\Scene\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Serialization\PrefabSerializer.cpp">
+      <Filter>src\Scene\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\Serialization\SceneSerializer.cpp">
+      <Filter>src\Scene\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\ScriptAPI.cpp">
+      <Filter>src\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scripting\ScriptHost.cpp">
+      <Filter>src\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Serialization\JsonValue.cpp">
+      <Filter>src\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\Editor.cpp">
+      <Filter>src\Tools\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorLayer.cpp">
+      <Filter>src\Tools\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\AssetInspectorPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\CreatureCreatorPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\FileSystemPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\GameViewPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneTreePanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewFBO.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\ThumbnailCache.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\WelcomePanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPicking.cpp">
+      <Filter>src\Tools\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\SceneViewerCameraBehaviour.cpp">
+      <Filter>src\Tools\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\GUI\Imgui\ImguiContext.cpp">
+      <Filter>src\Tools\GUI\Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

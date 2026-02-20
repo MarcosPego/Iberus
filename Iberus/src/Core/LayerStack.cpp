@@ -1,5 +1,6 @@
 #include "Enginepch.h"
 #include "LayerStack.h"
+#include "Layer.h"
 
 namespace Iberus {
 	LayerStack::LayerStack() {
@@ -35,6 +36,26 @@ namespace Iberus {
 		auto it = std::find(layers.begin(), layers.end(), layer);
 		if (it != layers.end()) {
 			layers.erase(it);
+		}
+	}
+
+	void LayerStack::ForEachLayer(const std::function<void(Layer*)>& fn) const {
+		for (Layer* layer : layers) {
+			fn(layer);
+		}
+		for (Layer* overlay : overlays) {
+			fn(overlay);
+		}
+	}
+
+	void LayerStack::ForEachLayerOverlaysFirst(const std::function<void(Layer*)>& fn) const {
+		// Run overlays first so EditorLayer can set editor render target and camera before GameLayer renders.
+		// This ensures the deferred passes use correct viewport dimensions and aspect ratio.
+		for (Layer* overlay : overlays) {
+			fn(overlay);
+		}
+		for (Layer* layer : layers) {
+			fn(layer);
 		}
 	}
 }

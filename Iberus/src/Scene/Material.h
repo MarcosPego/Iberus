@@ -1,6 +1,10 @@
 #pragma once
 
 #include "MathUtils.h"
+#include "Resource.h"
+
+#include <string>
+#include <unordered_map>
 
 using namespace Math;
 
@@ -13,8 +17,8 @@ namespace Iberus {
 	class Shader;
 	class Texture;
 
-	class IBERUS_API Material {
-	public:	
+	class IBERUS_API Material : public Resource {
+	public:
 		explicit Material(const std::string& inID);
 		virtual ~Material() = default;
 
@@ -36,10 +40,12 @@ namespace Iberus {
 
 		void PushDraw(RenderBatch& renderBatch);
 
+		const std::string& GetId() const { return GetID(); }
+		std::string GetShaderId() const;
+		std::unordered_map<std::string, std::string> GetTextureSlotPaths() const;
+
 	private:
 		void BindTextures(RenderBatch& renderBatch);
-
-		std::string ID;
 
 		std::unordered_map<std::string, int> texturesBindings;
 		std::unordered_map<std::string, Texture*> textures;

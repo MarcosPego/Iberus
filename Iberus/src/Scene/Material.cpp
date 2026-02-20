@@ -10,8 +10,7 @@
 
 namespace Iberus {
 
-	Material::Material(const std::string& inID) {
-		ID = inID;
+	Material::Material(const std::string& inID) : Resource(inID) {
 	}
 
 	void Material::SetShader(Shader* inboundShader) {
@@ -27,21 +26,36 @@ namespace Iberus {
 		textures[ID] = inTexture;
 	}
 
+	std::string Material::GetShaderId() const {
+		return shader ? shader->GetID() : "";
+	}
+
+	std::unordered_map<std::string, std::string> Material::GetTextureSlotPaths() const {
+		std::unordered_map<std::string, std::string> out;
+		for (const auto& [slot, tex] : textures) {
+			if (tex) {
+				out[slot] = tex->GetID();
+			}
+		}
+		return out;
+	}
+
 	void Material::BindTextures(RenderBatch& renderBatch) {
 		for (const auto& entry : texturesBindings) {
-			renderBatch.PushRenderCmdToQueue(new UniformRenderCmd(entry.first, entry.second, UniformType::INT));
+			renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<int>>(entry.first, entry.second, UniformType::INT));
 		}
 	}
 
 	void Material::PushDraw(RenderBatch& renderBatch) {
-		renderBatch.PushRenderCmdToQueue(new ShaderRenderCmd(shader->GetID()));
+		renderBatch.PushRenderCmdToQueue(std::make_unique<ShaderRenderCmd>(shader->GetID()));
 		BindTextures(renderBatch);
 
-		//TODO(MPP) render color!
-		renderBatch.PushRenderCmdToQueue(new UniformRenderCmd("albedoColor", albedoColor, UniformType::VEC4));
+		renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<Vec4>>("albedoColor", albedoColor, UniformType::VEC4));
+		bool hasAlbedoTex = (textures.count(ALBEDOTEXTURE) != 0 && textures.at(ALBEDOTEXTURE) != nullptr);
+		renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<int>>("hasAlbedoTexture", hasAlbedoTex ? 1 : 0, UniformType::INT));
 
 		for (const auto& texture : textures) {
-			renderBatch.PushRenderCmdToQueue(new TextureRenderCmd(texture.second->GetID(), texture.first, texturesBindings[texture.first]));
+			renderBatch.PushRenderCmdToQueue(std::make_unique<TextureRenderCmd>(texture.second->GetID(), texture.first, texturesBindings[texture.first]));
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace Iberus {
 
 		void Init() override;
 
-		void RenderFrame(Frame& frame) override;
+		void RenderFrame(Frame& frame, unsigned int outputFBO = 0, int outputWidth = 0, int outputHeight = 0) override;
 
 		void ExecuteAndFlushCmdQueue() override;
 

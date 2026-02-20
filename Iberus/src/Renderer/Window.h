@@ -40,10 +40,15 @@ namespace Iberus {
 
 		virtual void Update() = 0;
 
+		/// Poll input events. Call at frame start so behaviours/scripts see current key state.
+		virtual void PollEvents() {}
+
 		virtual void SetVSync(bool enabled) { windowProps.vsync = enabled; }
 		virtual bool IsVSync() const { return windowProps.vsync; }
 
 		virtual void SetEventCallback(const EventCallbackFn& eventCallback) = 0;
+
+		virtual void* GetNativeWindow() const = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 

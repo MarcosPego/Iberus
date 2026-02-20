@@ -55,6 +55,7 @@ namespace Iberus {
 		using OnEntityChangedFn = void (*)(void* handle, uint64_t entityId, void* worldPtr);
 		using DestroyInstanceFn = void (*)(void* handle);
 		using PrepareForScriptReloadFn = void (*)();
+		using CompleteScriptReloadFn = void (*)();
 
 		CreateInstanceFn createInstance{ nullptr };
 		InitFn scriptInit{ nullptr };
@@ -62,6 +63,7 @@ namespace Iberus {
 		OnEntityChangedFn scriptOnEntityChanged{ nullptr };
 		DestroyInstanceFn destroyInstance{ nullptr };
 		PrepareForScriptReloadFn prepareForScriptReload{ nullptr };
+		CompleteScriptReloadFn completeScriptReload{ nullptr };
 
 		std::string baseDir;
 		std::unordered_set<void*> activeHandles;
@@ -223,6 +225,12 @@ namespace Iberus {
 			if (rc == 0 && prepareReloadPtr) {
 				impl->prepareForScriptReload = (Impl::PrepareForScriptReloadFn)prepareReloadPtr;
 			}
+			void* completeReloadPtr = nullptr;
+			rc = impl->loadAssembly(runtimePathW.c_str(), bridgeTypeW, L"CompleteScriptReload",
+				UNMANAGEDCALLERSONLY_METHOD, nullptr, &completeReloadPtr);
+			if (rc == 0 && completeReloadPtr) {
+				impl->completeScriptReload = (Impl::CompleteScriptReloadFn)completeReloadPtr;
+			}
 		}
 		// C# Marshal.PtrToStringUTF8 expects UTF-8; use u8string for paths
 		auto fullPath = std::filesystem::path(fullAssemblyPath).u8string();
@@ -271,6 +279,9 @@ namespace Iberus {
 		if (impl->prepareForScriptReload) {
 			impl->prepareForScriptReload();
 		}
+		if (impl->completeScriptReload) {
+			impl->completeScriptReload();
+		}
 	}
 
 	void ScriptHost::Shutdown() {
@@ -297,6 +308,7 @@ namespace Iberus {
 		impl->scriptOnEntityChanged = nullptr;
 		impl->destroyInstance = nullptr;
 		impl->prepareForScriptReload = nullptr;
+		impl->completeScriptReload = nullptr;
 		initialized = false;
 	}
 

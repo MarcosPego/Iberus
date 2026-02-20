@@ -8,6 +8,7 @@
 #include "FileSystem.h"
 #include "Log.h"
 
+#include <filesystem>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -74,12 +75,21 @@ namespace Iberus {
 			baseDir = FileSystem::GetExeDirectory();
 		}
 
-		// Normalize assembly path: legacy "Demo.Scripts.dll" -> "Assets/Scripts/Demo.Scripts.dll"
-		auto resolveAssemblyPath = [](const std::string& p) -> std::string {
-			if (p.find('/') != std::string::npos || p.find('\\') != std::string::npos) {
-				return p;
+		// Normalize then resolve: prefer ScriptsContext/run (load from copy so build never overwrites in-use file), then ScriptsContext, then legacy.
+		auto resolveAssemblyPath = [&baseDir](const std::string& p) -> std::string {
+			std::string normalized = (p.find('/') != std::string::npos || p.find('\\') != std::string::npos)
+				? p : ("Assets/Scripts/" + p);
+			std::filesystem::path normPath(normalized);
+			std::string filename = normPath.filename().string();
+			std::filesystem::path runPath = std::filesystem::path(baseDir) / "Assets" / "Scripts" / "ScriptsContext" / "run" / filename;
+			std::filesystem::path ctxPath = std::filesystem::path(baseDir) / "Assets" / "Scripts" / "ScriptsContext" / filename;
+			if (std::filesystem::exists(runPath)) {
+				return (std::filesystem::path("Assets") / "Scripts" / "ScriptsContext" / "run" / filename).generic_string();
 			}
-			return "Assets/Scripts/" + p;
+			if (std::filesystem::exists(ctxPath)) {
+				return (std::filesystem::path("Assets") / "Scripts" / "ScriptsContext" / filename).generic_string();
+			}
+			return normalized;
 		};
 
 		for (auto [entityId, comp] : *scriptStorage) {

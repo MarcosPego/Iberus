@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "Framebuffer.h"
 #include "RenderSettings.h"
+#include "RenderCmd.h"
 #include "ShaderBindings.h"
 #include "OpenGLShader.h"
 
@@ -41,6 +42,12 @@ namespace Iberus {
 			return;
 		}
 
+		const PostProcessSettings& settings = Engine::Instance()->GetPostProcessSettings();
+		bool applyOutline = settings.enableOutlineHighlight;
+
+		float shadowStrength = applyOutline ? settings.outlineShadowStrength : 0.0f;
+		float highlightStrength = applyOutline ? settings.outlineHighlightStrength : 0.0f;
+
 		shaderPass->Bind();
 		source->Bind(FramebufferMode::READING, target->GetFBO(), texturesIdxs);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,6 +60,20 @@ namespace Iberus {
 		int effW = frame.renderWidth > 0 ? frame.renderWidth : Engine::Instance()->GetEffectiveRenderWidth();
 		int effH = frame.renderHeight > 0 ? frame.renderHeight : Engine::Instance()->GetEffectiveRenderHeight();
 		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(effW), static_cast<float>(effH)));
+		ShaderBindings::SetUniform<float>(programID, "shadowStrength", shadowStrength);
+		ShaderBindings::SetUniform<float>(programID, "highlightStrength", highlightStrength);
+		ShaderBindings::SetUniform<Vec3>(programID, "shadowColor", settings.outlineShadowColor);
+		ShaderBindings::SetUniform<Vec3>(programID, "highlightColor", settings.outlineHighlightColor);
+
+		Vec3 cameraPos{ 0.0f, 0.0f, 0.0f };
+		for (const RenderBatch& renderBatch : frame.renderBatches) {
+			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
+			if (cameraRenderCmd) {
+				cameraPos = cameraRenderCmd->cameraPos;
+				break;
+			}
+		}
+		ShaderBindings::SetUniform<Vec3>(programID, "cameraPos", cameraPos);
 
 		glDisable(GL_CULL_FACE);
 		quadMesh->Bind();

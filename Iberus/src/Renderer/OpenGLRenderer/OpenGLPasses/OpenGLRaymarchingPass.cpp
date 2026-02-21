@@ -7,6 +7,7 @@
 #include "ShaderBindings.h"
 #include "OpenGLShader.h"
 #include "OpenGLFramebuffer.h"
+#include "RenderCmd.h"
 
 #include "ShaderApi.h"
 #include "TextureApi.h"
@@ -18,7 +19,7 @@ namespace Iberus {
 		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
 		shaderPass = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseRaymarchingShader"));
 		if (!shaderPass) {
-			return; // Logging deal with this;
+			return;
 		}
 
 		GLuint programID{ 0 };
@@ -34,27 +35,25 @@ namespace Iberus {
 			ShaderBindings::SetUniform<int>(programID, "uvsIn", texturesIdxs.at(3));
 		}
 
-
-		/*sourceBuffer = dynamic_cast<Framebuffer*>(renderer.GetResource("geometryFBO"));
-
-		textures = { "worldPosOut_2", "diffuseOut_2", "normalOut_2", "uvsOut_2" };
-		std::vector<TextureApi*> texturesAPI;
-		for (const auto& entry : textures) {
-			texturesAPI.push_back(dynamic_cast<TextureApi*>(renderer.GetResource(entry)));
-		}
-		targetBuffer = renderer.CreateFramebuffer("raymarchFBO", texturesAPI);*/
-
 		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuadNDC"));
+
+		glGenBuffers(1, &sdfUBO);
+		if (sdfUBO != 0) {
+			glBindBuffer(GL_UNIFORM_BUFFER, sdfUBO);
+			glBufferData(GL_UNIFORM_BUFFER, static_cast<GLsizeiptr>(SDFUBO::BLOCK_SIZE), nullptr, GL_DYNAMIC_DRAW);
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		}
+
+		GLuint blockIndex = glGetUniformBlockIndex(programID, "SDFBlock");
+		if (blockIndex != GL_INVALID_INDEX) {
+			glUniformBlockBinding(programID, blockIndex, sdfUBOBindingIndex);
+		}
 	}
 
 	void OpenGLRaymarchingPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
 		if (!shaderPass) {
 			return;
 		}
-
-		/*glEnable(GL_BLEND);
-		glBlendEquation(GL_FUNC_ADD);
-		glBlendFunc(GL_ONE, GL_ONE);*/
 
 		shaderPass->Bind();
 		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), texturesIdxs);
@@ -63,8 +62,14 @@ namespace Iberus {
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		int w = frame.renderWidth > 0 ? frame.renderWidth : 1;
-		int h = frame.renderHeight > 0 ? frame.renderHeight : 1;
+		int w = frame.renderWidth > 0 ? frame.renderWidth : Engine::Instance()->GetEffectiveRenderWidth();
+		int h = frame.renderHeight > 0 ? frame.renderHeight : Engine::Instance()->GetEffectiveRenderHeight();
+		if (w <= 0) {
+			w = 1;
+		}
+		if (h <= 0) {
+			h = 1;
+		}
 		glViewport(0, 0, w, h);
 
 		GLuint programID{ 0 };
@@ -74,10 +79,8 @@ namespace Iberus {
 
 		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(w), static_cast<float>(h)));
 		ShaderBindings::SetUniform<int>(programID, "depthIn", depthTextureIdx);
-		// debugRayMode: 0=normal, 1=rayDir, 2=rayOrigin, 3=hitMiss, 4=sdfAtOrigin, 5=ndc
 		ShaderBindings::SetUniform<int>(programID, "debugRayMode", 0);
 
-		auto& renderer = Engine::Instance()->GetRenderer();
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
 			auto* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
 			if (cameraRenderCmd) {
@@ -87,15 +90,23 @@ namespace Iberus {
 				ShaderBindings::SetUniform<Mat4>(programID, "cameraToWorld", cameraRenderCmd->cameraToWorld);
 			}
 			for (const auto& renderCmd : renderBatch.GetSDFRenderCmds()) {
-				renderer.PushUniform(renderCmd.get(), programID);
+				if (auto* sdfBufferCmd = dynamic_cast<SDFBufferRenderCmd*>(renderCmd.get())) {
+					if (sdfUBO != 0 && !sdfBufferCmd->uboData.empty()) {
+						glBindBuffer(GL_UNIFORM_BUFFER, sdfUBO);
+						glBufferSubData(GL_UNIFORM_BUFFER, 0,
+							static_cast<GLsizeiptr>(sdfBufferCmd->uboData.size()),
+							sdfBufferCmd->uboData.data());
+						glBindBufferBase(GL_UNIFORM_BUFFER, sdfUBOBindingIndex, sdfUBO);
+						glBindBuffer(GL_UNIFORM_BUFFER, 0);
+					}
+					break;
+				}
 			}
 		}
 
 		glDisable(GL_CULL_FACE);
 		quadMesh->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)quadMesh->VertexSize());
-		if (glGetError() != GL_NO_ERROR) {
-			//std::cout << "Error in Mesh" << std::endl;
-		}
 	}
+
 }

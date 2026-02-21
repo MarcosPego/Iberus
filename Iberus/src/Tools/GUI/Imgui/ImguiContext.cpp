@@ -27,7 +27,7 @@ namespace Iberus {
 		if (!ImGui_ImplGlfw_InitForOpenGL(window, true)) {
 			return false;
 		}
-		if (!ImGui_ImplOpenGL3_Init("#version 330")) {
+		if (!ImGui_ImplOpenGL3_Init("#version 460")) {
 			ImGui_ImplGlfw_Shutdown();
 			return false;
 		}

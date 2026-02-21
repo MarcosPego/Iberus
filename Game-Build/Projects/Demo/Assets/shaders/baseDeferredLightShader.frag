@@ -1,4 +1,4 @@
-#version 330 core
+#version 460 core
 
 uniform sampler2D worldPosIn;   
 uniform sampler2D diffuseIn;     

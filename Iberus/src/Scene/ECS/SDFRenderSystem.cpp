@@ -6,13 +6,44 @@
 #include "Material.h"
 #include "RenderBatch.h"
 #include "RenderCmd.h"
+#include "OpenGLRaymarchingPass.h"
+
+#include <cstring>
 
 using namespace Math;
 
 namespace Iberus {
 
-	// Must match sdfMeshBufferSize in baseRaymarchingShader.frag
-	constexpr int SDF_MESH_BUFFER_SIZE = 4;
+	namespace {
+		void ExtractFrustumPlanes(const Mat4& viewProj, Vec4 planes[6]) {
+			const float* d = viewProj.data;
+			planes[0] = Vec4(d[3] + d[0], d[7] + d[4], d[11] + d[8],  d[15] + d[12]);  // left
+			planes[1] = Vec4(d[3] - d[0], d[7] - d[4], d[11] - d[8],  d[15] - d[12]);  // right
+			planes[2] = Vec4(d[3] + d[1], d[7] + d[5], d[11] + d[9],  d[15] + d[13]);  // bottom
+			planes[3] = Vec4(d[3] - d[1], d[7] - d[5], d[11] - d[9],  d[15] - d[13]);  // top
+			planes[4] = Vec4(d[3] + d[2], d[7] + d[6], d[11] + d[10], d[15] + d[14]);  // near
+			planes[5] = Vec4(d[3] - d[2], d[7] - d[6], d[11] - d[10], d[15] - d[14]);  // far
+			for (int i = 0; i < 6; ++i) {
+				float len = std::sqrt(planes[i].x * planes[i].x + planes[i].y * planes[i].y + planes[i].z * planes[i].z);
+				if (len > 1e-6f) {
+					planes[i].x /= len;
+					planes[i].y /= len;
+					planes[i].z /= len;
+					planes[i].w /= len;
+				}
+			}
+		}
+
+		bool SphereOutsideFrustum(const Vec3& center, float radius, const Vec4 planes[6]) {
+			for (int i = 0; i < 6; ++i) {
+				float sd = center.x * planes[i].x + center.y * planes[i].y + center.z * planes[i].z + planes[i].w;
+				if (sd < -radius) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 
 	void SDFRenderSystem::Execute(World& world, Scene& scene, RenderBatch& renderBatch) {
 		auto* sdfStorage = world.GetStorage<SDFComponent>();
@@ -21,8 +52,24 @@ namespace Iberus {
 			return;
 		}
 
+		Vec4 frustumPlanes[6];
+		const CameraRenderCmd* cameraRenderCmd = renderBatch.GetCameraRenderCmd();
+		if (cameraRenderCmd) {
+			Mat4 viewProj = cameraRenderCmd->projectionMatrix * cameraRenderCmd->viewMatrix;
+			ExtractFrustumPlanes(viewProj, frustumPlanes);
+		}
+
+		auto sdfBufferCmd = std::make_unique<SDFBufferRenderCmd>();
+		sdfBufferCmd->uboData.resize(SDFUBO::BLOCK_SIZE, 0);
+
 		int sdfSlot = 0;
+		auto& resourceManager = Engine::Instance()->GetResourceManager();
+		auto* provider = &Engine::Instance()->GetEngineProvider();
+
 		for (auto [entityId, sdf] : *sdfStorage) {
+			if (sdfSlot >= static_cast<int>(SDFUBO::SDF_MESH_COUNT)) {
+				break;
+			}
 			if (!world.IsAlive(entityId)) {
 				continue;
 			}
@@ -42,15 +89,12 @@ namespace Iberus {
 			}
 
 			Material* entityMaterial = nullptr;
-			auto& resourceManager = Engine::Instance()->GetResourceManager();
-			auto* provider = &Engine::Instance()->GetEngineProvider();
 			auto* meshRenderer = world.GetComponent<MeshRendererComponent>(entityId);
 			if (meshRenderer && !meshRenderer->MaterialId.empty()) {
 				entityMaterial = resourceManager.GetOrCreateResource<Material>(meshRenderer->MaterialId, provider);
 			}
 
-			constexpr int MAX_PARTS = 16; // Must match sdfPartBufferSize in shader
-			const int partCount = static_cast<int>(std::min(sdf.Parts.size(), static_cast<size_t>(MAX_PARTS)));
+			const int partCount = static_cast<int>(std::min(sdf.Parts.size(), SDFUBO::SDF_PART_COUNT));
 
 			// Compute world-space bounding sphere for culling
 			Vec3 boundMin(1e30f, 1e30f, 1e30f);
@@ -80,19 +124,21 @@ namespace Iberus {
 			Vec3 boundCenter = (boundMin + boundMax) * 0.5f;
 			float boundRadius = (boundMax - boundMin).length() * 0.5f + maxPartRadius;
 
-			const std::string sdfMesh = std::format("sdfMeshes[{0}]", sdfSlot);
-			renderBatch.PushRenderCmdToQueue(
-				std::make_unique<UniformRenderCmd<int>>(sdfMesh + ".size", partCount, UniformType::INT),
-				CMDQueue::SDF);
-			renderBatch.PushRenderCmdToQueue(
-				std::make_unique<UniformRenderCmd<Vec3>>(sdfMesh + ".boundCenter", boundCenter, UniformType::VEC3),
-				CMDQueue::SDF);
-			renderBatch.PushRenderCmdToQueue(
-				std::make_unique<UniformRenderCmd<float>>(sdfMesh + ".boundRadius", boundRadius, UniformType::FLOAT),
-				CMDQueue::SDF);
+			// Frustum culling
+			const float cullMargin = 1.5f;
+			if (cameraRenderCmd && SphereOutsideFrustum(boundCenter, boundRadius * cullMargin, frustumPlanes)) {
+				continue;
+			}
 
-			for (int count = 0; count < partCount; ++count) {
-				const auto& part = sdf.Parts[count];
+			// Write to UBO using std140 layout (SDFUBOLayout.h) - vec4 for vec3 to avoid padding issues
+			const size_t meshBase = sdfSlot * SDFUBO::MESH_STRIDE;
+			*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + meshBase + SDFUBO::MESH_SIZE) = partCount;
+			const Vec4 boundCenter4(boundCenter.x, boundCenter.y, boundCenter.z, 1.0f);
+			std::memcpy(sdfBufferCmd->uboData.data() + meshBase + SDFUBO::MESH_BOUND_CENTER, &boundCenter4, 16);
+			*reinterpret_cast<float*>(sdfBufferCmd->uboData.data() + meshBase + SDFUBO::MESH_BOUND_RADIUS) = boundRadius;
+
+			for (int j = 0; j < partCount; ++j) {
+				const auto& part = sdf.Parts[j];
 				Vec4 localCenter(part.Transform.Position);
 				Vec4 worldCenter4 = localToWorld->Matrix * localCenter;
 				Vec3 center(worldCenter4);
@@ -104,16 +150,6 @@ namespace Iberus {
 					endpoint = Vec3(worldEndpoint4);
 				}
 
-				std::string sdfPart = std::format("{0}.sdfParts[{1}]", sdfMesh, count);
-				renderBatch.PushRenderCmdToQueue(
-					std::make_unique<UniformRenderCmd<int>>(sdfPart + ".type", part.Type, UniformType::INT), CMDQueue::SDF);
-				renderBatch.PushRenderCmdToQueue(
-					std::make_unique<UniformRenderCmd<float>>(sdfPart + ".radius", part.Radius, UniformType::FLOAT), CMDQueue::SDF);
-				renderBatch.PushRenderCmdToQueue(
-					std::make_unique<UniformRenderCmd<Vec3>>(sdfPart + ".center", center, UniformType::VEC3), CMDQueue::SDF);
-				renderBatch.PushRenderCmdToQueue(
-					std::make_unique<UniformRenderCmd<Vec3>>(sdfPart + ".endpoint", endpoint, UniformType::VEC3), CMDQueue::SDF);
-
 				Vec4 color = Vec4(1, 1, 1, 1);
 				if (!part.MaterialId.empty()) {
 					Material* partMat = resourceManager.GetOrCreateResource<Material>(part.MaterialId, provider);
@@ -123,19 +159,27 @@ namespace Iberus {
 				} else if (entityMaterial) {
 					color = entityMaterial->albedoColor;
 				}
-				renderBatch.PushRenderCmdToQueue(
-					std::make_unique<UniformRenderCmd<Vec4>>(sdfPart + ".color", color, UniformType::VEC4), CMDQueue::SDF);
+
+				const size_t partBase = meshBase + SDFUBO::MESH_PARTS_START + j * SDFUBO::SDF_PART_STRIDE;
+				const Vec4 center4(center.x, center.y, center.z, 1.0f);
+				const Vec4 endpoint4(endpoint.x, endpoint.y, endpoint.z, 1.0f);
+				std::memcpy(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_CENTER, &center4, 16);
+				std::memcpy(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_COLOR, &color, 16);
+				*reinterpret_cast<float*>(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_RADIUS) = part.Radius;
+				*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_TYPE) = part.Type;
+				std::memcpy(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_ENDPOINT, &endpoint4, 16);
 			}
+
 			sdfSlot++;
 		}
 
-		// Clear unused slots so deleted entities don't leave "ghosts" (stale GPU uniform data).
-		for (int slot = sdfSlot; slot < SDF_MESH_BUFFER_SIZE; ++slot) {
-			const std::string sdfMesh = std::format("sdfMeshes[{0}]", slot);
-			renderBatch.PushRenderCmdToQueue(
-				std::make_unique<UniformRenderCmd<int>>(sdfMesh + ".size", 0, UniformType::INT),
-				CMDQueue::SDF);
+		// Clear unused slots (size=0)
+		for (int slot = sdfSlot; slot < static_cast<int>(SDFUBO::SDF_MESH_COUNT); ++slot) {
+			const size_t meshBase = slot * SDFUBO::MESH_STRIDE;
+			*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + meshBase + SDFUBO::MESH_SIZE) = 0;
 		}
+
+		renderBatch.PushRenderCmdToQueue(std::move(sdfBufferCmd), CMDQueue::SDF);
 	}
 
 }

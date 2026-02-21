@@ -1,4 +1,4 @@
-#version 330 core
+#version 460 core
 
 in mat4 worldMatrix;
 
@@ -8,24 +8,29 @@ uniform sampler2D normalIn;
 uniform sampler2D uvsIn;
 uniform sampler2D depthIn;
 
+const int sdfPartBufferSize = 16;
+const int sdfMeshBufferSize = 4;
+
+// vec4 used instead of vec3 to avoid std140 padding/alignment ambiguity across drivers
 struct SDFPart {
-	vec3 center;
-	vec4 color; // For now only color, later I want textures too
+	vec4 center;   // .xyz = position, .w unused
+	vec4 color;
 	float radius;
 	int type;
-	vec3 endpoint; // For capsule: segment endpoint in world space
+	vec4 endpoint; // .xyz = capsule end, .w unused
 };
 
-const int sdfPartBufferSize = 16;
 struct SDFMesh {
 	int size;
-	vec3 boundCenter;
+	vec4 boundCenter; // .xyz = center, .w unused
 	float boundRadius;
 	SDFPart sdfParts[sdfPartBufferSize];
 };
 
-const int sdfMeshBufferSize = 4;
-uniform SDFMesh sdfMeshes[sdfMeshBufferSize];
+// std140 layout - must match SDFUBO in OpenGLRaymarchingPass.h
+layout(std140) uniform SDFBlock {
+	SDFMesh sdfMeshes[sdfMeshBufferSize];
+};
 
 layout (location = 0) out vec3 worldPosOut;   
 layout (location = 1) out vec3 diffuseOut;     
@@ -35,7 +40,7 @@ layout (location = 3) out vec3 uvsOut;
 uniform vec2 screenSize;
 uniform vec3 cameraPos;
 uniform mat4 cameraToWorld;
-uniform int debugRayMode;  // 0=normal, 1=rayDir, 2=rayOrigin, 3=hitMiss, 4=sdfAtOrigin, 5=ndc
+uniform int debugRayMode;  // 0=normal, 1..5=debug views
 
 vec2 CalcUVCoord() {
   return gl_FragCoord.xy / screenSize;
@@ -80,7 +85,7 @@ float distanceField(vec3 position) {
 			continue;
 		}
 		// Bounding sphere culling: if we're farther from this mesh than current best hit, skip it
-		float dToBound = length(position - sdfMeshes[i].boundCenter) - sdfMeshes[i].boundRadius;
+		float dToBound = length(position - sdfMeshes[i].boundCenter.xyz) - sdfMeshes[i].boundRadius;
 		if (dToBound > result) {
 			continue;
 		}
@@ -88,38 +93,48 @@ float distanceField(vec3 position) {
 		float resultingT = result;
 		for (int j = 0; j < meshSize; j++) {
 			SDFPart part = sdfMeshes[i].sdfParts[j];
-			if (part.type <= 0) {
-				break;
+			int ptype = part.type;
+			if (ptype <= 0) {
+				ptype = 1;
+			}
+			vec3 center = part.center.xyz;
+			float radius = part.radius;
+
+			float dist;
+			if (ptype == 1) {
+				dist = sdSphere(position - center, radius);
+			} else if (ptype == 2) {
+				dist = sdBox(position - center, radius);
+			} else if (ptype == 3) {
+				dist = sdCapsule(position, center, part.endpoint.xyz, radius);
+			} else {
+				dist = sdSphere(position - center, radius);
 			}
 
 			if (j == 0) {
-				if (part.type == 1) {
-					resultingT = sdSphere(position - part.center, part.radius);
-				} else if (part.type == 2) {
-					resultingT = sdBox(position - part.center, part.radius);
-				} else if (part.type == 3) {
-					resultingT = sdCapsule(position, part.center, part.endpoint, part.radius);
-				}
-
-				if (resultingT < result) {
-					finalColor = part.color;
-					result = resultingT;
-				}	
+				resultingT = dist;
 			} else {
-				float _previousT = resultingT;
-				if (part.type == 1) {
-					resultingT = smootMin(sdSphere(position - part.center, part.radius), resultingT, 0.5f);
-				} else if (part.type == 2) {
-					resultingT = smootMin(sdBox(position - part.center, part.radius), resultingT, 0.4f);
-				} else if (part.type == 3) {
-					resultingT = smootMin(sdCapsule(position, part.center, part.endpoint, part.radius), resultingT, 0.5f);
+				resultingT = smootMin(dist, resultingT, (ptype == 2) ? 0.4f : 0.5f);
+			}
+			if (resultingT < result) {
+				float prevResult = result;
+				result = resultingT;
+				finalColor = (j == 0) ? part.color : mix(finalColor, part.color, clamp(prevResult - resultingT, 0.0, 1.0));
+			}
+		}
+	}
+	// Fallback: bound sphere when part loop yields nothing
+	if (result > 1e20) {
+		for (int k = 0; k < sdfMeshBufferSize; k++) {
+			if (sdfMeshes[k].size > 0) {
+				float d = length(position - sdfMeshes[k].boundCenter.xyz) - sdfMeshes[k].boundRadius;
+				if (d < result) {
+					result = d;
+					finalColor = vec4(1.0, 1.0, 1.0, 1.0);
 				}
-				if (resultingT < result) {
-					finalColor = mix(finalColor, part.color, clamp(_previousT - resultingT, 0, 1));
-					result = resultingT;
-				}	
-			}			
-		}		
+				break;
+			}
+		}
 	}
 	return result;
 }
@@ -137,8 +152,8 @@ vec3 getNormal(vec3 p) {
 
 float raymarching(vec3 origin, vec3 direction) {
 	float t = 0;
-	const int maxIteration = 64;
-	float maxDistance = 100.0f;
+	const int maxIteration = 128;
+	float maxDistance = 500.0;
 
 	for (int i = 0; i < maxIteration; i++) {
 		if (t > maxDistance) {
@@ -146,12 +161,13 @@ float raymarching(vec3 origin, vec3 direction) {
 		}
 
 		vec3 position = origin + direction * t;
-		float distance = distanceField(position);
+		float d = distanceField(position);
 
-		if (distance < 0.01) {
+		if (d < 0.01) {
 			return t;
 		}
-		t += max(distance, 0.001);  // min step to avoid stepping backward (negative dist = inside SDF)
+		float step = (d < 0.0) ? max(-d * 0.5, 0.01) : max(d, 0.001);
+		t += step;
 	}
 
 	return -1.0;
@@ -162,6 +178,7 @@ float raymarching(vec3 origin, vec3 direction) {
 void main(void)
 {
 	vec2 uvCoord = CalcUVCoord();
+
 	vec2 ndc = CalcNDC();
 	mat4 camToWorld = inverse(worldMatrix);
 
@@ -185,14 +202,13 @@ void main(void)
 		finalColor = vec4(0, 0, 0, 0);
 	}
 
-	// Depth occlusion: use geometry depth buffer (precision-stable at any distance)
+	// Depth occlusion: if geometry is closer than SDF hit, use geometry
 	if (t >= 0.0) {
 		float geomDepth = texture(depthIn, uvCoord).r;
 		vec4 clipPos = worldMatrix * vec4(pos, 1.0);
 		float raymarchDepth = (clipPos.z / clipPos.w) * 0.5 + 0.5;
 		const float depthBias = 0.0001;
 		if (raymarchDepth > geomDepth + depthBias) {
-			// SDF hit is behind geometry - treat as miss
 			pos = vec3(0, 0, 0);
 			normal = vec3(0, 0, 0);
 			finalColor = vec4(0, 0, 0, 0);
@@ -206,21 +222,15 @@ void main(void)
 	vec3 geomDiffuse = texture(diffuseIn, uvCoord).xyz;
 	vec3 geomNormal = texture(normalIn, uvCoord).xyz;
 
-	// DEBUG: ray visualization - compare game vs editor viewport
 	vec3 outColor;
 	if (debugRayMode == 1) {
 		outColor = 0.5 + 0.5 * rayDirection;
 	} else if (debugRayMode == 2) {
-		vec3 originOffset = rayOrigin - cameraPos;
-		float len = length(originOffset);
-		outColor = vec3(min(len * 0.1, 1.0), 0.0, 0.0);
-	} else if (debugRayMode == 3) {
 		outColor = (t >= 0.0) ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
-	} else if (debugRayMode == 4) {
+	} else if (debugRayMode == 3) {
 		float d = distanceField(rayOrigin);
-		float v = 1.0 - smoothstep(0.0, 10.0, d);
-		outColor = vec3(v, v, v);
-	} else if (debugRayMode == 5) {
+		outColor = vec3(1.0 - smoothstep(0.0, 50.0, d));
+	} else if (debugRayMode == 4) {
 		outColor = vec3(ndc * 0.5 + 0.5, 0.0);
 	} else {
 		outColor = sdfInFront ? finalColor.xyz : geomDiffuse;

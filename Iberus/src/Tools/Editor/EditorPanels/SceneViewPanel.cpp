@@ -50,14 +50,14 @@ namespace Iberus {
 			return sqrtf((px - cx) * (px - cx) + (py - cy) * (py - cy));
 		}
 
-		int DrawTranslateGizmo(ImDrawList* drawList, TransformComponent* transform,
+		int DrawTranslateGizmo(ImDrawList* drawList, TransformComponent* transform, const Math::Vec3& worldPos,
 			const Math::Mat4& view, const Math::Mat4& proj,
 			float vpX, float vpY, float vpW, float vpH,
 			float mouseX, float mouseY, bool mouseDown) {
 			static int draggingAxis = -1;
 			static float prevMouseX = 0, prevMouseY = 0;
 
-			Math::Vec3 pos = transform->Position;
+			Math::Vec3 pos = worldPos;
 			Math::Vec3 axes[3] = { {1,0,0}, {0,1,0}, {0,0,1} };
 			ImU32 colors[3] = { IM_COL32(200,60,60,255), IM_COL32(60,200,60,255), IM_COL32(60,60,200,255) };
 
@@ -203,11 +203,16 @@ namespace Iberus {
 						World& world = scene->GetWorld();
 						EntityId sel = editor.GetSelectedEntityId();
 						auto* transform = world.GetComponent<TransformComponent>(sel);
+						auto* localToWorld = world.GetComponent<LocalToWorldComponent>(sel);
 						if (transform && world.IsAlive(sel)) {
+							Math::Vec3 drawPos = transform->Position;
+							if (localToWorld) {
+								drawPos = Math::Vec3(localToWorld->Matrix.data[12], localToWorld->Matrix.data[13], localToWorld->Matrix.data[14]);
+							}
 							ImDrawList* drawList = ImGui::GetWindowDrawList();
 							if (drawList) {
 								ImVec2 mousePos = ImGui::GetMousePos();
-								gizmoHitAxis = DrawTranslateGizmo(drawList, transform, viewMat, projMat,
+								gizmoHitAxis = DrawTranslateGizmo(drawList, transform, drawPos, viewMat, projMat,
 									imageMin.x, imageMin.y, static_cast<float>(w), static_cast<float>(h),
 									mousePos.x, mousePos.y, ImGui::IsMouseDown(0));
 							}

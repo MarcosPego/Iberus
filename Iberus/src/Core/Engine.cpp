@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Window.h"
+#include "Profiler.h"
 
 #include "MeshFactory.h"
 #include "ScriptHost.h"
@@ -174,6 +175,7 @@ namespace Iberus {
 		if (scene) {
 			bool shouldUpdate = sceneSimulationEnabled || ConsumeStepRequest();
 			if (shouldUpdate) {
+				Profiler::Instance().RecordUpdate(deltaTime);
 				scene->Update(deltaTime);
 			}
 		}

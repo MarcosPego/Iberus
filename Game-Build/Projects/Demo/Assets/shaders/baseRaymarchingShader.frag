@@ -50,6 +50,43 @@ vec2 CalcNDC() {
   return (gl_FragCoord.xy - 0.5) / screenSize * 2.0 - 1.0;
 }
 
+/// Ray-sphere intersection: returns true if ray hits sphere in [0, maxT]. D must be normalized.
+bool rayIntersectsSphere(vec3 O, vec3 D, vec3 center, float radius, float maxT) {
+	vec3 L = center - O;
+	float tCa = dot(L, D);
+	float lSq = dot(L, L);
+	float rSq = radius * radius;
+	float dSq = lSq - tCa * tCa;
+	if (dSq > rSq) {
+		return false;
+	}
+	float tHcSq = rSq - dSq;
+	float tHc = sqrt(max(0.0, tHcSq));
+	float t0 = tCa - tHc;
+	float t1 = tCa + tHc;
+	// Ray hits sphere if either t0 or t1 is in [0, maxT]
+	if (t1 < 0.0 || t0 > maxT) {
+		return false;
+	}
+	return true;
+}
+
+/// Quick test: does ray enter any SDF bound? If not, skip raymarching.
+bool rayMayHitSDF(vec3 rayOrigin, vec3 rayDir, float maxDist) {
+	const float boundMargin = 1.05;
+	for (int i = 0; i < sdfMeshBufferSize; i++) {
+		if (sdfMeshes[i].size <= 0) {
+			continue;
+		}
+		vec3 center = sdfMeshes[i].boundCenter.xyz;
+		float r = sdfMeshes[i].boundRadius * boundMargin;
+		if (rayIntersectsSphere(rayOrigin, rayDir, center, r, maxDist)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 /// Distance Field Functions
 
 float sdSphere(vec3 position, float size) {
@@ -139,7 +176,7 @@ float distanceField(vec3 position) {
 	return result;
 }
 
-// Tetrahedron gradient - 4 evaluations instead of 6
+// Tetrahedron gradient - 4 evaluations (optimal for precision)
 vec3 getNormal(vec3 p) {
 	vec2 e = vec2(0.001, -0.001);
 	return normalize(
@@ -150,9 +187,9 @@ vec3 getNormal(vec3 p) {
 	);
 }
 
-float raymarching(vec3 origin, vec3 direction) {
+	float raymarching(vec3 origin, vec3 direction) {
 	float t = 0;
-	const int maxIteration = 128;
+	const int maxIteration = 48;
 	float maxDistance = 500.0;
 
 	for (int i = 0; i < maxIteration; i++) {
@@ -179,6 +216,22 @@ void main(void)
 {
 	vec2 uvCoord = CalcUVCoord();
 
+	// Early-out: no SDF entities - use geometry directly, skip expensive raymarching
+	bool hasSDF = false;
+	for (int i = 0; i < sdfMeshBufferSize; i++) {
+		if (sdfMeshes[i].size > 0) {
+			hasSDF = true;
+			break;
+		}
+	}
+	if (!hasSDF) {
+		worldPosOut = texture(worldPosIn, uvCoord).xyz;
+		diffuseOut = texture(diffuseIn, uvCoord).xyz;
+		normalOut = texture(normalIn, uvCoord).xyz;
+		uvsOut = texture(uvsIn, uvCoord).xyz;
+		return;
+	}
+
 	vec2 ndc = CalcNDC();
 	mat4 camToWorld = inverse(worldMatrix);
 
@@ -190,6 +243,16 @@ void main(void)
 
 	vec3 rayOrigin = nearPos;
 	vec3 rayDirection = normalize(farPos - nearPos);
+
+	// Ray-bounds early skip: if ray can't hit any SDF, use geometry
+	const float maxDist = 500.0;
+	if (!rayMayHitSDF(rayOrigin, rayDirection, maxDist)) {
+		worldPosOut = texture(worldPosIn, uvCoord).xyz;
+		diffuseOut = texture(diffuseIn, uvCoord).xyz;
+		normalOut = texture(normalIn, uvCoord).xyz;
+		uvsOut = texture(uvsIn, uvCoord).xyz;
+		return;
+	}
 
 	vec3 normal = vec3(0,0,0);
 	vec3 pos = vec3(0,0,0);

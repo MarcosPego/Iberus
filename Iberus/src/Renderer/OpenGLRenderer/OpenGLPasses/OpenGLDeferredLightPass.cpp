@@ -77,6 +77,8 @@ namespace Iberus {
 
 		int effW = frame.renderWidth > 0 ? frame.renderWidth : Engine::Instance()->GetEffectiveRenderWidth();
 		int effH = frame.renderHeight > 0 ? frame.renderHeight : Engine::Instance()->GetEffectiveRenderHeight();
+		if (effW <= 0) { effW = 1; }
+		if (effH <= 0) { effH = 1; }
 		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(effW), static_cast<float>(effH)));
 
 		for (const RenderBatch& renderBatch : frame.renderBatches) {

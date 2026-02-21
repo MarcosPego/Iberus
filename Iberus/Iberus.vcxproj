@@ -249,6 +249,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Core\Input\MouseCode.h" />
     <ClInclude Include="src\Core\InputManager.h" />
     <ClInclude Include="src\Core\Layer.h" />
+    <ClInclude Include="src\Core\Profiler.h" />
     <ClInclude Include="src\Core\LayerStack.h" />
     <ClInclude Include="src\Core\Types\Color.h" />
     <ClInclude Include="src\Events\ApplicationEvent.h" />
@@ -335,6 +336,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Tools\Editor\EditorPanels\FileSystemPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\GameViewPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\ProfilerPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\SceneTreePanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewFBO.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewPanel.h" />
@@ -370,6 +372,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\BuiltInBehaviors\CameraController.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
+    <ClCompile Include="src\Core\Profiler.cpp" />
     <ClCompile Include="src\Core\Enginepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -456,6 +459,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Tools\Editor\EditorPanels\FileSystemPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\GameViewPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\ProfilerPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\SceneTreePanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewFBO.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewPanel.cpp" />

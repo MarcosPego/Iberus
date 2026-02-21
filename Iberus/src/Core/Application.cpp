@@ -7,6 +7,7 @@
 #include "Renderer.h"
 #include "Engine.h"
 #include "ImguiContext.h"
+#include "Profiler.h"
 
 #include <chrono>
 
@@ -105,6 +106,8 @@ namespace Iberus {
 
 			Update();
 			window->Update();
+
+			Profiler::Instance().RecordFrame(deltaTime);
 		}
 	}
 }

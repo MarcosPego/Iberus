@@ -8,6 +8,7 @@
 #include "CreatureCreatorPanel.h"
 #include "FileSystemPanel.h"
 #include "AssetInspectorPanel.h"
+#include "ProfilerPanel.h"
 #include "WelcomePanel.h"
 #include "EntityId.h"
 #include "MathUtils.h"
@@ -91,6 +92,7 @@ namespace Iberus {
 		std::unique_ptr<CreatureCreatorPanel> creatureCreatorPanel;
 		std::unique_ptr<FileSystemPanel> fileSystemPanel;
 		std::unique_ptr<AssetInspectorPanel> assetInspectorPanel;
+		std::unique_ptr<ProfilerPanel> profilerPanel;
 		EditorMode editorMode{ EditorMode::Editor };
 		std::string selectedAssetPath;
 		bool wasF11Down{ false };

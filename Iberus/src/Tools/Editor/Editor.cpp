@@ -23,7 +23,8 @@ namespace Iberus {
 		, inspectorPanel(std::make_unique<InspectorPanel>(*this))
 		, creatureCreatorPanel(std::make_unique<CreatureCreatorPanel>(*this))
 		, fileSystemPanel(std::make_unique<FileSystemPanel>(*this))
-		, assetInspectorPanel(std::make_unique<AssetInspectorPanel>(*this)) {
+		, assetInspectorPanel(std::make_unique<AssetInspectorPanel>(*this))
+		, profilerPanel(std::make_unique<ProfilerPanel>(*this)) {
 	}
 
 	Editor::~Editor() = default;
@@ -273,6 +274,7 @@ namespace Iberus {
 		creatureCreatorPanel->OnDraw(*gui);
 		fileSystemPanel->OnDraw(*gui);
 		assetInspectorPanel->OnDraw(*gui);
+		profilerPanel->OnDraw(*gui);
 		gui->EndDockSpace();
 
 		UpdateEditorCamera(deltaTime);

@@ -61,7 +61,7 @@ namespace Iberus {
 
 		RenderObject* GetResource(const std::string& ID) const;
 
-		virtual Framebuffer* CreateFramebuffer(const std::string& ID, const std::vector<TextureApi*>& inTextures) = 0; /// Meant to be used by renderer classes
+		virtual Framebuffer* CreateFramebuffer(const std::string& ID, const std::vector<TextureApi*>& inTextures, int customWidth = 0, int customHeight = 0) = 0; /// Meant to be used by renderer classes
 
 	protected:
 		std::unordered_map<std::string, std::unique_ptr<RenderObject>> renderObjects;

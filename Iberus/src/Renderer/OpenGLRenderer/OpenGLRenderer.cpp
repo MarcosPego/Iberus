@@ -87,8 +87,8 @@ namespace Iberus {
 		renderCmdQueue.clear();
 	}
 
-	Framebuffer* OpenGLRenderer::CreateFramebuffer(const std::string& ID, const std::vector<TextureApi*>& inTextures) {
-		auto* framebuffer = new OpenGLFramebuffer(ID, inTextures);
+	Framebuffer* OpenGLRenderer::CreateFramebuffer(const std::string& ID, const std::vector<TextureApi*>& inTextures, int customWidth, int customHeight) {
+		auto* framebuffer = new OpenGLFramebuffer(ID, inTextures, customWidth, customHeight);
 		renderObjects[ID].reset(framebuffer);
 
 		return dynamic_cast<Framebuffer*>(renderObjects[ID].get());

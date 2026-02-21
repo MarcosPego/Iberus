@@ -32,11 +32,16 @@ namespace Iberus {
 		}
 		targetFBO = CreateFramebuffer("fbo_2", texturesAPI);
 
-		/// Emplace render passes (source/target passed at execute time; swap only after executed passes)
+		/// Emplace render passes (source/target passed at execute time; swap only after executed passes).
+		/// Chain: Geometry -> Raymarch -> DeferredLight -> Outline -> HDR -> Pixelation -> blit.
+		/// Uses same sourceFBO/targetFBO ping-pong; swap after each pass.
+		/// Outline preserves worldPos/normal/uvs for HDR (HDR only needs color); future passes (fog, SSAO) insert as needed.
 		renderPasses.emplace_back(new OpenGLGeometryPass());
 		renderPasses.emplace_back(new OpenGLRaymarchingPass());
 		renderPasses.emplace_back(new OpenGLDeferredLightPass());
+		renderPasses.emplace_back(new OpenGLOutlinePass());
 		renderPasses.emplace_back(new OpenGLHDRPass());
+		renderPasses.emplace_back(new OpenGLPixelationPass());
 	}
 
 	void OpenGLDeferredRenderer::RenderFrame(Frame& frame, unsigned int outputFBO, int outputWidth, int outputHeight) {

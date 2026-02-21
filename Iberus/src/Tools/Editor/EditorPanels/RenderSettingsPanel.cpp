@@ -40,7 +40,7 @@ namespace Iberus {
 
 			if (settings.enablePixelation) {
 				ImGui::Indent();
-				ImGui::SliderInt("Pixel Count##PostProcess", &settings.pixelCount, 0, 128, "%d", ImGuiSliderFlags_AlwaysClamp);
+				ImGui::SliderInt("Pixel Count##PostProcess", &settings.pixelCount, 0, 512, "%d", ImGuiSliderFlags_AlwaysClamp);
 				ImGui::Unindent();
 			}
 

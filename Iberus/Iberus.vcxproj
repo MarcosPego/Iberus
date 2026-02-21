@@ -280,6 +280,8 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLOutlinePass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLPixelationPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
@@ -409,6 +411,8 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLOutlinePass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLPixelationPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />

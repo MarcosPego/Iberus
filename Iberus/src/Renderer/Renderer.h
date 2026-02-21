@@ -12,7 +12,9 @@
 #include "OpenGLForwardPass.h"
 #include "OpenGLDeferredLightPass.h"
 #include "OpenGLRaymarchingPass.h"
+#include "OpenGLOutlinePass.h"
 #include "OpenGLHDRPass.h"
+#include "OpenGLPixelationPass.h"
 
 //Render Objects
 //#include "ShaderApi.h"

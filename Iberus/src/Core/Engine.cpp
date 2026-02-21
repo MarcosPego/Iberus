@@ -354,7 +354,9 @@ namespace Iberus {
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseDeferredLightShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseRaymarchingShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryCopyShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseOutlineShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseHDRShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/basePixelationShader", engineProvider.get());
 		
 		/// Textures reserved for passes 1
 		resourceManager->CreateResource<Texture>("worldPosOut_1", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);

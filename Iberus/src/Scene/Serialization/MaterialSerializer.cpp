@@ -33,6 +33,22 @@ namespace Iberus {
 			return Vec4(arr[0].AsFloat(), arr[1].AsFloat(), arr[2].AsFloat(), arr[3].AsFloat());
 		}
 
+		void SerializeVec3(JsonValue& obj, const char* key, const Vec3& v) {
+			JsonValue arr = JsonValue::Array();
+			arr.Set(0, JsonValue::Number(v.x));
+			arr.Set(1, JsonValue::Number(v.y));
+			arr.Set(2, JsonValue::Number(v.z));
+			obj.Set(key, arr);
+		}
+
+		Vec3 DeserializeVec3(const JsonValue& obj, const char* key) {
+			JsonValue arr = obj[key];
+			if (!arr.IsArray() || arr.Size() < 3) {
+				return Vec3(0, 0, 0);
+			}
+			return Vec3(arr[0].AsFloat(), arr[1].AsFloat(), arr[2].AsFloat());
+		}
+
 	}
 
 	Buffer MaterialSerializer::Serialize(const Material& material) {
@@ -40,6 +56,8 @@ namespace Iberus {
 		root.Set("id", material.GetId());
 		root.Set("shaderId", material.GetShaderId());
 		SerializeVec4(root, "albedoColor", material.albedoColor);
+		SerializeVec3(root, "emissiveColor", material.emissiveColor);
+		root.Set("emissiveIntensity", material.emissiveIntensity);
 
 		JsonValue texturesObj = JsonValue::Object();
 		for (const auto& [slot, path] : material.GetTextureSlotPaths()) {
@@ -60,6 +78,10 @@ namespace Iberus {
 		auto material = std::make_unique<Material>(id);
 
 		material->albedoColor = DeserializeVec4(root, "albedoColor");
+		material->emissiveColor = DeserializeVec3(root, "emissiveColor");
+		if (root.Contains("emissiveIntensity")) {
+			material->emissiveIntensity = root["emissiveIntensity"].AsFloat();
+		}
 
 		if (root.Contains("shaderId")) {
 			std::string shaderId = root["shaderId"].AsString();

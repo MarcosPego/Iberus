@@ -5,6 +5,8 @@ in vec2 exUVs;
 in vec3 exNormals;
 
 uniform vec4 albedoColor;
+uniform vec3 emissiveColor = vec3(0.0);
+uniform float emissiveIntensity = 0.0;
 uniform int hasAlbedoTexture;
 
 uniform sampler2D albedoTexture;
@@ -23,5 +25,5 @@ void main(void)
 	worldPosOut     = exVerticies;
 	diffuseOut      = hasAlbedoTexture != 0 ? albedoColor.rgb * texture(albedoTexture, exUVs).rgb : albedoColor.rgb;
 	normalOut       = normalize(exNormals);
-	uvsOut			= vec3(exUVs, 0.0);
+	uvsOut          = emissiveColor * emissiveIntensity;
 }

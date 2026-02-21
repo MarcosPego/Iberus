@@ -260,69 +260,66 @@ namespace Iberus {
 	}
 
 	void FileSystemPanel::OnDraw(IGUIContext& gui) {
-		if (!gui.BeginWindow("Project")) {
-			gui.EndWindow();
-			return;
-		}
-
-		std::string assetsPath = GetAssetsPath();
-		if (currentPath.empty() || currentPath.size() < assetsPath.size() || currentPath.substr(0, assetsPath.size()) != assetsPath) {
-			currentPath = assetsPath;
-		}
-
-		DrawToolbar();
-		ImGui::Separator();
-		DrawBreadcrumb(currentPath);
-		ImGui::Separator();
-
-		float leftWidth = 180.f;
-		ImGui::BeginChild("FolderTree##FolderTreeChild", ImVec2(leftWidth, 0), true);
-
-		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-		if (ImGui::TreeNodeEx("Assets##FolderTreeRoot", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Leaf)) {
-			if (ImGui::IsItemClicked()) {
-				currentPath = assetsPath;
-				contentDirty = true;
-			}
-			DrawFolderTree(assetsPath, 0);
-			ImGui::TreePop();
-		}
-
-		ImGui::EndChild();
-
-		ImGui::SameLine();
-
-		ImGui::BeginChild("ContentArea##ContentAreaChild", ImVec2(0, 0), true);
-
-		// Parent folder link
-		std::filesystem::path p(currentPath);
-		if (p.has_parent_path()) {
-			std::string parentPath = p.parent_path().string();
-			if (parentPath.size() >= assetsPath.size() && parentPath.substr(0, assetsPath.size()) == assetsPath) {
-				if (ImGui::Selectable("[..] Parent folder##ParentFolder")) {
-					currentPath = parentPath;
-					contentDirty = true;
+		if (gui.BeginWindow("Project")) {
+			if (!ImGui::IsWindowCollapsed()) {
+				std::string assetsPath = GetAssetsPath();
+				if (currentPath.empty() || currentPath.size() < assetsPath.size() || currentPath.substr(0, assetsPath.size()) != assetsPath) {
+					currentPath = assetsPath;
 				}
+
+				DrawToolbar();
 				ImGui::Separator();
-			}
-		}
+				DrawBreadcrumb(currentPath);
+				ImGui::Separator();
 
-		DrawContentGrid(currentPath);
+				float leftWidth = 180.f;
+				ImGui::BeginChild("FolderTree##FolderTreeChild", ImVec2(leftWidth, 0), true);
 
-		if (ImGui::BeginPopupContextWindow("ContentContext", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems)) {
-			ImGui::TextUnformatted(currentPath.c_str());
-			ImGui::Separator();
+				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+				if (ImGui::TreeNodeEx("Assets##FolderTreeRoot", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Leaf)) {
+					if (ImGui::IsItemClicked()) {
+						currentPath = assetsPath;
+						contentDirty = true;
+					}
+					DrawFolderTree(assetsPath, 0);
+					ImGui::TreePop();
+				}
+
+				ImGui::EndChild();
+
+				ImGui::SameLine();
+
+				ImGui::BeginChild("ContentArea##ContentAreaChild", ImVec2(0, 0), true);
+
+				std::filesystem::path p(currentPath);
+				if (p.has_parent_path()) {
+					std::string parentPath = p.parent_path().string();
+					if (parentPath.size() >= assetsPath.size() && parentPath.substr(0, assetsPath.size()) == assetsPath) {
+						if (ImGui::Selectable("[..] Parent folder##ParentFolder")) {
+							currentPath = parentPath;
+							contentDirty = true;
+						}
+						ImGui::Separator();
+					}
+				}
+
+				DrawContentGrid(currentPath);
+
+				if (ImGui::BeginPopupContextWindow("ContentContext", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems)) {
+					ImGui::TextUnformatted(currentPath.c_str());
+					ImGui::Separator();
 #ifdef _WIN32
-			if (ImGui::MenuItem("Open in Explorer##ContentOpenExplorer")) {
-				std::wstring wpath(currentPath.begin(), currentPath.end());
-				ShellExecuteW(nullptr, L"explore", wpath.c_str(), nullptr, nullptr, SW_SHOW);
-			}
+					if (ImGui::MenuItem("Open in Explorer##ContentOpenExplorer")) {
+						std::wstring wpath(currentPath.begin(), currentPath.end());
+						ShellExecuteW(nullptr, L"explore", wpath.c_str(), nullptr, nullptr, SW_SHOW);
+					}
 #endif
-			ImGui::EndPopup();
+					ImGui::EndPopup();
+				}
+
+				ImGui::EndChild();
+			}
 		}
-
-		ImGui::EndChild();
-
 		gui.EndWindow();
 	}
 

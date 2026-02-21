@@ -34,7 +34,7 @@ namespace Iberus {
 				ImGui::Indent();
 				ImGui::SliderFloat("Bloom Threshold##PostProcess", &settings.bloomThreshold, 0.1f, 3.0f, "%.2f");
 				ImGui::SliderFloat("Bloom Intensity##PostProcess", &settings.bloomIntensity, 0.0f, 2.0f, "%.2f");
-				ImGui::SliderFloat("Bloom Radius##PostProcess", &settings.bloomRadius, 0.0f, 1.0f, "%.2f");
+				ImGui::SliderFloat("Bloom Spread##PostProcess", &settings.bloomSpread, 4.0f, 80.0f, "%.0f px");
 				ImGui::Unindent();
 			}
 
@@ -101,14 +101,13 @@ namespace Iberus {
 			requestOpen = false;
 		}
 
-		if (!ImGui::Begin("Render Settings", nullptr, ImGuiWindowFlags_NoNavInputs)) {
-			return;
+		if (ImGui::Begin("Render Settings", nullptr, ImGuiWindowFlags_NoNavInputs)) {
+			if (!ImGui::IsWindowCollapsed()) {
+				DrawPostProcessSettings();
+				ImGui::Spacing();
+				DrawPipelinePasses();
+			}
 		}
-
-		DrawPostProcessSettings();
-		ImGui::Spacing();
-		DrawPipelinePasses();
-
 		ImGui::End();
 	}
 

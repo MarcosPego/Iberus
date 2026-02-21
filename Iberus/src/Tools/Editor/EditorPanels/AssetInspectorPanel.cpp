@@ -1,7 +1,12 @@
 #include "Enginepch.h"
 #include "AssetInspectorPanel.h"
 #include "Editor.h"
+#include "Engine.h"
 #include "FileSystem.h"
+#include "Material.h"
+#include "MaterialSerializer.h"
+#include "ResourceManager.h"
+#include "Shader.h"
 
 #include "imgui.h"
 
@@ -65,6 +70,64 @@ namespace Iberus {
 		}
 	}
 
+	void AssetInspectorPanel::DrawMaterialEditor(const std::string& path) {
+		if (cachedMaterialPath != path) {
+			cachedMaterialPath = path;
+			cachedMaterial.reset();
+			auto* engine = Engine::Instance();
+			cachedMaterial = MaterialSerializer::LoadFromFile(path, engine->GetResourceManager(), &engine->GetEngineProvider());
+		}
+
+		if (!cachedMaterial) {
+			ImGui::Text("Failed to load material");
+			ImGui::Spacing();
+			DrawFileInfo(path);
+			return;
+		}
+
+		Material& mat = *cachedMaterial;
+
+		ImGui::Text("Material");
+		ImGui::Separator();
+
+		if (ImGui::ColorEdit4("Albedo Color##MaterialAlbedo", &mat.albedoColor.x)) {
+		}
+
+		ImGui::Separator();
+		ImGui::Text("Emissive");
+		if (ImGui::ColorEdit3("Emissive Color##MaterialEmissive", &mat.emissiveColor.x)) {
+		}
+		if (ImGui::SliderFloat("Emissive Intensity##MaterialEmissive", &mat.emissiveIntensity, 0.0f, 10.0f, "%.2f")) {
+		}
+
+		ImGui::Separator();
+		ImGui::Text("Shader");
+		char shaderBuf[256];
+		snprintf(shaderBuf, sizeof(shaderBuf), "%s", mat.GetShaderId().c_str());
+		if (ImGui::InputText("Shader ID##MaterialShader", shaderBuf, sizeof(shaderBuf))) {
+			std::string newId(shaderBuf);
+			if (!newId.empty()) {
+				auto* engine = Engine::Instance();
+				Shader* shader = engine->GetResourceManager().GetOrCreateResource<Shader>(newId, &engine->GetEngineProvider());
+				if (shader) {
+					mat.SetShader(shader);
+				}
+			}
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		if (ImGui::Button("Save##MaterialSave")) {
+			MaterialSerializer::SaveToFile(mat, path);
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Text("File Info");
+		ImGui::Separator();
+		DrawFileInfo(path);
+	}
+
 	void AssetInspectorPanel::DrawUnknownAsset(const std::string& path) {
 		ImGui::Text("No specialized editor for this asset type.");
 		ImGui::Spacing();
@@ -82,6 +145,8 @@ namespace Iberus {
 
 		std::string path = editor.GetSelectedAssetPath();
 		if (path.empty()) {
+			cachedMaterialPath.clear();
+			cachedMaterial.reset();
 			gui.Text("Select a file in the File System panel");
 			gui.EndWindow();
 			return;
@@ -96,10 +161,10 @@ namespace Iberus {
 
 		std::string ext = p.extension().string();
 		if (ext == ".mat") {
-			ImGui::Text("Material asset (.mat) - editor coming in Phase 5");
-			ImGui::Spacing();
-			DrawFileInfo(path);
+			DrawMaterialEditor(path);
 		} else {
+			cachedMaterialPath.clear();
+			cachedMaterial.reset();
 			DrawUnknownAsset(path);
 		}
 

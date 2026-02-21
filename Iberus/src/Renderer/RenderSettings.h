@@ -23,6 +23,7 @@ namespace Iberus {
 		float bloomThreshold{ 1.0f };
 		float bloomIntensity{ 0.5f };
 		float bloomRadius{ 0.4f };
+		float bloomSpread{ 24.0f };
 
 		// Pixelation
 		int pixelCount{ 0 };

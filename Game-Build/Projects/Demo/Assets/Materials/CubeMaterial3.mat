@@ -1,1 +1,17 @@
-{"id":"CubeMaterial3","shaderId":"assets/shaders/baseGeometryShader","albedoColor":[0.9,0.8,0.1,1],"textures":{}}
+{
+  "albedoColor": [
+    0.38235294818878174,
+    0.8365052938461304,
+    1.0,
+    1.0
+  ],
+  "emissiveColor": [
+    0.5196078419685364,
+    0.9293541312217712,
+    1.0
+  ],
+  "emissiveIntensity": 2.5799999237060547,
+  "id": "CubeMaterial3",
+  "shaderId": "assets/shaders/baseGeometryShader",
+  "textures": {}
+}

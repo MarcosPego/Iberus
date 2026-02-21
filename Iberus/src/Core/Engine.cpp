@@ -357,6 +357,8 @@ namespace Iberus {
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryCopyShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseOutlineShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseHDRShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseBloomBrightShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseBloomBlurShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/basePixelationShader", engineProvider.get());
 		
 		/// Textures reserved for passes 1

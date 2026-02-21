@@ -38,11 +38,9 @@ namespace Iberus {
 	}
 
 	void ProfilerPanel::OnDraw(IGUIContext& gui) {
-		if (!ImGui::Begin("Profiler", nullptr, ImGuiWindowFlags_NoNavInputs)) {
-			return;
-		}
-
-		Profiler& profiler = Profiler::Instance();
+		if (ImGui::Begin("Profiler", nullptr, ImGuiWindowFlags_NoNavInputs)) {
+			if (!ImGui::IsWindowCollapsed()) {
+				Profiler& profiler = Profiler::Instance();
 
 		ImGui::Text("FPS: %.1f", profiler.GetFPS());
 		ImGui::Text("UPS: %.1f", profiler.GetUPS());
@@ -125,8 +123,9 @@ namespace Iberus {
 				}
 			}
 		}
-
-		ImGui::End();
+		}
+	}
+	ImGui::End();
 	}
 
 }

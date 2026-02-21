@@ -119,7 +119,8 @@ void main(void)
 	}
 
 	vec3 color = texture(diffuseIn, uvCoord).xyz;
-	vec3 fragColor = lightColor * color;
+	vec3 emissive = texture(uvsIn, uvCoord).xyz;
+	vec3 fragColor = lightColor * color + emissive;
 
 	worldPosOut = fragPos;
 	diffuseOut = fragColor;

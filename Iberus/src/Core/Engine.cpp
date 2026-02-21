@@ -352,6 +352,7 @@ namespace Iberus {
 		/// Init necessary deferred renderer resources
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseDeferredLightShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseToonLightShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseRaymarchingShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryCopyShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseOutlineShader", engineProvider.get());

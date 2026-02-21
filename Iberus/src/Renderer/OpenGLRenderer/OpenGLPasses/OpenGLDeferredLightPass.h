@@ -13,7 +13,6 @@ namespace Iberus {
 		std::string GetName() const override { return "Light"; }
 	private:
 		MeshApi* quadMesh{ nullptr };
-		
 		std::vector<int> texturesIdxs{ 4, 5, 6, 7 };
 	};
 

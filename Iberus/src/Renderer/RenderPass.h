@@ -14,6 +14,8 @@ namespace Iberus {
 		virtual std::string GetName() const { return "Pass"; }
 
 		void SetShader(ShaderApi* inShader);
+		ShaderApi* GetShader() { return shaderPass; }
+		const ShaderApi* GetShader() const { return shaderPass; }
 
 		void SetEnabled(bool enabled) { enabledFlag = enabled; }
 		bool IsEnabled() const { return enabledFlag; }

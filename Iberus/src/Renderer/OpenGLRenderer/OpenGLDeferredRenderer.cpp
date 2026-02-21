@@ -6,6 +6,11 @@
 #include "Window.h"
 #include "Framebuffer.h"
 #include "Profiler.h"
+#include "RenderSettings.h"
+#include "OpenGLDeferredLightPass.h"
+#include "OpenGLShader.h"
+#include "ShaderApi.h"
+#include "ShaderBindings.h"
 
 #include <chrono>
 
@@ -42,10 +47,57 @@ namespace Iberus {
 		renderPasses.emplace_back(new OpenGLOutlinePass());
 		renderPasses.emplace_back(new OpenGLHDRPass());
 		renderPasses.emplace_back(new OpenGLPixelationPass());
+
+		SyncLightPassShader();
+	}
+
+	void OpenGLDeferredRenderer::SyncLightPassShader() {
+		const PostProcessSettings& settings = Engine::Instance()->GetPostProcessSettings();
+		bool usePixelPipeline = (settings.renderStyle == RenderStyle::PixelStyle) || settings.enableToon;
+
+		const char* shaderId = usePixelPipeline ? "assets/shaders/baseToonLightShader" : "assets/shaders/baseDeferredLightShader";
+		ShaderApi* lightShader = dynamic_cast<ShaderApi*>(GetResource(shaderId));
+		if (!lightShader) {
+			lightShader = dynamic_cast<ShaderApi*>(GetResource("assets/shaders/baseDeferredLightShader"));
+		}
+
+		for (const auto& p : renderPasses) {
+			RenderPass* pass = p.get();
+			if (pass->GetName() == "Light") {
+				pass->SetShader(lightShader);
+				break;
+			}
+		}
+	}
+
+	void OpenGLDeferredRenderer::SetLightPassPipelineUniforms(RenderPass* lightPass) {
+		const PostProcessSettings& settings = Engine::Instance()->GetPostProcessSettings();
+		bool usePixelPipeline = (settings.renderStyle == RenderStyle::PixelStyle) || settings.enableToon;
+		if (!usePixelPipeline) {
+			return;
+		}
+		ShaderApi* shader = lightPass->GetShader();
+		if (!shader) {
+			return;
+		}
+		GLuint programID = 0;
+		if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shader); openGLShader) {
+			programID = openGLShader->GetProgramID();
+		}
+		if (programID == 0) {
+			return;
+		}
+		const PostProcessSettings& pp = Engine::Instance()->GetPostProcessSettings();
+		shader->Bind();
+		ShaderBindings::SetUniform<int>(programID, "toonCuts", pp.toonCuts);
+		ShaderBindings::SetUniform<float>(programID, "toonSteepness", pp.toonSteepness);
+		ShaderBindings::SetUniform<float>(programID, "toonWrap", pp.toonWrap);
+		ShaderBindings::SetUniform<float>(programID, "toonRimWidth", pp.toonRimWidth);
 	}
 
 	void OpenGLDeferredRenderer::RenderFrame(Frame& frame, unsigned int outputFBO, int outputWidth, int outputHeight) {
 		ExecuteAndFlushCmdQueue();
+		SyncLightPassShader();
 
 		auto* window = Engine::Instance()->GetCurrentWindow();
 		int width = outputWidth > 0 ? outputWidth : window->GetWidth();
@@ -66,6 +118,9 @@ namespace Iberus {
 		for (const auto& pass : renderPasses) {
 			if (!pass->IsEnabled()) {
 				continue;
+			}
+			if (pass->GetName() == "Light") {
+				SetLightPassPipelineUniforms(pass.get());
 			}
 			auto t0 = std::chrono::high_resolution_clock::now();
 			pass->ExecutePass(frame, _renderBatchCommands, sourceFBO, targetFBO);

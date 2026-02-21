@@ -12,7 +12,7 @@
 #include "MeshApi.h"
 
 namespace Iberus {
-	OpenGLHDRPass::OpenGLHDRPass(Framebuffer* inSourceBuffer, Framebuffer* inTargetBuffer) : RenderPass(inSourceBuffer, inTargetBuffer) {
+	OpenGLHDRPass::OpenGLHDRPass() {
 		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
 		shaderPass = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseHDRShader"));
 		if (!shaderPass) {
@@ -38,13 +38,13 @@ namespace Iberus {
 		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuadNDC"));
 	}
 
-	void OpenGLHDRPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
-		if (!shaderPass) {
+	void OpenGLHDRPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source, Framebuffer* target) {
+		if (!shaderPass || !source || !target) {
 			return;
 		}
 
 		shaderPass->Bind();
-		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), texturesIdxs);
+		source->Bind(FramebufferMode::READING, target->GetFBO(), texturesIdxs);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		GLuint programID{ 0 };

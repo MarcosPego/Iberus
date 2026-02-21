@@ -33,7 +33,10 @@ namespace Iberus {
 		};
 
 		for (const auto& pass : renderPasses) {
-			pass->ExecutePass(frame, _renderBatchCommands);
+			if (!pass->IsEnabled()) {
+				continue;
+			}
+			pass->ExecutePass(frame, _renderBatchCommands, nullptr, nullptr);
 		}
 	}
 

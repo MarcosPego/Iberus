@@ -7,9 +7,9 @@ namespace Iberus {
 
 	class OpenGLGeometryPass : public RenderPass {
 	public:
-		OpenGLGeometryPass(Framebuffer* inSourceFBO = nullptr, Framebuffer* inTargetFBO = nullptr);
+		OpenGLGeometryPass();
 
-		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
+		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source = nullptr, Framebuffer* target = nullptr) override;
 		std::string GetName() const override { return "Geometry"; }
 	};
 

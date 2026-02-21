@@ -30,10 +30,10 @@ namespace Iberus {
 
 	class OpenGLRaymarchingPass : public RenderPass {
 	public:
-		OpenGLRaymarchingPass(Framebuffer* inSourceBuffer = nullptr, Framebuffer* inTargetBuffer = nullptr);
+		OpenGLRaymarchingPass();
 		~OpenGLRaymarchingPass();
 
-		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
+		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source = nullptr, Framebuffer* target = nullptr) override;
 		std::string GetName() const override { return "Raymarching"; }
 	private:
 		void BuildTileBuffer(const SDFBufferRenderCmd* sdfCmd, const Math::Mat4& viewProj, int screenW, int screenH);

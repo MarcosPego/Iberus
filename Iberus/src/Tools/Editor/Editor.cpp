@@ -24,7 +24,8 @@ namespace Iberus {
 		, creatureCreatorPanel(std::make_unique<CreatureCreatorPanel>(*this))
 		, fileSystemPanel(std::make_unique<FileSystemPanel>(*this))
 		, assetInspectorPanel(std::make_unique<AssetInspectorPanel>(*this))
-		, profilerPanel(std::make_unique<ProfilerPanel>(*this)) {
+		, profilerPanel(std::make_unique<ProfilerPanel>(*this))
+		, renderSettingsPanel(std::make_unique<RenderSettingsPanel>(*this)) {
 	}
 
 	Editor::~Editor() = default;
@@ -240,6 +241,12 @@ namespace Iberus {
 			ImGui::SameLine();
 			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
 			ImGui::SameLine();
+			if (ImGui::BeginMenu("Settings##EditorSettingsMenu")) {
+				if (ImGui::MenuItem("Render Settings##EditorRenderSettings")) {
+					renderSettingsPanel->RequestOpen();
+				}
+				ImGui::EndMenu();
+			}
 			if (ImGui::BeginMenu("File##EditorFileMenu")) {
 				bool hasScenePath = !Application::Get()->GetCurrentScenePath().empty();
 				bool hasScene = Engine::Instance()->GetSceneManager().GetActiveScene() != nullptr;
@@ -275,6 +282,7 @@ namespace Iberus {
 		fileSystemPanel->OnDraw(*gui);
 		assetInspectorPanel->OnDraw(*gui);
 		profilerPanel->OnDraw(*gui);
+		renderSettingsPanel->OnDraw(*gui);
 		gui->EndDockSpace();
 
 		UpdateEditorCamera(deltaTime);

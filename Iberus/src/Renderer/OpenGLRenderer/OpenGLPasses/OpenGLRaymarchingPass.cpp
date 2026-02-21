@@ -141,7 +141,7 @@ namespace Iberus {
 		glBindTexture(GL_TEXTURE_BUFFER, 0);
 	}
 
-	OpenGLRaymarchingPass::OpenGLRaymarchingPass(Framebuffer* inSourceBuffer, Framebuffer* inTargetBuffer) : RenderPass(inSourceBuffer, inTargetBuffer) {
+	OpenGLRaymarchingPass::OpenGLRaymarchingPass() {
 		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
 		shaderPass = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseRaymarchingShader"));
 		if (!shaderPass) {
@@ -188,14 +188,14 @@ namespace Iberus {
 		}
 	}
 
-	void OpenGLRaymarchingPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
-		if (!shaderPass) {
+	void OpenGLRaymarchingPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source, Framebuffer* target) {
+		if (!shaderPass || !source || !target) {
 			return;
 		}
 
 		shaderPass->Bind();
-		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), texturesIdxs);
-		if (auto* glFbo = dynamic_cast<OpenGLFramebuffer*>(sourceBuffer)) {
+		source->Bind(FramebufferMode::READING, target->GetFBO(), texturesIdxs);
+		if (auto* glFbo = dynamic_cast<OpenGLFramebuffer*>(source)) {
 			glFbo->BindDepthTexture(depthTextureIdx);
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

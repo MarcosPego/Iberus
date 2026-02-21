@@ -6,9 +6,9 @@ namespace Iberus {
 
 	class OpenGLHDRPass : public RenderPass {
 	public:
-		OpenGLHDRPass(Framebuffer* inSourceBuffer = nullptr, Framebuffer* inTargetBuffer = nullptr);
+		OpenGLHDRPass();
 
-		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
+		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source = nullptr, Framebuffer* target = nullptr) override;
 		std::string GetName() const override { return "HDR"; }
 
 	private:

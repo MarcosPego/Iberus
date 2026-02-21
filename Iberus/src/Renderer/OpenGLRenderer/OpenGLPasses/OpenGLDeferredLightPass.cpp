@@ -34,7 +34,7 @@ namespace Iberus {
 		ShaderBindings::SetUniform<Vec3>(programID, (p + "direction").c_str(), light.Direction);
 	}
 
-	OpenGLDeferredLightPass::OpenGLDeferredLightPass(Framebuffer* inSourceFBO, Framebuffer* inTargetFBO) : RenderPass(inSourceFBO, inTargetFBO) {
+	OpenGLDeferredLightPass::OpenGLDeferredLightPass() {
 		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
 		shaderPass = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseDeferredLightShader"));
 		if (!shaderPass) {
@@ -57,8 +57,8 @@ namespace Iberus {
 		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuadNDC"));
 	}
 
-	void OpenGLDeferredLightPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
-		if (!shaderPass) {
+	void OpenGLDeferredLightPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source, Framebuffer* target) {
+		if (!shaderPass || !source || !target) {
 			return;
 		}
 
@@ -67,7 +67,7 @@ namespace Iberus {
 		glBlendFunc(GL_ONE, GL_ONE);*/
 
 		shaderPass->Bind();
-		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), texturesIdxs);
+		source->Bind(FramebufferMode::READING, target->GetFBO(), texturesIdxs);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		GLuint programID{ 0 };

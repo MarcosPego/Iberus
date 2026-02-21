@@ -19,7 +19,7 @@
 
 namespace Iberus {
 
-	OpenGLGeometryPass::OpenGLGeometryPass(Framebuffer* inSourceFBO, Framebuffer* inTargetFBO) : RenderPass(inSourceFBO, inTargetFBO) {
+	OpenGLGeometryPass::OpenGLGeometryPass() {
 		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
 		auto* shaderObject = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseGeometryShader"));
 		if (shaderObject) {
@@ -29,14 +29,14 @@ namespace Iberus {
 		// NOTE(MPP) No need for sourceFBO for now
 	}
 
-	void OpenGLGeometryPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
-		if (!shaderPass) {
+	void OpenGLGeometryPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source, Framebuffer* target) {
+		if (!shaderPass || !target) {
 			return;
 		}
 
 		// Only the geometry pass updates the depth buffer
 		shaderPass->Bind();
-		targetBuffer->Bind(FramebufferMode::WRITING);
+		target->Bind(FramebufferMode::WRITING);
 
 		glDepthMask(GL_TRUE);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,7 +53,7 @@ namespace Iberus {
 	
 #ifdef DEBUG_FBO
 		// Copy fbo to the default fbo (draw to screen)
-		auto fboID = dynamic_cast<OpenGLFramebuffer*>(targetBuffer)->GetFBO();
+		auto fboID = dynamic_cast<OpenGLFramebuffer*>(target)->GetFBO();
 		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, fboID);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

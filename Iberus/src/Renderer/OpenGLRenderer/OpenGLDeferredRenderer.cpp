@@ -32,13 +32,11 @@ namespace Iberus {
 		}
 		targetFBO = CreateFramebuffer("fbo_2", texturesAPI);
 
-		/// Emplace render passes
-		renderPasses.emplace_back(new OpenGLGeometryPass(sourceFBO, targetFBO)); 		std::swap(sourceFBO, targetFBO);
-		renderPasses.emplace_back(new OpenGLRaymarchingPass(sourceFBO, targetFBO));		std::swap(sourceFBO, targetFBO);
-		renderPasses.emplace_back(new OpenGLDeferredLightPass(sourceFBO, targetFBO));	std::swap(sourceFBO, targetFBO);
-		renderPasses.emplace_back(new OpenGLHDRPass(sourceFBO, targetFBO));				std::swap(sourceFBO, targetFBO);
-
-		std::swap(sourceFBO, targetFBO);
+		/// Emplace render passes (source/target passed at execute time; swap only after executed passes)
+		renderPasses.emplace_back(new OpenGLGeometryPass());
+		renderPasses.emplace_back(new OpenGLRaymarchingPass());
+		renderPasses.emplace_back(new OpenGLDeferredLightPass());
+		renderPasses.emplace_back(new OpenGLHDRPass());
 	}
 
 	void OpenGLDeferredRenderer::RenderFrame(Frame& frame, unsigned int outputFBO, int outputWidth, int outputHeight) {
@@ -61,15 +59,19 @@ namespace Iberus {
 		};
 
 		for (const auto& pass : renderPasses) {
+			if (!pass->IsEnabled()) {
+				continue;
+			}
 			auto t0 = std::chrono::high_resolution_clock::now();
-			pass->ExecutePass(frame, _renderBatchCommands);
+			pass->ExecutePass(frame, _renderBatchCommands, sourceFBO, targetFBO);
 			auto t1 = std::chrono::high_resolution_clock::now();
 			double passMs = std::chrono::duration<double, std::milli>(t1 - t0).count();
 			Profiler::Instance().RecordZone(pass->GetName(), passMs);
+			std::swap(sourceFBO, targetFBO);
 		}
 
 		unsigned int blitTarget = outputFBO != 0 ? outputFBO : 0;
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, targetFBO->GetFBO());
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO->GetFBO());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, blitTarget);
 		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

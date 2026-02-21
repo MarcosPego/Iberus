@@ -65,6 +65,14 @@ namespace Iberus {
 		return nullptr;
 	}
 
+	std::vector<RenderPass*> Renderer::GetRenderPasses() {
+		std::vector<RenderPass*> out;
+		for (const auto& p : renderPasses) {
+			out.push_back(p.get());
+		}
+		return out;
+	}
+
 	uint32_t Renderer::GenerateHandle() {
 		return static_cast<uint32_t>(renderObjects.size());
 	}

@@ -176,7 +176,13 @@ namespace Iberus {
 			bool shouldUpdate = sceneSimulationEnabled || ConsumeStepRequest();
 			if (shouldUpdate) {
 				Profiler::Instance().RecordUpdate(deltaTime);
-				scene->Update(deltaTime);
+				{
+					auto t0 = std::chrono::high_resolution_clock::now();
+					scene->Update(deltaTime);
+					auto t1 = std::chrono::high_resolution_clock::now();
+					double updateMs = std::chrono::duration<double, std::milli>(t1 - t0).count();
+					Profiler::Instance().RecordZone("Update", updateMs);
+				}
 			}
 		}
 
@@ -347,6 +353,7 @@ namespace Iberus {
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseDeferredLightShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseRaymarchingShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryCopyShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseHDRShader", engineProvider.get());
 		
 		/// Textures reserved for passes 1

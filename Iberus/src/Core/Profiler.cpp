@@ -5,6 +5,38 @@
 
 namespace Iberus {
 
+	void Profiler::RecordZone(const std::string& name, double timeMs) {
+		if (!heatMapEnabled || name.empty()) {
+			return;
+		}
+		auto it = zones.find(name);
+		if (it == zones.end()) {
+			zones[name] = ZoneData{ timeMs, true };
+		} else {
+			double a = 1.0 - kZoneSmoothing;
+			it->second.avgMs = a * it->second.avgMs + kZoneSmoothing * timeMs;
+			it->second.hasData = true;
+		}
+		zoneCacheDirty = true;
+	}
+
+	std::vector<std::pair<std::string, double>> Profiler::GetZoneHeatMap() const {
+		if (!zoneCacheDirty) {
+			return zoneHeatMapCache;
+		}
+		zoneHeatMapCache.clear();
+		zoneHeatMapCache.reserve(zones.size());
+		for (const auto& [name, data] : zones) {
+			if (data.hasData && data.avgMs > 0.0) {
+				zoneHeatMapCache.emplace_back(name, data.avgMs);
+			}
+		}
+		std::sort(zoneHeatMapCache.begin(), zoneHeatMapCache.end(),
+			[](const auto& a, const auto& b) { return a.second > b.second; });
+		zoneCacheDirty = false;
+		return zoneHeatMapCache;
+	}
+
 	Profiler::Profiler()
 		: frameWriteIdx(0)
 		, updateWriteIdx(0)

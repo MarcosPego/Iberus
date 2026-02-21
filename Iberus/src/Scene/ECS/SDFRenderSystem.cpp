@@ -8,6 +8,7 @@
 #include "RenderCmd.h"
 #include "OpenGLRaymarchingPass.h"
 
+#include <algorithm>
 #include <cstring>
 
 using namespace Math;

@@ -95,7 +95,20 @@ void main(void)
 	vec2 uvCoord = CalcUVCoord();
 
 	vec3 fragPos = texture(worldPosIn, uvCoord).xyz;
-	vec3 normalizedNormal = normalize(texture(normalIn, uvCoord).xyz);
+	vec3 geomNormal = texture(normalIn, uvCoord).xyz;
+
+	// Early-out: skip lighting for background/sky pixels (no geometry rendered here).
+	// Clear color yields worldPos≈0 and normal≈0 for empty pixels.
+	if (dot(geomNormal, geomNormal) < 0.001) {
+		vec3 ambient = 0.1 * vec3(1.0, 1.0, 1.0);
+		worldPosOut = fragPos;
+		diffuseOut = ambient;
+		normalOut = geomNormal;
+		uvsOut = texture(uvsIn, uvCoord).xyz;
+		return;
+	}
+
+	vec3 normalizedNormal = normalize(geomNormal);
 
 	float ambientStrength = 0.1;
 	vec3 ambient = ambientStrength * vec3(1.0, 1.0, 1.0);
@@ -108,11 +121,8 @@ void main(void)
 	vec3 color = texture(diffuseIn, uvCoord).xyz;
 	vec3 fragColor = lightColor * color;
 
-	worldPosOut     = texture(worldPosIn, uvCoord).xyz;				
-	diffuseOut      = fragColor;	
-	normalOut       = texture(normalIn, uvCoord).xyz;					
-	uvsOut			= texture(uvsIn, uvCoord).xyz;	
-
-	//fragColor = vec4(color, 1.0);	
-	//fragColor = vec4(texture(normalIn, uvCoord).xyz, 1);
+	worldPosOut = fragPos;
+	diffuseOut = fragColor;
+	normalOut = geomNormal;
+	uvsOut = texture(uvsIn, uvCoord).xyz;
 }

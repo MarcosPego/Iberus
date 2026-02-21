@@ -5,6 +5,9 @@
 #include "Engine.h"
 #include "Window.h"
 #include "Framebuffer.h"
+#include "Profiler.h"
+
+#include <chrono>
 
 namespace Iberus {
 
@@ -58,7 +61,11 @@ namespace Iberus {
 		};
 
 		for (const auto& pass : renderPasses) {
+			auto t0 = std::chrono::high_resolution_clock::now();
 			pass->ExecutePass(frame, _renderBatchCommands);
+			auto t1 = std::chrono::high_resolution_clock::now();
+			double passMs = std::chrono::duration<double, std::milli>(t1 - t0).count();
+			Profiler::Instance().RecordZone(pass->GetName(), passMs);
 		}
 
 		unsigned int blitTarget = outputFBO != 0 ? outputFBO : 0;

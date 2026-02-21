@@ -1,13 +1,15 @@
 #pragma once
 
 #include "RenderPass.h"
+#include "Matrix.h"
+#include "RenderCmd.h"
 #include <cstddef>
 #include <vector>
 
 /// std140 layout for SDF UBO. Must match baseRaymarchingShader.frag SDFBlock.
 namespace SDFUBO {
 	constexpr size_t SDF_PART_COUNT = 16;
-	constexpr size_t SDF_MESH_COUNT = 4;
+	constexpr size_t SDF_MESH_COUNT = 16;
 	constexpr size_t SDF_PART_STRIDE = 64;
 	constexpr size_t MESH_HEADER_SIZE = 48;
 	constexpr size_t MESH_STRIDE = MESH_HEADER_SIZE + SDF_PART_STRIDE * SDF_PART_COUNT;
@@ -29,16 +31,28 @@ namespace Iberus {
 	class OpenGLRaymarchingPass : public RenderPass {
 	public:
 		OpenGLRaymarchingPass(Framebuffer* inSourceBuffer = nullptr, Framebuffer* inTargetBuffer = nullptr);
+		~OpenGLRaymarchingPass();
 
 		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
+		std::string GetName() const override { return "Raymarching"; }
 	private:
+		void BuildTileBuffer(const SDFBufferRenderCmd* sdfCmd, const Math::Mat4& viewProj, int screenW, int screenH);
+		void BuildEmptyTileBuffer(int screenW, int screenH);
+		static constexpr int TILE_SIZE = 32;
+		static constexpr int MAX_SDF_PER_TILE = 16;
+		static constexpr int TILE_STRIDE = 1 + MAX_SDF_PER_TILE;  // count + indices
+
 		MeshApi* quadMesh{ nullptr };
 
 		std::vector<int> texturesIdxs{ 4, 5, 6, 7 };
 		static constexpr int depthTextureIdx = 8;
+		static constexpr int tileBufferTextureIdx = 9;
 		static constexpr unsigned int sdfUBOBindingIndex = 0;
 
 		unsigned int sdfUBO{ 0 };
+		unsigned int tileBuffer{ 0 };
+		unsigned int tileBufferTexture{ 0 };
+		int lastTileBufferBytes{ 0 };
 	};
 
 }

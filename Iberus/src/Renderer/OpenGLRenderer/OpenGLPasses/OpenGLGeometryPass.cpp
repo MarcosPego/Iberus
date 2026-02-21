@@ -46,8 +46,6 @@ namespace Iberus {
 
 		renderFrame(frame, shaderPass);
 
-		// When we get here the depth buffer is already populated and the stencil pass
-		// depends on it, but it does not write to it.
 		glDepthMask(GL_FALSE);
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);

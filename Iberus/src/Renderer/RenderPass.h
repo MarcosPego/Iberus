@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Iberus {
 	struct Frame;
 	class Framebuffer;
@@ -9,6 +11,7 @@ namespace Iberus {
 	public:
 		RenderPass(Framebuffer* inSourceFBO = nullptr, Framebuffer* inTargetFBO = nullptr);
 		virtual void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) = 0;
+		virtual std::string GetName() const { return "Pass"; }
 
 		void SetShader(ShaderApi* inShader);
 

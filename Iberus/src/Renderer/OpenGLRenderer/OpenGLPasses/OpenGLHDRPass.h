@@ -9,6 +9,7 @@ namespace Iberus {
 		OpenGLHDRPass(Framebuffer* inSourceBuffer = nullptr, Framebuffer* inTargetBuffer = nullptr);
 
 		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
+		std::string GetName() const override { return "HDR"; }
 
 	private:
 		MeshApi* quadMesh{ nullptr };

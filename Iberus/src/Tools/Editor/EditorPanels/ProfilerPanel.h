@@ -13,6 +13,7 @@ namespace Iberus {
 
 	private:
 		Editor& editor;
+		bool showHeatMap{ false };
 	};
 
 }

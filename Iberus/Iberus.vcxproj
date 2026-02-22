@@ -239,6 +239,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
     <ClInclude Include="src\BuiltInBehaviors\CameraController.h" />
     <ClInclude Include="src\Core\Application.h" />
+    <ClInclude Include="src\Core\Callback.h" />
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Core\Enginepch.h" />

@@ -311,5 +311,6 @@ void main(void)
 	worldPosOut     = sdfInFront ? pos : geomPos;
 	diffuseOut      = outColor;
 	normalOut       = sdfInFront ? normal : geomNormal;
-	uvsOut			= texture(uvsIn, uvCoord).xyz;
+	// SDF has no emissive; only pass through geometry's emissive when showing geometry (avoids adding occluded geometry's emissive to SDF = see-through).
+	uvsOut			= sdfInFront ? vec3(0.0) : texture(uvsIn, uvCoord).xyz;
 }

@@ -4,6 +4,7 @@
 #include "OpenGLFramebuffer.h"
 #include "OpenGLMesh.h"
 #include "OpenGLShader.h"
+#include "OpenGLComputeShader.h"
 #include "OpenGLTexture.h"
 #include "RenderBatch.h"
 #include "RenderCmd.h"
@@ -49,6 +50,9 @@ namespace Iberus {
 			if (type == RenderCmdType::DELETE_SHADER) {
 				auto* shaderCmd = dynamic_cast<DeleteShaderRenderCmd*>(renderCmd.get());
 				renderObjects.erase(shaderCmd->ID);
+			} else if (type == RenderCmdType::DELETE_COMPUTE_SHADER) {
+				auto* cmd = dynamic_cast<DeleteComputeShaderRenderCmd*>(renderCmd.get());
+				renderObjects.erase(cmd->ID);
 			} else if (type == RenderCmdType::DELETE_MESH) {
 				auto* meshCmd = dynamic_cast<DeleteMeshRenderCmd*>(renderCmd.get());
 				renderObjects.erase(meshCmd->ID);
@@ -61,9 +65,15 @@ namespace Iberus {
 			switch (renderCmd->GetRenderCmdType()) {
 			case RenderCmdType::UPLOAD_SHADER: {
 				auto* shaderCmd = dynamic_cast<UploadShaderRenderCmd*>(renderCmd.get());
-				auto handle = GenerateHandle(); // Needs to be reviewed
+				auto handle = GenerateHandle();
 				auto* shader = new OpenGLShader(shaderCmd->ID, handle, std::move(shaderCmd->vertexBuffer), std::move(shaderCmd->fragBuffer));
 				renderObjects[shaderCmd->ID].reset(shader);
+			} break;
+			case RenderCmdType::UPLOAD_COMPUTE_SHADER: {
+				auto* cmd = dynamic_cast<UploadComputeShaderRenderCmd*>(renderCmd.get());
+				auto handle = GenerateHandle();
+				auto* compShader = new OpenGLComputeShader(cmd->ID, handle, std::move(cmd->compBuffer));
+				renderObjects[cmd->ID].reset(compShader);
 			} break;
 			case RenderCmdType::UPLOAD_MESH: {
 				auto* meshCmd = dynamic_cast<UploadMeshRenderCmd*>(renderCmd.get());
@@ -80,6 +90,7 @@ namespace Iberus {
 				renderObjects[textureCmd->ID].reset(texture);
 			} break;
 			case RenderCmdType::DELETE_SHADER:
+			case RenderCmdType::DELETE_COMPUTE_SHADER:
 			case RenderCmdType::DELETE_MESH:
 			case RenderCmdType::DELETE_TEXTURE:
 				break;

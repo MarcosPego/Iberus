@@ -4,6 +4,7 @@
 #include "FileSystem.h"
 #include "IProvider.h"
 #include "Shader.h"
+#include "ComputeShader.h"
 #include "Mesh.h"
 #include "Material.h"
 #include "MaterialSerializer.h"
@@ -63,13 +64,92 @@ namespace Iberus {
 				return nullptr;
 			}
 
-			auto vertexBuffer = provider->GetRawFileBuffer(id + ".vert");
-			auto fragBuffer = provider->GetRawFileBuffer(id + ".frag");
+			// Extract basename for path fallbacks (e.g. "assets/shaders/baseRaymarchingShader" -> "baseRaymarchingShader")
+			std::string basename = id;
+			auto slash = id.find_last_of("/\\");
+			if (slash != std::string::npos) {
+				basename = id.substr(slash + 1);
+			}
+
+			std::string vertPaths[] = {
+				id + ".vert",
+				"Assets/Shaders/" + basename + ".vert",
+				"assets/shaders/" + basename + ".vert",
+				"Projects/Demo/Assets/Shaders/" + basename + ".vert",
+			};
+			std::string fragPaths[] = {
+				id + ".frag",
+				"Assets/Shaders/" + basename + ".frag",
+				"assets/shaders/" + basename + ".frag",
+				"Projects/Demo/Assets/Shaders/" + basename + ".frag",
+			};
+
+			Buffer vertexBuffer;
+			Buffer fragBuffer;
+			for (const auto& p : vertPaths) {
+				vertexBuffer = provider->GetRawFileBuffer(p);
+				if (!vertexBuffer.Invalid() && vertexBuffer.GetSize() > 0) {
+					break;
+				}
+			}
+			for (const auto& p : fragPaths) {
+				fragBuffer = provider->GetRawFileBuffer(p);
+				if (!fragBuffer.Invalid() && fragBuffer.GetSize() > 0) {
+					break;
+				}
+			}
+
+			if (vertexBuffer.Invalid() || vertexBuffer.GetSize() == 0) {
+				Log::GetCoreLogger()->error("Shader vertex stage not found for id: {}", id);
+				return nullptr;
+			}
+			if (fragBuffer.Invalid() || fragBuffer.GetSize() == 0) {
+				Log::GetCoreLogger()->error("Shader fragment stage not found for id: {}", id);
+				return nullptr;
+			}
 
 			auto shader = std::make_unique<Shader>(id, std::move(vertexBuffer), std::move(fragBuffer));
 			auto* ptr = shader.get();
 			resources.emplace(id, std::move(shader));
 			return dynamic_cast<Shader*>(ptr);
+		}
+
+		template<>
+		ComputeShader* CreateResource(const std::string& id, IProvider* provider) {
+			if (!provider) {
+				return nullptr;
+			}
+
+			std::string basename = id;
+			auto slash = id.find_last_of("/\\");
+			if (slash != std::string::npos) {
+				basename = id.substr(slash + 1);
+			}
+
+			std::string compPaths[] = {
+				id + ".comp",
+				"Assets/Shaders/" + basename + ".comp",
+				"assets/shaders/" + basename + ".comp",
+				"Projects/Demo/Assets/Shaders/" + basename + ".comp",
+			};
+
+			Buffer compBuffer;
+			for (const auto& p : compPaths) {
+				compBuffer = provider->GetRawFileBuffer(p);
+				if (!compBuffer.Invalid() && compBuffer.GetSize() > 0) {
+					break;
+				}
+			}
+
+			if (compBuffer.Invalid() || compBuffer.GetSize() == 0) {
+				Log::GetCoreLogger()->warn("Compute shader not found for id: {}", id);
+				return nullptr;
+			}
+
+			auto shader = std::make_unique<ComputeShader>(id, std::move(compBuffer));
+			auto* ptr = shader.get();
+			resources.emplace(id, std::move(shader));
+			return dynamic_cast<ComputeShader*>(ptr);
 		}
 
 		template<>

@@ -10,6 +10,7 @@
 #include "Profiler.h"
 
 #include <chrono>
+#include <thread>
 
 namespace Iberus {
 
@@ -108,6 +109,14 @@ namespace Iberus {
 			window->Update();
 
 			Profiler::Instance().RecordFrame(deltaTime);
+
+			// 60 FPS limit
+			const double targetFrameTime = 1.0 / 144.0;
+			auto frameEnd = Clock::now();
+			double frameDuration = std::chrono::duration<double>(frameEnd - lastFrameTime).count();
+			if (frameDuration < targetFrameTime) {
+				std::this_thread::sleep_for(std::chrono::duration<double>(targetFrameTime - frameDuration));
+			}
 		}
 	}
 }

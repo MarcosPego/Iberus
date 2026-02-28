@@ -280,6 +280,14 @@ namespace Iberus {
 						ImGui::DragFloat3("Endpoint##SDFPartEndpoint", &part.Endpoint.x, 0.1f);
 					}
 
+					uint32_t blendMask = part.BlendGroupMask;
+					if (ImGui::InputScalar("Blend Group Mask##SDFPartBlend", ImGuiDataType_U32, &blendMask, nullptr, nullptr, "%08X")) {
+						part.BlendGroupMask = blendMask;
+					}
+					if (ImGui::IsItemHovered()) {
+						ImGui::SetTooltip("Bit 0=body, bits 1..31=member0..member30; joint = 0x01 | (1<<i)");
+					}
+
 					char matBuf[256];
 					snprintf(matBuf, sizeof(matBuf), "%s", part.MaterialId.c_str());
 					if (ImGui::InputText("Material Override##SDFPartMaterial", matBuf, sizeof(matBuf))) {

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include "Buffer.h"
 #include "MathUtils.h"
 
 using namespace Math;
@@ -33,6 +34,8 @@ namespace Iberus {
 		DELETE_SHADER,
 		DELETE_MESH,
 		DELETE_TEXTURE,
+		UPLOAD_COMPUTE_SHADER,
+		DELETE_COMPUTE_SHADER,
 	};
 
 	class RenderCmd {
@@ -175,6 +178,7 @@ namespace Iberus {
 	};
 
 	/// Single UBO payload for all SDF meshes/parts (std140 layout). Replaces many PUSH_UNIFORM SDF commands.
+	/// screenBounds: (minX, minY, maxX, maxY) in pixels for scissor culling. All zero = full screen (no culling).
 	class IBERUS_API SDFBufferRenderCmd : public RenderCmd {
 	public:
 		SDFBufferRenderCmd() {
@@ -182,6 +186,10 @@ namespace Iberus {
 		}
 
 		std::vector<uint8_t> uboData;
+		int screenBoundsMinX{ 0 };
+		int screenBoundsMinY{ 0 };
+		int screenBoundsMaxX{ 0 };
+		int screenBoundsMaxY{ 0 };
 	};
 
 	/// Create and Delete Cmds
@@ -235,6 +243,28 @@ namespace Iberus {
 			ID = inboundID;
 
 			renderCmdType = RenderCmdType::DELETE_SHADER;
+		}
+
+		std::string ID;
+	};
+
+	class UploadComputeShaderRenderCmd : public RenderCmd {
+	public:
+		UploadComputeShaderRenderCmd(const std::string& inboundID, Buffer inboundCompBuffer) {
+			ID = inboundID;
+			compBuffer = std::move(inboundCompBuffer);
+			renderCmdType = RenderCmdType::UPLOAD_COMPUTE_SHADER;
+		}
+
+		std::string ID;
+		Buffer compBuffer;
+	};
+
+	class DeleteComputeShaderRenderCmd : public RenderCmd {
+	public:
+		DeleteComputeShaderRenderCmd(const std::string& inboundID) {
+			ID = inboundID;
+			renderCmdType = RenderCmdType::DELETE_COMPUTE_SHADER;
 		}
 
 		std::string ID;

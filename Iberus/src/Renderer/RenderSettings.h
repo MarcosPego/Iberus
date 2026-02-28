@@ -44,5 +44,16 @@ namespace Iberus {
 		bool enableFog{ false };
 		bool enableSSAO{ false };
 		bool enableShadows{ false };
+
+		// SDF raymarch debug: 0=normal, 5=creatureCount, 6=tileCount, 7=rayMayHit, 8=distField, 9=raymarch hit
+		int sdfDebugMode{ 0 };
+		// SDF radius scale: multiplier for all part radii (1=normal; <1 thins, >1 thickens)
+		float sdfRadiusScale{ 1.0f };
+		// Force CPU tile build (bypass GPU compute) when GPU path produces empty tiles
+		bool sdfForceCPUTiles{ false };
+		// Enable coarse 8x8 pre-pass (skip full raymarch where block has no hit)
+		bool sdfUseCoarsePass{ false };
+		// Coarse debug: 0=hit mask, 1=tileCount/64, 2=gradient, 3=constant red (verify main pass path)
+		int sdfCoarseDebugMode{ 0 };
 	};
 }

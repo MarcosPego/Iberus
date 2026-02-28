@@ -285,6 +285,8 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLPixelationPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
+    <ClInclude Include="src\Renderer\ComputeShaderApi.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLComputeShader.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLTexture.h" />
@@ -321,6 +323,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Scene\Resources\ProjectPaths.h" />
     <ClInclude Include="src\Scene\Resources\Resource.h" />
     <ClInclude Include="src\Scene\Resources\ResourceManager.h" />
+    <ClInclude Include="src\Scene\Resources\ComputeShader.h" />
     <ClInclude Include="src\Scene\Resources\Shader.h" />
     <ClInclude Include="src\Scene\Resources\Texture.h" />
     <ClInclude Include="src\Scene\Scene.h" />
@@ -416,6 +419,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLPixelationPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLComputeShader.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShaderBindings.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLTexture.cpp" />
@@ -448,6 +452,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Scene\Resources\ProjectPaths.cpp" />
     <ClCompile Include="src\Scene\Resources\Resource.cpp" />
     <ClCompile Include="src\Scene\Resources\ResourceManager.cpp" />
+    <ClCompile Include="src\Scene\Resources\ComputeShader.cpp" />
     <ClCompile Include="src\Scene\Resources\Shader.cpp" />
     <ClCompile Include="src\Scene\Resources\Texture.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />

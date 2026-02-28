@@ -136,10 +136,11 @@ namespace Iberus {
 					partObj.Set("Type", p.Type);
 					SerializeVec3(partObj, "Endpoint", p.Endpoint);
 					partObj.Set("Radius", p.Radius);
-				partObj.Set("MaterialId", p.MaterialId);
-				partsArr.Push(partObj);
-			}
-			outEntity.Set("sdf", partsArr);
+					partObj.Set("MaterialId", p.MaterialId);
+					partObj.Set("BlendGroupMask", static_cast<int64_t>(p.BlendGroupMask));
+					partsArr.Push(partObj);
+				}
+				outEntity.Set("sdf", partsArr);
 			}
 
 			if (auto* script = world.GetComponent<ScriptComponent>(entityId)) {
@@ -456,6 +457,7 @@ namespace Iberus {
 						part.Endpoint = DeserializeVec3(partJson, "Endpoint");
 						part.Radius = partJson.Contains("Radius") ? partJson["Radius"].AsFloat() : 1.0f;
 						part.MaterialId = partJson.Contains("MaterialId") ? partJson["MaterialId"].AsString() : std::string();
+						part.BlendGroupMask = partJson.Contains("BlendGroupMask") ? static_cast<uint32_t>(partJson["BlendGroupMask"].AsInt64()) : 0x01u;
 						comp->Parts.push_back(part);
 					}
 				}

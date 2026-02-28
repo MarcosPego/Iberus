@@ -354,7 +354,9 @@ namespace Iberus {
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseDeferredLightShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseToonLightShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseRaymarchingShader", engineProvider.get());
-		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryCopyShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseRaymarchingCoarseShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/coarseDebugBlit", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/coarseDirectTest", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseOutlineShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseHDRShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseBloomBrightShader", engineProvider.get());

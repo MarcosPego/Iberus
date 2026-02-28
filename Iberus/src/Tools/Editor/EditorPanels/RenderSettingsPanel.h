@@ -15,6 +15,7 @@ namespace Iberus {
 
 	private:
 		void DrawPostProcessSettings();
+		void DrawSDFSettings();
 		void DrawPipelinePasses();
 
 		Editor& editor;

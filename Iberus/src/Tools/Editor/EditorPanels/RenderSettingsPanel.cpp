@@ -70,6 +70,64 @@ namespace Iberus {
 		}
 	}
 
+	void RenderSettingsPanel::DrawSDFSettings() {
+		PostProcessSettings& settings = Engine::Instance()->GetPostProcessSettings();
+
+		if (ImGui::CollapsingHeader("SDF Raymarching", ImGuiTreeNodeFlags_DefaultOpen)) {
+			const char* sdfDebugNames[] = {
+				"Normal",
+				"Ray Direction",
+				"Hit/Miss",
+				"Distance Field",
+				"NDC",
+				"creatureCount (SSBO)",
+				"tileCount",
+				"rayMayHit",
+				"distField at Origin",
+				"Raymarch Hit",
+				"coarseMask",
+				"coarse culling",
+				"raw coarse"
+			};
+			if (ImGui::Combo("Debug Mode##SDF", &settings.sdfDebugMode, sdfDebugNames, 13)) {
+				// Combo changed; setting already updated
+			}
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetTooltip(
+					"Visualize SDF pipeline stages for debugging.\n"
+					"creatureCount: green=SSBO has data\n"
+					"tileCount: green=tile has SDFs\n"
+					"rayMayHit: green=ray passes bounds test\n"
+					"distField: brightness=near surface\n"
+					"Raymarch Hit: green=SDF hit\n"
+					"coarseMask: white=8x8 block hit (requires coarse pass)\n"
+					"coarse culling: red=culled (no raymarch), green=raymarched\n"
+					"raw coarse: coarse texture as grayscale; use Coarse debug Pipeline test to validate write+read");
+			}
+			ImGui::SliderFloat("Radius Scale##SDF", &settings.sdfRadiusScale, 0.1f, 2.0f, "%.2f");
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetTooltip("Multiplier for SDF part radii. Use <1 if creatures look too chunky.");
+			}
+			ImGui::Checkbox("Force CPU tiles##SDF", &settings.sdfForceCPUTiles);
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetTooltip("Use CPU tile build instead of GPU compute. Enable if SDF shows nothing (tileCount/rayMayHit red).");
+			}
+			ImGui::Checkbox("Use coarse pass##SDF", &settings.sdfUseCoarsePass);
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetTooltip("8x8 pre-pass to skip raymarch where no SDF. Use coarseMask debug to verify.");
+			}
+			if (settings.sdfUseCoarsePass || settings.sdfDebugMode == 10 || settings.sdfDebugMode == 11 || settings.sdfDebugMode == 12) {
+				ImGui::Indent();
+				const char* coarseDebugNames[] = { "Hit mask", "tileCount/64", "Gradient", "Constant red", "Direct gradient", "Pipeline test" };
+				if (ImGui::Combo("Coarse debug##SDF", &settings.sdfCoarseDebugMode, coarseDebugNames, 6)) { }
+				if (ImGui::IsItemHovered()) {
+					ImGui::SetTooltip("Hit mask: default for culling. Pipeline test: outputs white; use raw coarse to verify write+read.");
+				}
+				ImGui::Unindent();
+			}
+		}
+	}
+
 	void RenderSettingsPanel::DrawPipelinePasses() {
 		if (ImGui::CollapsingHeader("Pipeline Passes", ImGuiTreeNodeFlags_DefaultOpen)) {
 			std::vector<RenderPass*> passes = Engine::Instance()->GetRenderer().GetRenderPasses();
@@ -104,6 +162,8 @@ namespace Iberus {
 		if (ImGui::Begin("Render Settings", nullptr, ImGuiWindowFlags_NoNavInputs)) {
 			if (!ImGui::IsWindowCollapsed()) {
 				DrawPostProcessSettings();
+				ImGui::Spacing();
+				DrawSDFSettings();
 				ImGui::Spacing();
 				DrawPipelinePasses();
 			}

@@ -87,6 +87,7 @@ namespace Iberus {
 		Vec3 Endpoint{ 0, 0, 0 }; // For capsule: local-space endpoint; segment = Transform.Position to Endpoint
 		float Radius{ 1.0f };
 		std::string MaterialId; // Override material per part; empty = use entity material
+		uint32_t BlendGroupMask{ 0x01u }; // Bit 0=body; bits 1..31=members; joint = 0x01 | (1<<i)
 	};
 
 	struct IBERUS_API SDFComponent {

@@ -18,6 +18,11 @@ void OpenGLShader::Unbind() const {
 }
 
 bool OpenGLShader::Load(Buffer vertexBuffer, Buffer fragBuffer) {
+	if (vertexBuffer.Invalid() || vertexBuffer.GetSize() == 0 ||
+		fragBuffer.Invalid() || fragBuffer.GetSize() == 0) {
+		return false;
+	}
+
 	shaderGLID = glCreateProgram();
 
 	GLuint VertexShaderId = AddShader(GL_VERTEX_SHADER, std::move(vertexBuffer));

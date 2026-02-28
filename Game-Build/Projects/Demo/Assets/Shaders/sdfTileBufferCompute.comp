@@ -1,0 +1,86 @@
+#version 460 core
+
+layout(local_size_x = 8, local_size_y = 8) in;
+
+struct CreatureHeader {
+	int partOffset;
+	int partCount;
+	vec4 boundCenter;
+	float boundRadius;
+	int _pad;
+};
+
+layout(std430, binding = 0) buffer SDFBlock {
+	int creatureCount;
+	int totalPartCount;
+	int _pad[2];
+	CreatureHeader headers[256];
+};
+
+layout(std430, binding = 1) buffer TileBuffer {
+	uint tileData[];
+};
+
+uniform mat4 viewProj;
+uniform int screenW;
+uniform int screenH;
+uniform int tileSize;
+uniform int tilesX;
+uniform int tilesY;
+
+const int TILE_STRIDE = 65;  // count + 64 indices
+const int MAX_SDF_PER_TILE = 64;
+
+vec3 ProjectToScreen(vec3 worldPos) {
+	vec4 clip = viewProj * vec4(worldPos, 1.0);
+	if (abs(clip.w) < 1e-6) {
+		return vec3(-1e6, -1e6, 0.0);
+	}
+	float ndcX = clip.x / clip.w;
+	float ndcY = clip.y / clip.w;
+	float sx = (ndcX + 1.0) * 0.5 * float(screenW);
+	float sy = (ndcY + 1.0) * 0.5 * float(screenH);
+	return vec3(sx, sy, clip.w);
+}
+
+void main() {
+	ivec2 tileCoord = ivec2(gl_GlobalInvocationID.xy);
+	if (tileCoord.x >= tilesX || tileCoord.y >= tilesY) {
+		return;
+	}
+	int tileIdx = tileCoord.y * tilesX + tileCoord.x;
+
+	uint indices[MAX_SDF_PER_TILE];
+	uint count = 0u;
+	const float margin = 1.5;
+
+	float tileMinX = float(tileCoord.x * tileSize);
+	float tileMaxX = float((tileCoord.x + 1) * tileSize);
+	float tileMinY = float(tileCoord.y * tileSize);
+	float tileMaxY = float((tileCoord.y + 1) * tileSize);
+
+	for (int slot = 0; slot < creatureCount && count < MAX_SDF_PER_TILE; slot++) {
+		vec3 center = headers[slot].boundCenter.xyz;
+		float radius = headers[slot].boundRadius;
+
+		vec3 proj = ProjectToScreen(center);
+		if (proj.z < 0.01) {
+			continue;
+		}
+		float screenRadius = radius * float(screenH) / max(proj.z, 0.001);
+		float sdfMinX = proj.x - screenRadius * margin;
+		float sdfMaxX = proj.x + screenRadius * margin;
+		float sdfMinY = proj.y - screenRadius * margin;
+		float sdfMaxY = proj.y + screenRadius * margin;
+
+		if (sdfMinX < tileMaxX && sdfMaxX > tileMinX && sdfMinY < tileMaxY && sdfMaxY > tileMinY) {
+			indices[int(count)] = uint(slot);
+			count++;
+		}
+	}
+
+	tileData[tileIdx * TILE_STRIDE] = count;
+	for (uint k = 0u; k < count; k++) {
+		tileData[tileIdx * TILE_STRIDE + 1u + k] = indices[k];
+	}
+}

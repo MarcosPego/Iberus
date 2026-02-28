@@ -7,6 +7,7 @@
 #include "RenderBatch.h"
 #include "RenderCmd.h"
 #include "OpenGLRaymarchingPass.h"
+#include "RenderSettings.h"
 
 #include <algorithm>
 #include <cstring>
@@ -61,14 +62,19 @@ namespace Iberus {
 		}
 
 		auto sdfBufferCmd = std::make_unique<SDFBufferRenderCmd>();
-		sdfBufferCmd->uboData.resize(SDFUBO::BLOCK_SIZE, 0);
+		sdfBufferCmd->uboData.resize(SDFSSBO::BLOCK_SIZE, 0);
 
+		const float radiusScale = Engine::Instance()->GetPostProcessSettings().sdfRadiusScale;
 		int sdfSlot = 0;
+		int totalPartCount = 0;
 		auto& resourceManager = Engine::Instance()->GetResourceManager();
 		auto* provider = &Engine::Instance()->GetEngineProvider();
 
 		for (auto [entityId, sdf] : *sdfStorage) {
-			if (sdfSlot >= static_cast<int>(SDFUBO::SDF_MESH_COUNT)) {
+			if (sdfSlot >= static_cast<int>(SDFSSBO::MAX_CREATURES)) {
+				break;
+			}
+			if (totalPartCount >= static_cast<int>(SDFSSBO::POOL_BUDGET)) {
 				break;
 			}
 			if (!world.IsAlive(entityId)) {
@@ -95,7 +101,12 @@ namespace Iberus {
 				entityMaterial = resourceManager.GetOrCreateResource<Material>(meshRenderer->MaterialId, provider);
 			}
 
-			const int partCount = static_cast<int>(std::min(sdf.Parts.size(), SDFUBO::SDF_PART_COUNT));
+			const int partLimit = std::min(static_cast<int>(sdf.Parts.size()),
+				static_cast<int>(SDFSSBO::POOL_BUDGET - totalPartCount));
+			const int partCount = partLimit > 0 ? partLimit : 0;
+			if (partCount <= 0) {
+				continue;
+			}
 
 			// Compute world-space bounding sphere for culling
 			Vec3 boundMin(1e30f, 1e30f, 1e30f);
@@ -122,8 +133,15 @@ namespace Iberus {
 				}
 				maxPartRadius = std::max(maxPartRadius, p.Radius);
 			}
+			// Extract uniform scale from LocalToWorld (column-major upper-left 3x3)
+			const float* d = localToWorld->Matrix.data;
+			const float scaleX = std::sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
+			const float scaleY = std::sqrt(d[4] * d[4] + d[5] * d[5] + d[6] * d[6]);
+			const float scaleZ = std::sqrt(d[8] * d[8] + d[9] * d[9] + d[10] * d[10]);
+			const float uniformScale = (scaleX + scaleY + scaleZ) / 3.0f;
+
 			Vec3 boundCenter = (boundMin + boundMax) * 0.5f;
-			float boundRadius = (boundMax - boundMin).length() * 0.5f + maxPartRadius;
+			float boundRadius = (boundMax - boundMin).length() * 0.5f + maxPartRadius * uniformScale * radiusScale;
 
 			// Frustum culling
 			const float cullMargin = 1.5f;
@@ -131,12 +149,13 @@ namespace Iberus {
 				continue;
 			}
 
-			// Write to UBO using std140 layout (SDFUBOLayout.h) - vec4 for vec3 to avoid padding issues
-			const size_t meshBase = sdfSlot * SDFUBO::MESH_STRIDE;
-			*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + meshBase + SDFUBO::MESH_SIZE) = partCount;
+			// Write creature header (pool layout)
+			const size_t headerBase = SDFSSBO::GLOBAL_HEADER_SIZE + sdfSlot * SDFSSBO::CREATURE_HEADER_STRIDE;
+			*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + headerBase + SDFSSBO::CREATURE_HEADER_PART_OFFSET) = totalPartCount;
+			*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + headerBase + SDFSSBO::CREATURE_HEADER_PART_COUNT) = partCount;
 			const Vec4 boundCenter4(boundCenter.x, boundCenter.y, boundCenter.z, 1.0f);
-			std::memcpy(sdfBufferCmd->uboData.data() + meshBase + SDFUBO::MESH_BOUND_CENTER, &boundCenter4, 16);
-			*reinterpret_cast<float*>(sdfBufferCmd->uboData.data() + meshBase + SDFUBO::MESH_BOUND_RADIUS) = boundRadius;
+			std::memcpy(sdfBufferCmd->uboData.data() + headerBase + SDFSSBO::CREATURE_HEADER_BOUND_CENTER, &boundCenter4, 16);
+			*reinterpret_cast<float*>(sdfBufferCmd->uboData.data() + headerBase + SDFSSBO::CREATURE_HEADER_BOUND_RADIUS) = boundRadius;
 
 			for (int j = 0; j < partCount; ++j) {
 				const auto& part = sdf.Parts[j];
@@ -161,24 +180,30 @@ namespace Iberus {
 					color = entityMaterial->albedoColor;
 				}
 
-				const size_t partBase = meshBase + SDFUBO::MESH_PARTS_START + j * SDFUBO::SDF_PART_STRIDE;
+				const size_t partBase = SDFSSBO::PARTS_OFFSET + (totalPartCount + j) * SDFSSBO::SDF_PART_STRIDE;
 				const Vec4 center4(center.x, center.y, center.z, 1.0f);
 				const Vec4 endpoint4(endpoint.x, endpoint.y, endpoint.z, 1.0f);
-				std::memcpy(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_CENTER, &center4, 16);
-				std::memcpy(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_COLOR, &color, 16);
-				*reinterpret_cast<float*>(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_RADIUS) = part.Radius;
-				*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_TYPE) = part.Type;
-				std::memcpy(sdfBufferCmd->uboData.data() + partBase + SDFUBO::PART_ENDPOINT, &endpoint4, 16);
+				const float worldRadius = part.Radius * uniformScale * radiusScale;
+				std::memcpy(sdfBufferCmd->uboData.data() + partBase + SDFSSBO::PART_CENTER, &center4, 16);
+				std::memcpy(sdfBufferCmd->uboData.data() + partBase + SDFSSBO::PART_COLOR, &color, 16);
+				*reinterpret_cast<float*>(sdfBufferCmd->uboData.data() + partBase + SDFSSBO::PART_RADIUS) = worldRadius;
+				*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + partBase + SDFSSBO::PART_TYPE) = part.Type;
+				*reinterpret_cast<uint32_t*>(sdfBufferCmd->uboData.data() + partBase + SDFSSBO::PART_BLEND_GROUP_MASK) = part.BlendGroupMask != 0u ? part.BlendGroupMask : 0x01u;
+				std::memcpy(sdfBufferCmd->uboData.data() + partBase + SDFSSBO::PART_ENDPOINT, &endpoint4, 16);
 			}
 
+			totalPartCount += partCount;
 			sdfSlot++;
 		}
 
-		// Clear unused slots (size=0)
-		for (int slot = sdfSlot; slot < static_cast<int>(SDFUBO::SDF_MESH_COUNT); ++slot) {
-			const size_t meshBase = slot * SDFUBO::MESH_STRIDE;
-			*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + meshBase + SDFUBO::MESH_SIZE) = 0;
-		}
+		// Write global header
+		*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + SDFSSBO::GLOBAL_CREATURE_COUNT) = sdfSlot;
+		*reinterpret_cast<int*>(sdfBufferCmd->uboData.data() + SDFSSBO::GLOBAL_TOTAL_PART_COUNT) = totalPartCount;
+
+		// Shrink to exact needed bytes for upload. Parts are at PARTS_OFFSET (fixed layout).
+		const size_t requiredBytes = SDFSSBO::PARTS_OFFSET
+			+ static_cast<size_t>(totalPartCount) * SDFSSBO::SDF_PART_STRIDE;
+		sdfBufferCmd->uboData.resize(requiredBytes);
 
 		renderBatch.PushRenderCmdToQueue(std::move(sdfBufferCmd), CMDQueue::SDF);
 	}

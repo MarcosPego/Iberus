@@ -1,11 +1,14 @@
 #include "Enginepch.h"
 #include "ImguiContext.h"
+#include "FileSystem.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "IconsFontAwesome6.h"
 
 #include <GLFW/glfw3.h>
+#include <filesystem>
 
 namespace Iberus {
 
@@ -22,6 +25,17 @@ namespace Iberus {
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+		// Load default font and merge Font Awesome icons
+		io.Fonts->AddFontDefault();
+		std::string fontPath = FileSystem::GetAppDirectory() + "/fonts/fa-solid-900.ttf";
+		if (std::filesystem::exists(fontPath)) {
+			ImFontConfig config;
+			config.MergeMode = true;
+			config.GlyphMinAdvanceX = 13.0f;
+			static const ImWchar iconRanges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+			io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 13.0f, &config, iconRanges);
+		}
 
 		GLFWwindow* window = static_cast<GLFWwindow*>(nativeWindow);
 		if (!ImGui_ImplGlfw_InitForOpenGL(window, true)) {

@@ -223,9 +223,14 @@ namespace Iberus {
 		}
 		auto* tag = world.GetComponent<TagComponent>(entityId);
 		const char* name = tag ? tag->Id.c_str() : "?";
+		auto* hierarchy = world.GetComponent<HierarchyComponent>(entityId);
+		bool hasChildren = hierarchy && !hierarchy->ChildrenIds.empty();
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 		if (editor.GetSelectedEntityId() == entityId) {
 			flags |= ImGuiTreeNodeFlags_Selected;
+		}
+		if (!hasChildren) {
+			flags |= ImGuiTreeNodeFlags_Leaf;
 		}
 		ImGui::PushID(static_cast<int>(entityId));
 		char treeBuf[128];
@@ -260,7 +265,6 @@ namespace Iberus {
 			ImGui::EndDragDropSource();
 		}
 		if (opened) {
-			auto* hierarchy = world.GetComponent<HierarchyComponent>(entityId);
 			if (hierarchy) {
 				for (EntityId childId : hierarchy->ChildrenIds) {
 					DrawEntityTree(scene, world, childId, entityId, editor);

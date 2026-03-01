@@ -10,6 +10,7 @@
 
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "IconsFontAwesome6.h"
 
 using namespace Math;
 
@@ -250,7 +251,7 @@ namespace Iberus {
 			if (ImGui::BeginMenu("File##EditorFileMenu")) {
 				bool hasScenePath = !Application::Get()->GetCurrentScenePath().empty();
 				bool hasScene = Engine::Instance()->GetSceneManager().GetActiveScene() != nullptr;
-				if (ImGui::MenuItem("Save##EditorSave", "Ctrl+S", false, hasScene && hasScenePath)) {
+				if (ImGui::MenuItem(ICON_FA_FLOPPY_DISK " Save##EditorSave", "Ctrl+S", false, hasScene && hasScenePath)) {
 					if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
 						if (SceneSerializer::SaveToFile(*scene, Application::Get()->GetCurrentScenePath())) {
 							Application::Get()->SetSceneDirty(false);

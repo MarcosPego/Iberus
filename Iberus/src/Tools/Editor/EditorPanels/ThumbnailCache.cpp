@@ -231,6 +231,15 @@ namespace Iberus {
 		if (ext == ".vert" || ext == ".frag" || ext == ".glsl" || ext == ".hlsl" || ext == ".vs" || ext == ".fs" || ext == ".shader") {
 			return AssetIconType::Shader;
 		}
+		if (ext == ".scene") {
+			return AssetIconType::Scene;
+		}
+		if (ext == ".mat") {
+			return AssetIconType::Material;
+		}
+		if (ext == ".prefab") {
+			return AssetIconType::Prefab;
+		}
 		if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp" || ext == ".tga") {
 			return AssetIconType::Image;
 		}
@@ -243,7 +252,10 @@ namespace Iberus {
 		case AssetIconType::Folder: return folderIconId;
 		case AssetIconType::Mesh: return meshIconId;
 		case AssetIconType::Shader: return shaderIconId;
-		case AssetIconType::File: return fileIconId;
+		case AssetIconType::File:
+		case AssetIconType::Scene:
+		case AssetIconType::Material:
+		case AssetIconType::Prefab: return fileIconId;
 		case AssetIconType::Image: return 0;
 		default: return fileIconId;
 		}

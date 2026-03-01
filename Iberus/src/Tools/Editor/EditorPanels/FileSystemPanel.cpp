@@ -4,6 +4,7 @@
 #include "FileSystem.h"
 #include "FileWatcher.h"
 #include "ThumbnailCache.h"
+#include "IconsFontAwesome6.h"
 
 #include "imgui.h"
 
@@ -48,6 +49,20 @@ namespace Iberus {
 		thumbnailCache->Invalidate(path);
 	}
 
+	static const char* GetIconForAssetType(AssetIconType type) {
+		switch (type) {
+		case AssetIconType::Folder: return ICON_FA_FOLDER;
+		case AssetIconType::Mesh: return ICON_FA_CUBE;
+		case AssetIconType::Shader: return ICON_FA_CODE;
+		case AssetIconType::Scene: return ICON_FA_FILM;
+		case AssetIconType::Material: return ICON_FA_SWATCHBOOK;
+		case AssetIconType::Prefab: return ICON_FA_OBJECT_GROUP;
+		case AssetIconType::Image: return ICON_FA_IMAGE;
+		case AssetIconType::File:
+		default: return ICON_FA_FILE;
+		}
+	}
+
 	bool FileSystemPanel::PassesFilter(const std::string& name) const {
 		if (searchFilter.empty()) {
 			return true;
@@ -60,7 +75,7 @@ namespace Iberus {
 	}
 
 	void FileSystemPanel::DrawToolbar() {
-		if (ImGui::Button("Project Root##ProjectRoot")) {
+		if (ImGui::Button(ICON_FA_FOLDER " Project Root##ProjectRoot")) {
 			currentPath = GetAssetsPath();
 			contentDirty = true;
 		}
@@ -68,7 +83,7 @@ namespace Iberus {
 		ImGui::SetNextItemWidth(150);
 		char filterBuf[128];
 		snprintf(filterBuf, sizeof(filterBuf), "%s", searchFilter.c_str());
-		if (ImGui::InputTextWithHint("##Search", "Search...", filterBuf, sizeof(filterBuf))) {
+		if (ImGui::InputTextWithHint("##Search", ICON_FA_MAGNIFYING_GLASS " Search...", filterBuf, sizeof(filterBuf))) {
 			searchFilter = filterBuf;
 			contentDirty = true;
 		}
@@ -76,7 +91,7 @@ namespace Iberus {
 		ImGui::SetNextItemWidth(80);
 		ImGui::SliderFloat("##IconSize", &iconSize, 32.f, 128.f, "%.0f");
 		ImGui::SameLine();
-		if (ImGui::Button(viewGrid ? "List##ViewList" : "Grid##ViewGrid")) {
+		if (ImGui::Button(viewGrid ? ICON_FA_LIST " List##ViewList" : ICON_FA_GRIP " Grid##ViewGrid")) {
 			viewGrid = !viewGrid;
 		}
 	}
@@ -94,7 +109,7 @@ namespace Iberus {
 			rel = "Assets";
 		}
 
-		ImGui::TextUnformatted("Assets");
+		ImGui::TextUnformatted(ICON_FA_FOLDER " Assets");
 		std::string acc = assetsPath;
 		for (size_t i = 0; i < rel.size(); ) {
 			size_t sep = rel.find_first_of("/\\", i);
@@ -121,6 +136,16 @@ namespace Iberus {
 		}
 	}
 
+	static bool FolderHasSubfolders(const std::string& path) {
+		auto entries = FileSystem::ListDirectory(path);
+		for (const auto& e : entries) {
+			if (e.isDirectory) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	void FileSystemPanel::DrawFolderTree(const std::string& path, int depth) {
 		auto entries = FileSystem::ListDirectory(path);
 		for (const auto& e : entries) {
@@ -133,13 +158,17 @@ namespace Iberus {
 
 			std::string fullPath = (std::filesystem::path(path) / e.name).string();
 			bool selected = (currentPath == fullPath);
+			bool hasSubfolders = FolderHasSubfolders(fullPath);
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 			if (selected) {
 				flags |= ImGuiTreeNodeFlags_Selected;
 			}
+			if (!hasSubfolders) {
+				flags |= ImGuiTreeNodeFlags_Leaf;
+			}
 
 			char treeBuf[512];
-			snprintf(treeBuf, sizeof(treeBuf), "%s##FolderTree_%s", e.name.c_str(), fullPath.c_str());
+			snprintf(treeBuf, sizeof(treeBuf), "%s %s##FolderTree_%s", ICON_FA_FOLDER, e.name.c_str(), fullPath.c_str());
 			bool open = ImGui::TreeNodeEx(treeBuf, flags);
 			if (ImGui::IsItemClicked()) {
 				currentPath = fullPath;
@@ -173,8 +202,30 @@ namespace Iberus {
 				ImGui::BeginGroup();
 				ImGui::PushID(fullPath.c_str());
 
+				AssetIconType iconType = thumbnailCache->GetIconTypeForPath(fullPath, e.isDirectory);
+				bool useImage = (iconType == AssetIconType::Image);
 				void* texId = thumbnailCache->GetTextureId(fullPath, e.isDirectory);
-				if (ImGui::ImageButton("##AssetIcon", ImTextureRef(static_cast<ImTextureID>(reinterpret_cast<intptr_t>(texId))), ImVec2(iconSize, iconSize), ImVec2(0, 1), ImVec2(1, 0), selected ? ImVec4(0.3f, 0.5f, 0.8f, 1.f) : ImVec4(0, 0, 0, 0))) {
+				useImage = useImage && (texId != nullptr);
+
+				bool clicked = false;
+				if (useImage) {
+					clicked = ImGui::ImageButton("##AssetIcon", ImTextureRef(static_cast<ImTextureID>(reinterpret_cast<intptr_t>(texId))), ImVec2(iconSize, iconSize), ImVec2(0, 1), ImVec2(1, 0), selected ? ImVec4(0.3f, 0.5f, 0.8f, 1.f) : ImVec4(0, 0, 0, 0));
+				} else {
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1, 1, 1, 0.15f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 1, 1, 0.25f));
+					if (selected) {
+						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.5f, 0.8f, 0.4f));
+					}
+					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+					float iconScale = std::clamp(iconSize / 24.0f, 1.5f, 4.0f);
+					ImGui::SetWindowFontScale(iconScale);
+					clicked = ImGui::Button(GetIconForAssetType(iconType), ImVec2(iconSize, iconSize));
+					ImGui::SetWindowFontScale(1.0f);
+					ImGui::PopStyleVar();
+					ImGui::PopStyleColor(selected ? 4 : 3);
+				}
+				if (clicked) {
 					if (e.isDirectory) {
 						currentPath = fullPath;
 						contentDirty = true;
@@ -225,8 +276,8 @@ namespace Iberus {
 				}
 			} else {
 				ImGui::PushID(fullPath.c_str());
-				std::string label = e.isDirectory ? "[D] " : "[F] ";
-				label += e.name;
+				AssetIconType iconType = thumbnailCache->GetIconTypeForPath(fullPath, e.isDirectory);
+				std::string label = std::string(GetIconForAssetType(iconType)) + " " + e.name;
 				label += "##ContentSelectable";
 				if (ImGui::Selectable(label.c_str(), selected)) {
 					if (e.isDirectory) {
@@ -276,7 +327,7 @@ namespace Iberus {
 				ImGui::BeginChild("FolderTree##FolderTreeChild", ImVec2(leftWidth, 0), true);
 
 				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-				if (ImGui::TreeNodeEx("Assets##FolderTreeRoot", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Leaf)) {
+				if (ImGui::TreeNodeEx(ICON_FA_FOLDER " Assets##FolderTreeRoot", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Leaf)) {
 					if (ImGui::IsItemClicked()) {
 						currentPath = assetsPath;
 						contentDirty = true;
@@ -295,7 +346,7 @@ namespace Iberus {
 				if (p.has_parent_path()) {
 					std::string parentPath = p.parent_path().string();
 					if (parentPath.size() >= assetsPath.size() && parentPath.substr(0, assetsPath.size()) == assetsPath) {
-						if (ImGui::Selectable("[..] Parent folder##ParentFolder")) {
+						if (ImGui::Selectable(ICON_FA_ANGLES_LEFT " Parent folder##ParentFolder")) {
 							currentPath = parentPath;
 							contentDirty = true;
 						}

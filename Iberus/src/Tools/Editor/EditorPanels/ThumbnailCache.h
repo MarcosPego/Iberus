@@ -7,7 +7,7 @@
 
 namespace Iberus {
 
-	enum class AssetIconType { Folder, Mesh, Shader, Image, File };
+	enum class AssetIconType { Folder, Mesh, Shader, Image, File, Scene, Material, Prefab };
 
 	/// Caches thumbnails for asset browser. PNG/JPG show image preview; folders/meshes/shaders use proper icons.
 	class IBERUS_API ThumbnailCache {
@@ -20,13 +20,14 @@ namespace Iberus {
 		void Invalidate(const std::string& path);
 		void Clear();
 
+		AssetIconType GetIconTypeForPath(const std::string& path, bool isDirectory) const;
+
 		static constexpr int kThumbSize = 64;
 
 	private:
 		void CreateIconsIfNeeded();
 		unsigned int GetIconForType(AssetIconType type);
 		unsigned int GetOrCreateImageTexture(const std::string& path);
-		AssetIconType GetIconTypeForPath(const std::string& path, bool isDirectory) const;
 
 		struct CacheEntry {
 			unsigned int textureId{ 0 };

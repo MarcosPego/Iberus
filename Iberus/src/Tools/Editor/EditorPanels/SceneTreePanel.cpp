@@ -236,7 +236,7 @@ namespace Iberus {
 		char treeBuf[128];
 		snprintf(treeBuf, sizeof(treeBuf), "%s##Entity_%d", name, static_cast<int>(entityId));
 		bool opened = ImGui::TreeNodeEx(treeBuf, flags);
-		if (ImGui::IsItemClicked()) {
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
 			editor.SetSelectedEntity(entityId);
 		}
 		if (ImGui::BeginPopupContextItem()) {

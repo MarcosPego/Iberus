@@ -170,7 +170,7 @@ namespace Iberus {
 			char treeBuf[512];
 			snprintf(treeBuf, sizeof(treeBuf), "%s %s##FolderTree_%s", ICON_FA_FOLDER, e.name.c_str(), fullPath.c_str());
 			bool open = ImGui::TreeNodeEx(treeBuf, flags);
-			if (ImGui::IsItemClicked()) {
+			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
 				currentPath = fullPath;
 				contentDirty = true;
 			}

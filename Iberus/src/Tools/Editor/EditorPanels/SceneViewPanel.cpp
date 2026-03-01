@@ -9,8 +9,11 @@
 #include "Components.h"
 #include "Matrix.h"
 #include "World.h"
+#include "IconsFontAwesome6.h"
 
 #include "imgui.h"
+
+#include <cmath>
 
 namespace Iberus {
 
@@ -109,6 +112,174 @@ namespace Iberus {
 			return hitAxis;
 		}
 
+		int DrawScaleGizmo(ImDrawList* drawList, TransformComponent* transform, const Math::Vec3& worldPos,
+			const Math::Mat4& view, const Math::Mat4& proj,
+			float vpX, float vpY, float vpW, float vpH,
+			float mouseX, float mouseY, bool mouseDown) {
+			static int draggingAxis = -1;
+			static float prevMouseX = 0, prevMouseY = 0;
+			static float prevScale = 1.0f;
+
+			Math::Vec3 pos = worldPos;
+			Math::Vec3 axes[3] = { {1,0,0}, {0,1,0}, {0,0,1} };
+			ImU32 colors[3] = { IM_COL32(200,60,60,255), IM_COL32(60,200,60,255), IM_COL32(60,60,200,255) };
+
+			float origSx, origSy;
+			if (!WorldToScreen(pos, view, proj, vpX, vpY, vpW, vpH, origSx, origSy)) {
+				return -1;
+			}
+
+			float endSx[3], endSy[3];
+			for (int i = 0; i < 3; ++i) {
+				float s = (transform->Scale.x + transform->Scale.y + transform->Scale.z) / 3.0f;
+				Math::Vec3 end = pos + axes[i] * GizmoAxisLength * std::max(s, 0.1f);
+				WorldToScreen(end, view, proj, vpX, vpY, vpW, vpH, endSx[i], endSy[i]);
+				drawList->AddLine(ImVec2(origSx, origSy), ImVec2(endSx[i], endSy[i]), colors[i], 3.0f);
+			}
+
+			int hitAxis = -1;
+			if (mouseDown && draggingAxis >= 0) {
+				hitAxis = draggingAxis;
+				float ax = origSx, ay = origSy;
+				float bx = endSx[hitAxis], by = endSy[hitAxis];
+				float sx = bx - ax, sy = by - ay;
+				float len = sqrtf(sx * sx + sy * sy);
+				if (len > 1e-6f) {
+					float nx = sx / len;
+					float ny = sy / len;
+					float deltaPixels = (mouseX - prevMouseX) * nx + (mouseY - prevMouseY) * ny;
+					float scaleFactor = 1.0f + deltaPixels * 0.01f;
+					float newScale = prevScale * scaleFactor;
+					if (newScale < 0.01f) {
+						newScale = 0.01f;
+					}
+					float oldAvg = (transform->Scale.x + transform->Scale.y + transform->Scale.z) / 3.0f;
+					float ratio = oldAvg > 1e-6f ? newScale / oldAvg : 1.0f;
+					transform->Scale.x *= ratio;
+					transform->Scale.y *= ratio;
+					transform->Scale.z *= ratio;
+					prevScale = (transform->Scale.x + transform->Scale.y + transform->Scale.z) / 3.0f;
+				}
+			} else {
+				float bestDist = GizmoAxisHitRadius;
+				for (int i = 0; i < 3; ++i) {
+					float t;
+					float d = PointToSegmentDist(mouseX, mouseY, origSx, origSy, endSx[i], endSy[i], t);
+					if (d < bestDist && t > 0.05f) {
+						bestDist = d;
+						hitAxis = i;
+					}
+				}
+				if (mouseDown && hitAxis >= 0) {
+					draggingAxis = hitAxis;
+					prevScale = (transform->Scale.x + transform->Scale.y + transform->Scale.z) / 3.0f;
+				} else if (!mouseDown) {
+					draggingAxis = -1;
+				}
+			}
+			prevMouseX = mouseX;
+			prevMouseY = mouseY;
+			return hitAxis;
+		}
+
+		int DrawRotateGizmo(ImDrawList* drawList, TransformComponent* transform, const Math::Vec3& worldPos,
+			const Math::Mat4& view, const Math::Mat4& proj,
+			float vpX, float vpY, float vpW, float vpH,
+			float mouseX, float mouseY, bool mouseDown) {
+			static int draggingAxis = -1;
+			static float prevAngle = 0;
+			static float prevMouseX = 0, prevMouseY = 0;
+
+			Math::Vec3 pos = worldPos;
+			ImU32 colors[3] = { IM_COL32(200,60,60,255), IM_COL32(60,200,60,255), IM_COL32(60,60,200,255) };
+
+			float origSx, origSy;
+			if (!WorldToScreen(pos, view, proj, vpX, vpY, vpW, vpH, origSx, origSy)) {
+				return -1;
+			}
+
+			const int circleSegments = 32;
+			const float circleRadius = GizmoAxisLength;
+			float bestDist = GizmoAxisHitRadius * 2.0f;
+			int hitAxis = -1;
+
+			for (int axis = 0; axis < 3; ++axis) {
+				float prevSx = 0, prevSy = 0;
+				for (int i = 0; i <= circleSegments; ++i) {
+					float angle = static_cast<float>(i) / circleSegments * 2.0f * 3.14159265f;
+					Math::Vec3 p = pos;
+					if (axis == 0) {
+						p.x += circleRadius * cosf(angle);
+						p.z += circleRadius * sinf(angle);
+					} else if (axis == 1) {
+						p.x += circleRadius * cosf(angle);
+						p.y += circleRadius * sinf(angle);
+					} else {
+						p.y += circleRadius * cosf(angle);
+						p.z += circleRadius * sinf(angle);
+					}
+					float sx, sy;
+					if (WorldToScreen(p, view, proj, vpX, vpY, vpW, vpH, sx, sy)) {
+						if (i > 0) {
+							drawList->AddLine(ImVec2(prevSx, prevSy), ImVec2(sx, sy), colors[axis], 2.0f);
+						}
+						prevSx = sx;
+						prevSy = sy;
+					}
+				}
+
+				for (int i = 0; i < circleSegments; ++i) {
+					float angle = static_cast<float>(i) / circleSegments * 2.0f * 3.14159265f;
+					Math::Vec3 p = pos;
+					if (axis == 0) {
+						p.x += circleRadius * cosf(angle);
+						p.z += circleRadius * sinf(angle);
+					} else if (axis == 1) {
+						p.x += circleRadius * cosf(angle);
+						p.y += circleRadius * sinf(angle);
+					} else {
+						p.y += circleRadius * cosf(angle);
+						p.z += circleRadius * sinf(angle);
+					}
+					float sx, sy;
+					if (WorldToScreen(p, view, proj, vpX, vpY, vpW, vpH, sx, sy)) {
+						float dx = mouseX - sx;
+						float dy = mouseY - sy;
+						float d = sqrtf(dx * dx + dy * dy);
+						if (d < bestDist) {
+							bestDist = d;
+							hitAxis = axis;
+						}
+					}
+				}
+			}
+
+			if (mouseDown && draggingAxis >= 0) {
+				hitAxis = draggingAxis;
+				float dx = mouseX - origSx;
+				float dy = mouseY - origSy;
+				float angle = atan2f(dy, dx);
+				float prevAngleVal = atan2f(prevMouseY - origSy, prevMouseX - origSx);
+				float deltaAngle = (angle - prevAngleVal) * 57.2957795f;
+				if (hitAxis == 0) {
+					transform->Rotation.x += deltaAngle;
+				} else if (hitAxis == 1) {
+					transform->Rotation.y += deltaAngle;
+				} else {
+					transform->Rotation.z += deltaAngle;
+				}
+			} else {
+				if (mouseDown && hitAxis >= 0) {
+					draggingAxis = hitAxis;
+				} else if (!mouseDown) {
+					draggingAxis = -1;
+				}
+			}
+			prevMouseX = mouseX;
+			prevMouseY = mouseY;
+			return hitAxis;
+		}
+
 		void DrawSelectionAABB(ImDrawList* drawList, const Iberus::World& world, Iberus::EntityId entityId,
 			const Math::Mat4& view, const Math::Mat4& proj,
 			float vpX, float vpY, float vpW, float vpH) {
@@ -141,20 +312,24 @@ namespace Iberus {
 	}
 
 	void SceneViewPanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		if (!ImGui::Begin("Scene View", p_open, ImGuiWindowFlags_NoNavInputs)) {
 			editor.SetSceneViewFocused(false);
 			ImGui::End();
+			ImGui::PopStyleVar();
 			return;
 		}
 		editor.SetSceneViewFocused(ImGui::IsWindowHovered());
 
 		if (Application::Get()->IsGameFullscreen()) {
 			ImGui::End();
+			ImGui::PopStyleVar();
 			return;
 		}
 
 		if (ImGui::IsWindowCollapsed()) {
 			ImGui::End();
+			ImGui::PopStyleVar();
 			return;
 		}
 
@@ -164,6 +339,7 @@ namespace Iberus {
 		const int minViewportSize = 8;
 		if (w < minViewportSize || h < minViewportSize || w > 16384 || h > 16384) {
 			ImGui::End();
+			ImGui::PopStyleVar();
 			return;
 		}
 		{
@@ -198,7 +374,7 @@ namespace Iberus {
 			if (editor.GetMode() == EditorMode::Editor &&
 				editor.GetSelectedEntityId() != NullEntity && ImGui::IsItemHovered()) {
 				auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene();
-				if (scene && editor.GetGizmoOperation() == GizmoOperation::Translate) {
+				if (scene) {
 					Math::Mat4 viewMat, projMat;
 					if (editor.GetEditorViewProjection(viewMat, projMat, aspect)) {
 						World& world = scene->GetWorld();
@@ -213,9 +389,20 @@ namespace Iberus {
 							ImDrawList* drawList = ImGui::GetWindowDrawList();
 							if (drawList) {
 								ImVec2 mousePos = ImGui::GetMousePos();
-								gizmoHitAxis = DrawTranslateGizmo(drawList, transform, drawPos, viewMat, projMat,
-									imageMin.x, imageMin.y, static_cast<float>(w), static_cast<float>(h),
-									mousePos.x, mousePos.y, ImGui::IsMouseDown(0));
+								bool mouseDown = ImGui::IsMouseDown(0);
+								if (editor.GetGizmoOperation() == GizmoOperation::Translate) {
+									gizmoHitAxis = DrawTranslateGizmo(drawList, transform, drawPos, viewMat, projMat,
+										imageMin.x, imageMin.y, static_cast<float>(w), static_cast<float>(h),
+										mousePos.x, mousePos.y, mouseDown);
+								} else if (editor.GetGizmoOperation() == GizmoOperation::Scale) {
+									gizmoHitAxis = DrawScaleGizmo(drawList, transform, drawPos, viewMat, projMat,
+										imageMin.x, imageMin.y, static_cast<float>(w), static_cast<float>(h),
+										mousePos.x, mousePos.y, mouseDown);
+								} else if (editor.GetGizmoOperation() == GizmoOperation::Rotate) {
+									gizmoHitAxis = DrawRotateGizmo(drawList, transform, drawPos, viewMat, projMat,
+										imageMin.x, imageMin.y, static_cast<float>(w), static_cast<float>(h),
+										mousePos.x, mousePos.y, mouseDown);
+								}
 							}
 						}
 					}
@@ -255,8 +442,24 @@ namespace Iberus {
 					}
 				}
 			}
+
+			if (editor.GetMode() == EditorMode::Editor) {
+				ImGui::SetCursorScreenPos(ImVec2(imageMin.x + static_cast<float>(w) - 110.0f, imageMin.y + 8.0f));
+				bool ortho = editor.GetEditorCamera().IsOrthographic;
+				if (ImGui::Checkbox(ICON_FA_VIDEO " Ortho##SceneViewOrtho", &ortho)) {
+					editor.GetEditorCamera().IsOrthographic = ortho;
+				}
+				if (ortho) {
+					ImGui::SetCursorScreenPos(ImVec2(imageMin.x + static_cast<float>(w) - 110.0f, imageMin.y + 36.0f));
+					float orthoSize = editor.GetEditorCamera().OrthoSize;
+					if (ImGui::SliderFloat("##OrthoSize", &orthoSize, 1.0f, 100.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp)) {
+						editor.GetEditorCamera().OrthoSize = orthoSize;
+					}
+				}
+			}
 		}
 		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
 }

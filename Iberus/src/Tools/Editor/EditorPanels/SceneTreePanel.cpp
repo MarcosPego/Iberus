@@ -13,6 +13,7 @@
 #include "FileSystemProvider.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "IconsFontAwesome6.h"
 
 #include "imgui.h"
 
@@ -233,11 +234,32 @@ namespace Iberus {
 			flags |= ImGuiTreeNodeFlags_Leaf;
 		}
 		ImGui::PushID(static_cast<int>(entityId));
+		ImGui::AlignTextToFramePadding();
+		auto* active = world.GetComponent<ActiveComponent>(entityId);
+		bool isActive = active ? active->Active : true;
+		const char* icon = isActive ? ICON_FA_EYE : ICON_FA_EYE_SLASH;
+		ImGui::PushStyleColor(ImGuiCol_Text, isActive ? ImVec4(1, 1, 1, 1) : ImVec4(0.5f, 0.5f, 0.5f, 1));
+		ImGui::Text("%s", icon);
+		if (ImGui::IsItemClicked()) {
+			if (active) {
+				active->Active = !active->Active;
+			} else {
+				scene->AddComponent<ActiveComponent>(entityId, !isActive);
+			}
+		}
+		if (ImGui::IsItemHovered()) {
+			ImGui::SetTooltip("%s", isActive ? "Hide entity" : "Show entity");
+		}
+		ImGui::PopStyleColor();
+		ImGui::SameLine(0, 4.0f);
 		char treeBuf[128];
 		snprintf(treeBuf, sizeof(treeBuf), "%s##Entity_%d", name, static_cast<int>(entityId));
 		bool opened = ImGui::TreeNodeEx(treeBuf, flags);
 		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
 			editor.SetSelectedEntity(entityId);
+		}
+		if (ImGui::IsItemClicked(0) && ImGui::IsMouseDoubleClicked(0)) {
+			editor.FocusCameraOnEntity(entityId);
 		}
 		if (ImGui::BeginPopupContextItem()) {
 			DrawEntityContextMenu(scene, entityId, parentId, editor);

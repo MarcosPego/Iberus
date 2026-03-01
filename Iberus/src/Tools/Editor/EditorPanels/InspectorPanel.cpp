@@ -214,7 +214,7 @@ namespace Iberus {
 		}
 	}
 
-	static void DrawCameraComponent(World& world, EntityId entityId) {
+	static void DrawCameraComponent(World& world, EntityId entityId, Editor& editor) {
 		auto* comp = world.GetComponent<CameraComponent>(entityId);
 		if (!comp) {
 			return;
@@ -230,6 +230,37 @@ namespace Iberus {
 				ImGui::DragFloat("FOV Y##CameraFov", &p.Fovy, 1.0f, 1.0f, 179.0f);
 				ImGui::DragFloat("Near##CameraNear", &p.NearZ, 0.01f, 0.001f, 100.0f);
 				ImGui::DragFloat("Far##CameraFar", &p.FarZ, 1.0f, 1.0f, 100000.0f);
+			}
+			if (comp->ProjectionType == CameraProjectionType::Orthographic) {
+				auto& o = comp->OrthoParams;
+				ImGui::DragFloat("Left##CameraOrthoLeft", &o.Left, 0.5f);
+				ImGui::DragFloat("Right##CameraOrthoRight", &o.Right, 0.5f);
+				ImGui::DragFloat("Bottom##CameraOrthoBottom", &o.Bottom, 0.5f);
+				ImGui::DragFloat("Top##CameraOrthoTop", &o.Top, 0.5f);
+			}
+			ImGui::Separator();
+			if (ImGui::Checkbox("Look At Target##CameraLookAt", &comp->UseLookAt)) {
+				if (!comp->UseLookAt) {
+					comp->LookAtTargetId = NullEntity;
+				}
+			}
+			if (comp->UseLookAt) {
+				EntityId sel = editor.GetSelectedEntityId();
+				bool hasValidTarget = comp->LookAtTargetId != NullEntity && world.IsAlive(comp->LookAtTargetId);
+				if (ImGui::Button("Use Selected##CameraLookAtTarget") && sel != NullEntity && sel != entityId && world.IsAlive(sel)) {
+					comp->LookAtTargetId = sel;
+				}
+				if (hasValidTarget) {
+					ImGui::SameLine();
+					if (ImGui::Button("Clear##CameraLookAtTarget")) {
+						comp->LookAtTargetId = NullEntity;
+					}
+					auto* targetTag = world.GetComponent<TagComponent>(comp->LookAtTargetId);
+					ImGui::Text("Target: %s", targetTag ? targetTag->Id.c_str() : "?");
+				}
+				if (!hasValidTarget) {
+					ImGui::DragFloat3("Look At Position##CameraLookAtPos", &comp->LookAtPosition.x, 0.1f);
+				}
 			}
 		}
 	}
@@ -454,7 +485,7 @@ namespace Iberus {
 			DrawMeshRendererComponent(world, entityId);
 		}
 		if (world.HasComponent<CameraComponent>(entityId)) {
-			DrawCameraComponent(world, entityId);
+			DrawCameraComponent(world, entityId, editor);
 		}
 		if (world.HasComponent<SDFComponent>(entityId)) {
 			DrawSDFComponent(world, entityId, scene);

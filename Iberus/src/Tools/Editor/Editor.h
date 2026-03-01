@@ -36,6 +36,8 @@ namespace Iberus {
 		float Fovy{ 60.0f };
 		float NearZ{ 0.1f };
 		float FarZ{ 100000.0f };
+		bool IsOrthographic{ false };
+		float OrthoSize{ 10.0f };
 	};
 
 	class IBERUS_API Editor {
@@ -81,6 +83,9 @@ namespace Iberus {
 
 		/// Get view and projection matrices for editor camera (for picking). Returns false if not available.
 		bool GetEditorViewProjection(Math::Mat4& outView, Math::Mat4& outProj, float aspectRatio) const;
+
+		/// Frame editor camera on entity (double-click focus). Moves camera to look at entity AABB center.
+		void FocusCameraOnEntity(EntityId entityId);
 
 	private:
 		void UpdateEditorCamera(double deltaTime);

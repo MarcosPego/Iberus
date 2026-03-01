@@ -4,6 +4,8 @@
 #include "Engine.h"
 #include "SceneManager.h"
 #include "SceneSerializer.h"
+#include "Scene.h"
+#include "EditorPicking.h"
 #include "KeyCode.h"
 #include "MouseCode.h"
 #include "Matrix.h"
@@ -106,18 +108,20 @@ namespace Iberus {
 
 		float pitchRad = Deg2Rad(rot.x);
 		float yawRad = Deg2Rad(rot.y);
-		float cosPitch = cosf(pitchRad);
-		float sinPitch = sinf(pitchRad);
-		float cosYaw = cosf(yawRad);
-		float sinYaw = sinf(yawRad);
-
 		Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
 		forward = normalize(forward);
 		Vec3 up(0, 1, 0);
 		Vec3 center = pos + forward;
 		Mat4 viewMatrix = MatrixFactory::CreateViewMat4(pos, center, up);
-		Mat4 projectionMatrix = MatrixFactory::CreatePerspectiveMat4(
-			editorCamera.Fovy, aspectRatio, editorCamera.NearZ, editorCamera.FarZ);
+		Mat4 projectionMatrix;
+		if (editorCamera.IsOrthographic) {
+			float halfH = editorCamera.OrthoSize * 0.5f;
+			float halfW = halfH * aspectRatio;
+			projectionMatrix = MatrixFactory::CreateOrtoMat4(-halfW, halfW, -halfH, halfH, editorCamera.NearZ, editorCamera.FarZ);
+		} else {
+			projectionMatrix = MatrixFactory::CreatePerspectiveMat4(
+				editorCamera.Fovy, aspectRatio, editorCamera.NearZ, editorCamera.FarZ);
+		}
 		Mat4 cameraToWorld = inverse(viewMatrix);
 
 		return std::make_unique<CameraRenderCmd>(viewMatrix, projectionMatrix, pos, cameraToWorld);
@@ -133,9 +137,46 @@ namespace Iberus {
 		Vec3 up(0, 1, 0);
 		Vec3 center = pos + forward;
 		outView = MatrixFactory::CreateViewMat4(pos, center, up);
-		outProj = MatrixFactory::CreatePerspectiveMat4(
-			editorCamera.Fovy, aspectRatio, editorCamera.NearZ, editorCamera.FarZ);
+		if (editorCamera.IsOrthographic) {
+			float halfH = editorCamera.OrthoSize * 0.5f;
+			float halfW = halfH * aspectRatio;
+			outProj = MatrixFactory::CreateOrtoMat4(-halfW, halfW, -halfH, halfH, editorCamera.NearZ, editorCamera.FarZ);
+		} else {
+			outProj = MatrixFactory::CreatePerspectiveMat4(
+				editorCamera.Fovy, aspectRatio, editorCamera.NearZ, editorCamera.FarZ);
+		}
 		return true;
+	}
+
+	void Editor::FocusCameraOnEntity(EntityId entityId) {
+		auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene();
+		if (!scene || entityId == NullEntity || !scene->GetWorld().IsAlive(entityId)) {
+			return;
+		}
+		Math::Vec3 aabbMin, aabbMax;
+		GetEntityAABB(scene->GetWorld(), entityId, aabbMin, aabbMax);
+		Math::Vec3 center = (aabbMin + aabbMax) * 0.5f;
+		Math::Vec3 size = aabbMax - aabbMin;
+		float maxDim = std::max({ size.x, size.y, size.z, 1.0f });
+		float distance = maxDim * 2.5f;
+
+		Math::Vec3 toCamera = editorCamera.Position - center;
+		float len = toCamera.length();
+		if (len < 1e-6f) {
+			toCamera = Math::Vec3(0, 0, -1);
+			len = 1.0f;
+		} else {
+			toCamera = toCamera / len;
+		}
+		float yawRad = atan2f(toCamera.x, -toCamera.z);
+		float pitchRad = asinf(-toCamera.y);
+		editorCameraPitch = Rad2Deg(pitchRad);
+		editorCameraYaw = Rad2Deg(yawRad);
+		editorCamera.Rotation = Math::Vec3(editorCameraPitch, editorCameraYaw, 0.0f);
+
+		Math::Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
+		forward = normalize(forward);
+		editorCamera.Position = center - forward * distance;
 	}
 
 	void Editor::OnUpdate(double deltaTime, IGUIContext* gui) {

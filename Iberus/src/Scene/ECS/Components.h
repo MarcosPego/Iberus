@@ -71,6 +71,9 @@ namespace Iberus {
 		CameraProjectionType ProjectionType{ CameraProjectionType::Perspective };
 		PerspectiveProjectionParams PerspectiveParams;
 		OrthoProjectionParams OrthoParams;
+		EntityId LookAtTargetId{ NullEntity };
+		Vec3 LookAtPosition{ 0, 0, 0 };
+		bool UseLookAt{ false };
 		Mat4 ViewMatrix;
 		Mat4 CameraToWorld;
 	};

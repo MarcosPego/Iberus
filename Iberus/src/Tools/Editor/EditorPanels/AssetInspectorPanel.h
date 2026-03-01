@@ -13,7 +13,7 @@ namespace Iberus {
 	class AssetInspectorPanel {
 	public:
 		explicit AssetInspectorPanel(Editor& editor);
-		void OnDraw(IGUIContext& gui);
+		void OnDraw(IGUIContext& gui, bool* p_open = nullptr);
 
 	private:
 		void DrawFileInfo(const std::string& path);

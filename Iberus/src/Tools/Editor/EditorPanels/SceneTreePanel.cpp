@@ -315,8 +315,8 @@ namespace Iberus {
 	SceneTreePanel::SceneTreePanel(Editor& editor) : editor(editor) {
 	}
 
-	void SceneTreePanel::OnDraw(IGUIContext& gui) {
-		if (!gui.BeginWindow("Scene Tree")) {
+	void SceneTreePanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		if (!gui.BeginWindow("Scene Tree", p_open)) {
 			gui.EndWindow();
 			return;
 		}

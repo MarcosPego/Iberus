@@ -103,8 +103,8 @@ namespace Iberus {
 		}
 	}
 
-	bool ImguiContext::BeginWindow(const char* title) {
-		return ImGui::Begin(title);
+	bool ImguiContext::BeginWindow(const char* title, bool* p_open) {
+		return ImGui::Begin(title, p_open);
 	}
 
 	void ImguiContext::EndWindow() {

@@ -310,8 +310,8 @@ namespace Iberus {
 		}
 	}
 
-	void FileSystemPanel::OnDraw(IGUIContext& gui) {
-		if (gui.BeginWindow("Project")) {
+	void FileSystemPanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		if (gui.BeginWindow("Project", p_open)) {
 			if (!ImGui::IsWindowCollapsed()) {
 				std::string assetsPath = GetAssetsPath();
 				if (currentPath.empty() || currentPath.size() < assetsPath.size() || currentPath.substr(0, assetsPath.size()) != assetsPath) {

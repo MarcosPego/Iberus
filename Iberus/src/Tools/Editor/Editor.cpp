@@ -242,9 +242,22 @@ namespace Iberus {
 			ImGui::SameLine();
 			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
 			ImGui::SameLine();
+			if (ImGui::BeginMenu("View##EditorViewMenu")) {
+				if (ImGui::MenuItem("Scene Tree##ViewSceneTree", nullptr, &sceneTreeOpen)) {}
+				if (ImGui::MenuItem("Scene View##ViewSceneView", nullptr, &sceneViewOpen)) {}
+				if (ImGui::MenuItem("Game##ViewGame", nullptr, &gameViewOpen)) {}
+				if (ImGui::MenuItem("Inspector##ViewInspector", nullptr, &inspectorOpen)) {}
+				if (ImGui::MenuItem("Creature Creator##ViewCreatureCreator", nullptr, &creatureCreatorOpen)) {}
+				if (ImGui::MenuItem("Project##ViewProject", nullptr, &fileSystemOpen)) {}
+				if (ImGui::MenuItem("Asset Inspector##ViewAssetInspector", nullptr, &assetInspectorOpen)) {}
+				if (ImGui::MenuItem("Profiler##ViewProfiler", nullptr, &profilerOpen)) {}
+				if (ImGui::MenuItem("Render Settings##ViewRenderSettings", nullptr, &renderSettingsOpen)) {}
+				ImGui::EndMenu();
+			}
 			if (ImGui::BeginMenu("Settings##EditorSettingsMenu")) {
 				if (ImGui::MenuItem("Render Settings##EditorRenderSettings")) {
 					renderSettingsPanel->RequestOpen();
+					renderSettingsOpen = true;
 				}
 				ImGui::EndMenu();
 			}
@@ -275,15 +288,33 @@ namespace Iberus {
 			ImGui::EndMainMenuBar();
 		}
 
-		sceneTreePanel->OnDraw(*gui);
-		sceneViewPanel->OnDraw(*gui);
-		gameViewPanel->OnDraw(*gui);
-		inspectorPanel->OnDraw(*gui);
-		creatureCreatorPanel->OnDraw(*gui);
-		fileSystemPanel->OnDraw(*gui);
-		assetInspectorPanel->OnDraw(*gui);
-		profilerPanel->OnDraw(*gui);
-		renderSettingsPanel->OnDraw(*gui);
+		if (sceneTreeOpen) {
+			sceneTreePanel->OnDraw(*gui, &sceneTreeOpen);
+		}
+		if (sceneViewOpen) {
+			sceneViewPanel->OnDraw(*gui, &sceneViewOpen);
+		}
+		if (gameViewOpen) {
+			gameViewPanel->OnDraw(*gui, &gameViewOpen);
+		}
+		if (inspectorOpen) {
+			inspectorPanel->OnDraw(*gui, &inspectorOpen);
+		}
+		if (creatureCreatorOpen) {
+			creatureCreatorPanel->OnDraw(*gui, &creatureCreatorOpen);
+		}
+		if (fileSystemOpen) {
+			fileSystemPanel->OnDraw(*gui, &fileSystemOpen);
+		}
+		if (assetInspectorOpen) {
+			assetInspectorPanel->OnDraw(*gui, &assetInspectorOpen);
+		}
+		if (profilerOpen) {
+			profilerPanel->OnDraw(*gui, &profilerOpen);
+		}
+		if (renderSettingsOpen) {
+			renderSettingsPanel->OnDraw(*gui, &renderSettingsOpen);
+		}
 		gui->EndDockSpace();
 
 		UpdateEditorCamera(deltaTime);

@@ -37,8 +37,8 @@ namespace Iberus {
 			255);
 	}
 
-	void ProfilerPanel::OnDraw(IGUIContext& gui) {
-		if (ImGui::Begin("Profiler", nullptr, ImGuiWindowFlags_NoNavInputs)) {
+	void ProfilerPanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		if (ImGui::Begin("Profiler", p_open, ImGuiWindowFlags_NoNavInputs)) {
 			if (!ImGui::IsWindowCollapsed()) {
 				Profiler& profiler = Profiler::Instance();
 

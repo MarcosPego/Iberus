@@ -427,8 +427,8 @@ namespace Iberus {
 		}
 	}
 
-	void InspectorPanel::OnDraw(IGUIContext& gui) {
-		if (!gui.BeginWindow("Inspector")) {
+	void InspectorPanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		if (!gui.BeginWindow("Inspector", p_open)) {
 			gui.EndWindow();
 			return;
 		}

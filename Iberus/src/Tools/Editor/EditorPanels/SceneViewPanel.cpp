@@ -140,9 +140,10 @@ namespace Iberus {
 	SceneViewPanel::SceneViewPanel(Editor& editor) : editor(editor) {
 	}
 
-	void SceneViewPanel::OnDraw(IGUIContext& gui) {
-		if (!ImGui::Begin("Scene View", nullptr, ImGuiWindowFlags_NoNavInputs)) {
+	void SceneViewPanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		if (!ImGui::Begin("Scene View", p_open, ImGuiWindowFlags_NoNavInputs)) {
 			editor.SetSceneViewFocused(false);
+			ImGui::End();
 			return;
 		}
 		editor.SetSceneViewFocused(ImGui::IsWindowHovered());

@@ -9,7 +9,7 @@ namespace Iberus {
 	class RenderSettingsPanel {
 	public:
 		explicit RenderSettingsPanel(Editor& editor);
-		void OnDraw(IGUIContext& gui);
+		void OnDraw(IGUIContext& gui, bool* p_open = nullptr);
 
 		void RequestOpen() { requestOpen = true; }
 

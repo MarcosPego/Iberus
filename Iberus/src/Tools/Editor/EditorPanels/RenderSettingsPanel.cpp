@@ -94,14 +94,14 @@ namespace Iberus {
 		}
 	}
 
-	void RenderSettingsPanel::OnDraw(IGUIContext& gui) {
+	void RenderSettingsPanel::OnDraw(IGUIContext& gui, bool* p_open) {
 		if (requestOpen) {
 			ImGui::SetNextWindowCollapsed(false);
 			ImGui::SetNextWindowFocus();
 			requestOpen = false;
 		}
 
-		if (ImGui::Begin("Render Settings", nullptr, ImGuiWindowFlags_NoNavInputs)) {
+		if (ImGui::Begin("Render Settings", p_open, ImGuiWindowFlags_NoNavInputs)) {
 			if (!ImGui::IsWindowCollapsed()) {
 				DrawPostProcessSettings();
 				ImGui::Spacing();

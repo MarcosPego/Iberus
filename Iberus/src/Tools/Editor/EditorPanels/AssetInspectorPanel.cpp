@@ -137,8 +137,8 @@ namespace Iberus {
 		DrawFileInfo(path);
 	}
 
-	void AssetInspectorPanel::OnDraw(IGUIContext& gui) {
-		if (!gui.BeginWindow("Asset Inspector")) {
+	void AssetInspectorPanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		if (!gui.BeginWindow("Asset Inspector", p_open)) {
 			gui.EndWindow();
 			return;
 		}

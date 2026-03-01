@@ -19,7 +19,7 @@ namespace Iberus {
 
 		bool IsMinimized() const;
 
-		bool BeginWindow(const char* title) override;
+		bool BeginWindow(const char* title, bool* p_open = nullptr) override;
 		void EndWindow() override;
 		void Text(const char* text) override;
 		bool Button(const char* label) override;

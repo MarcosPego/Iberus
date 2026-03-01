@@ -115,5 +115,16 @@ namespace Iberus {
 		float editorCameraYaw{ 180 };
 		bool editorCameraDragging{ false };
 		Math::Vec2 editorCameraLastMouse{ 0, 0 };
+
+		// Panel visibility (View menu + close buttons)
+		bool sceneTreeOpen{ true };
+		bool sceneViewOpen{ true };
+		bool gameViewOpen{ true };
+		bool inspectorOpen{ true };
+		bool creatureCreatorOpen{ true };
+		bool fileSystemOpen{ true };
+		bool assetInspectorOpen{ true };
+		bool profilerOpen{ true };
+		bool renderSettingsOpen{ true };
 	};
 }

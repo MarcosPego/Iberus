@@ -12,7 +12,7 @@ namespace Iberus {
 	class GameViewPanel {
 	public:
 		explicit GameViewPanel(Editor& editor);
-		void OnDraw(IGUIContext& gui);
+		void OnDraw(IGUIContext& gui, bool* p_open = nullptr);
 
 	private:
 		Editor& editor;

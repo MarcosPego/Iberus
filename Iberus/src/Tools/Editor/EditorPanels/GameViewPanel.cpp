@@ -11,8 +11,9 @@ namespace Iberus {
 	GameViewPanel::GameViewPanel(Editor& editor) : editor(editor) {
 	}
 
-	void GameViewPanel::OnDraw(IGUIContext& gui) {
-		if (!ImGui::Begin("Game", nullptr, ImGuiWindowFlags_NoNavInputs)) {
+	void GameViewPanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		if (!ImGui::Begin("Game", p_open, ImGuiWindowFlags_NoNavInputs)) {
+			ImGui::End();
 			return;
 		}
 

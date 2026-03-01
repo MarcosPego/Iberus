@@ -324,7 +324,7 @@ namespace Iberus {
 				ImGui::Separator();
 
 				float leftWidth = 180.f;
-				ImGui::BeginChild("FolderTree##FolderTreeChild", ImVec2(leftWidth, 0), true);
+				ImGui::BeginChild("FolderTree##FolderTreeChild", ImVec2(leftWidth, 0), ImGuiChildFlags_ResizeX);
 
 				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 				if (ImGui::TreeNodeEx(ICON_FA_FOLDER " Assets##FolderTreeRoot", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Leaf)) {
@@ -338,9 +338,19 @@ namespace Iberus {
 
 				ImGui::EndChild();
 
+				// Draw visible resize bar on the right edge of the folder tree
+				ImVec2 treeMin = ImGui::GetItemRectMin();
+				ImVec2 treeMax = ImGui::GetItemRectMax();
+				float resizeBarX = treeMax.x;
+				float barWidth = 2.0f;
+				ImGui::GetWindowDrawList()->AddRectFilled(
+					ImVec2(resizeBarX - barWidth * 0.5f, treeMin.y),
+					ImVec2(resizeBarX + barWidth * 0.5f, treeMax.y),
+					ImGui::GetColorU32(ImGuiCol_Separator));
+
 				ImGui::SameLine();
 
-				ImGui::BeginChild("ContentArea##ContentAreaChild", ImVec2(0, 0), true);
+				ImGui::BeginChild("ContentArea##ContentAreaChild", ImVec2(0, 0), ImGuiChildFlags_None);
 
 				std::filesystem::path p(currentPath);
 				if (p.has_parent_path()) {

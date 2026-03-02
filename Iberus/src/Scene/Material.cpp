@@ -51,6 +51,8 @@ namespace Iberus {
 		BindTextures(renderBatch);
 
 		renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<Vec4>>("albedoColor", albedoColor, UniformType::VEC4));
+		renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<Vec3>>("emissiveColor", emissiveColor, UniformType::VEC3));
+		renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<float>>("emissiveIntensity", emissiveIntensity, UniformType::FLOAT));
 		bool hasAlbedoTex = (textures.count(ALBEDOTEXTURE) != 0 && textures.at(ALBEDOTEXTURE) != nullptr);
 		renderBatch.PushRenderCmdToQueue(std::make_unique<UniformRenderCmd<int>>("hasAlbedoTexture", hasAlbedoTex ? 1 : 0, UniformType::INT));
 

@@ -15,7 +15,7 @@ namespace Iberus {
 		}
 	}
 
-	void OpenGLForwardPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
+	void OpenGLForwardPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source, Framebuffer* target) {
 		if (!shaderPass) {
 			return;
 		}

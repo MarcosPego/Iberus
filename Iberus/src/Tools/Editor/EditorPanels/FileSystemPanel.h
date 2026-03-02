@@ -16,10 +16,10 @@ namespace Iberus {
 		explicit FileSystemPanel(Editor& editor);
 		~FileSystemPanel();
 
-		void OnDraw(IGUIContext& gui);
+		void OnDraw(IGUIContext& gui, bool* p_open = nullptr);
 
 	private:
-		void DrawFolderTree(const std::string& path, int depth);
+		void DrawFolderTreeContents(const std::string& path, int depth);
 		void DrawContentGrid(const std::string& path);
 		void DrawBreadcrumb(const std::string& path);
 		void DrawToolbar();

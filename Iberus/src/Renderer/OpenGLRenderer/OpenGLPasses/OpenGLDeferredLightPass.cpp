@@ -34,7 +34,7 @@ namespace Iberus {
 		ShaderBindings::SetUniform<Vec3>(programID, (p + "direction").c_str(), light.Direction);
 	}
 
-	OpenGLDeferredLightPass::OpenGLDeferredLightPass(Framebuffer* inSourceFBO, Framebuffer* inTargetFBO) : RenderPass(inSourceFBO, inTargetFBO) {
+	OpenGLDeferredLightPass::OpenGLDeferredLightPass() {
 		auto& renderer = Iberus::Engine::Instance()->GetRenderer();
 		shaderPass = dynamic_cast<ShaderApi*>(renderer.GetResource("assets/shaders/baseDeferredLightShader"));
 		if (!shaderPass) {
@@ -45,7 +45,6 @@ namespace Iberus {
 		if (auto* openGLShader = dynamic_cast<OpenGLShader*>(shaderPass); openGLShader) {
 			programID = openGLShader->GetProgramID();
 		}
-
 		shaderPass->Bind();
 		if (texturesIdxs.size() == 4) {
 			ShaderBindings::SetUniform<int>(programID, "worldPosIn", texturesIdxs.at(0));
@@ -57,17 +56,13 @@ namespace Iberus {
 		quadMesh = dynamic_cast<MeshApi*>(renderer.GetResource("renderQuadNDC"));
 	}
 
-	void OpenGLDeferredLightPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) {
-		if (!shaderPass) {
+	void OpenGLDeferredLightPass::ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source, Framebuffer* target) {
+		if (!shaderPass || !source || !target) {
 			return;
 		}
 
-		/*glEnable(GL_BLEND);
-		glBlendEquation(GL_FUNC_ADD);
-		glBlendFunc(GL_ONE, GL_ONE);*/
-
 		shaderPass->Bind();
-		sourceBuffer->Bind(FramebufferMode::READING, targetBuffer->GetFBO(), texturesIdxs);
+		source->Bind(FramebufferMode::READING, target->GetFBO(), texturesIdxs);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		GLuint programID{ 0 };
@@ -75,8 +70,17 @@ namespace Iberus {
 			programID = openGLShader->GetProgramID();
 		}
 
+		if (texturesIdxs.size() == 4) {
+			ShaderBindings::SetUniform<int>(programID, "worldPosIn", texturesIdxs.at(0));
+			ShaderBindings::SetUniform<int>(programID, "diffuseIn", texturesIdxs.at(1));
+			ShaderBindings::SetUniform<int>(programID, "normalIn", texturesIdxs.at(2));
+			ShaderBindings::SetUniform<int>(programID, "uvsIn", texturesIdxs.at(3));
+		}
+
 		int effW = frame.renderWidth > 0 ? frame.renderWidth : Engine::Instance()->GetEffectiveRenderWidth();
 		int effH = frame.renderHeight > 0 ? frame.renderHeight : Engine::Instance()->GetEffectiveRenderHeight();
+		if (effW <= 0) { effW = 1; }
+		if (effH <= 0) { effH = 1; }
 		ShaderBindings::SetUniform<Vec2>(programID, "screenSize", Vec2(static_cast<float>(effW), static_cast<float>(effH)));
 
 		for (const RenderBatch& renderBatch : frame.renderBatches) {
@@ -107,7 +111,6 @@ namespace Iberus {
 		if (glGetError() != GL_NO_ERROR) {
 			//std::cout << "Error in Mesh" << std::endl;
 		}
-
 	}
 }
 

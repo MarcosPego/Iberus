@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Window.h"
+#include "Profiler.h"
 
 #include "MeshFactory.h"
 #include "ScriptHost.h"
@@ -174,7 +175,14 @@ namespace Iberus {
 		if (scene) {
 			bool shouldUpdate = sceneSimulationEnabled || ConsumeStepRequest();
 			if (shouldUpdate) {
-				scene->Update(deltaTime);
+				Profiler::Instance().RecordUpdate(deltaTime);
+				{
+					auto t0 = std::chrono::high_resolution_clock::now();
+					scene->Update(deltaTime);
+					auto t1 = std::chrono::high_resolution_clock::now();
+					double updateMs = std::chrono::duration<double, std::milli>(t1 - t0).count();
+					Profiler::Instance().RecordZone("Update", updateMs);
+				}
 			}
 		}
 
@@ -344,8 +352,14 @@ namespace Iberus {
 		/// Init necessary deferred renderer resources
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseDeferredLightShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseToonLightShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseRaymarchingShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseGeometryCopyShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseOutlineShader", engineProvider.get());
 		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseHDRShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseBloomBrightShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/baseBloomBlurShader", engineProvider.get());
+		resourceManager->GetOrCreateResource<Shader>("assets/shaders/basePixelationShader", engineProvider.get());
 		
 		/// Textures reserved for passes 1
 		resourceManager->CreateResource<Texture>("worldPosOut_1", currentWindow->GetWidth(), currentWindow->GetHeight(), 4);

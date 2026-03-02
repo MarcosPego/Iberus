@@ -5,30 +5,25 @@
 #include "RenderCmd.h"
 #include "Matrix.h"
 #include "Engine.h"
+#include "EntityId.h"
 
 using namespace Math;
 
 namespace Iberus {
 
-	static Mat4 ComputeViewMatrix(const TransformComponent& transform, Vec3& outForward, Vec3& outUp) {
-		const Vec3& pos = transform.Position;
-		const Vec3& rot = transform.Rotation;
-
+	static Vec3 ComputeForwardFromRotation(const Vec3& rot) {
 		float pitchRad = Deg2Rad(rot.x);
 		float yawRad = Deg2Rad(rot.y);
+		Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
+		return normalize(forward);
+	}
 
-		float cosPitch = cosf(pitchRad);
-		float sinPitch = sinf(pitchRad);
-		float cosYaw = cosf(yawRad);
-		float sinYaw = sinf(yawRad);
-
-		outForward = Vec3(sinYaw * cosPitch, -sinPitch, -cosYaw * cosPitch);
-		outForward = normalize(outForward);
+	static Mat4 ComputeViewMatrix(const TransformComponent& transform, Vec3& outForward, Vec3& outUp) {
+		const Vec3& pos = transform.Position;
+		outForward = ComputeForwardFromRotation(transform.Rotation);
 		outUp = Vec3(0, 1, 0);
-
 		Vec3 center = pos + outForward;
-		Mat4 view = MatrixFactory::CreateViewMat4(pos, center, outUp);
-		return view;
+		return MatrixFactory::CreateViewMat4(pos, center, outUp);
 	}
 
 	static Mat4 GetProjectionMatrix(CameraComponent& cam) {
@@ -73,7 +68,26 @@ namespace Iberus {
 		}
 
 		Vec3 forward, up;
-		Mat4 viewMatrix = ComputeViewMatrix(*transform, forward, up);
+		Mat4 viewMatrix;
+		Vec3 lookAtCenter = transform->Position;
+		if (camera->UseLookAt) {
+			if (camera->LookAtTargetId != NullEntity && world.IsAlive(camera->LookAtTargetId)) {
+				auto* targetTransform = world.GetComponent<TransformComponent>(camera->LookAtTargetId);
+				auto* targetL2W = world.GetComponent<LocalToWorldComponent>(camera->LookAtTargetId);
+				if (targetL2W) {
+					lookAtCenter = Vec3(targetL2W->Matrix.data[12], targetL2W->Matrix.data[13], targetL2W->Matrix.data[14]);
+				} else if (targetTransform) {
+					lookAtCenter = targetTransform->Position;
+				}
+			} else {
+				lookAtCenter = camera->LookAtPosition;
+			}
+			up = Vec3(0, 1, 0);
+			forward = normalize(lookAtCenter - transform->Position);
+			viewMatrix = MatrixFactory::CreateViewMat4(transform->Position, lookAtCenter, up);
+		} else {
+			viewMatrix = ComputeViewMatrix(*transform, forward, up);
+		}
 		camera->ViewMatrix = viewMatrix;
 		camera->CameraToWorld = inverse(viewMatrix);
 

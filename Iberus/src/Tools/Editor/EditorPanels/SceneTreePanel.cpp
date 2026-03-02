@@ -13,6 +13,7 @@
 #include "FileSystemProvider.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "IconsFontAwesome6.h"
 
 #include "imgui.h"
 
@@ -223,16 +224,42 @@ namespace Iberus {
 		}
 		auto* tag = world.GetComponent<TagComponent>(entityId);
 		const char* name = tag ? tag->Id.c_str() : "?";
+		auto* hierarchy = world.GetComponent<HierarchyComponent>(entityId);
+		bool hasChildren = hierarchy && !hierarchy->ChildrenIds.empty();
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 		if (editor.GetSelectedEntityId() == entityId) {
 			flags |= ImGuiTreeNodeFlags_Selected;
 		}
+		if (!hasChildren) {
+			flags |= ImGuiTreeNodeFlags_Leaf;
+		}
 		ImGui::PushID(static_cast<int>(entityId));
+		ImGui::AlignTextToFramePadding();
+		auto* active = world.GetComponent<ActiveComponent>(entityId);
+		bool isActive = active ? active->Active : true;
+		const char* icon = isActive ? ICON_FA_EYE : ICON_FA_EYE_SLASH;
+		ImGui::PushStyleColor(ImGuiCol_Text, isActive ? ImVec4(1, 1, 1, 1) : ImVec4(0.5f, 0.5f, 0.5f, 1));
+		ImGui::Text("%s", icon);
+		if (ImGui::IsItemClicked()) {
+			if (active) {
+				active->Active = !active->Active;
+			} else {
+				scene->AddComponent<ActiveComponent>(entityId, !isActive);
+			}
+		}
+		if (ImGui::IsItemHovered()) {
+			ImGui::SetTooltip("%s", isActive ? "Hide entity" : "Show entity");
+		}
+		ImGui::PopStyleColor();
+		ImGui::SameLine(0, 4.0f);
 		char treeBuf[128];
 		snprintf(treeBuf, sizeof(treeBuf), "%s##Entity_%d", name, static_cast<int>(entityId));
 		bool opened = ImGui::TreeNodeEx(treeBuf, flags);
-		if (ImGui::IsItemClicked()) {
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
 			editor.SetSelectedEntity(entityId);
+		}
+		if (ImGui::IsItemClicked(0) && ImGui::IsMouseDoubleClicked(0)) {
+			editor.FocusCameraOnEntity(entityId);
 		}
 		if (ImGui::BeginPopupContextItem()) {
 			DrawEntityContextMenu(scene, entityId, parentId, editor);
@@ -260,7 +287,6 @@ namespace Iberus {
 			ImGui::EndDragDropSource();
 		}
 		if (opened) {
-			auto* hierarchy = world.GetComponent<HierarchyComponent>(entityId);
 			if (hierarchy) {
 				for (EntityId childId : hierarchy->ChildrenIds) {
 					DrawEntityTree(scene, world, childId, entityId, editor);
@@ -311,8 +337,8 @@ namespace Iberus {
 	SceneTreePanel::SceneTreePanel(Editor& editor) : editor(editor) {
 	}
 
-	void SceneTreePanel::OnDraw(IGUIContext& gui) {
-		if (!gui.BeginWindow("Scene Tree")) {
+	void SceneTreePanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		if (!gui.BeginWindow("Scene Tree", p_open)) {
 			gui.EndWindow();
 			return;
 		}

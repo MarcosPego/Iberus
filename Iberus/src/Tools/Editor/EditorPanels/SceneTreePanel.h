@@ -9,7 +9,7 @@ namespace Iberus {
 	class SceneTreePanel {
 	public:
 		explicit SceneTreePanel(Editor& editor);
-		void OnDraw(IGUIContext& gui);
+		void OnDraw(IGUIContext& gui, bool* p_open = nullptr);
 
 	private:
 		Editor& editor;

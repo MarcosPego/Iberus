@@ -15,7 +15,7 @@ namespace Iberus {
 
 		void ExecuteAndFlushCmdQueue() override;
 
-		Framebuffer* CreateFramebuffer(const std::string& ID, const std::vector<TextureApi*>& inTextures) override;
+		Framebuffer* CreateFramebuffer(const std::string& ID, const std::vector<TextureApi*>& inTextures, int customWidth = 0, int customHeight = 0) override;
 
 	protected:
 		virtual void RenderBatchCommands(Frame& frame, ShaderApi* globalShader = nullptr);

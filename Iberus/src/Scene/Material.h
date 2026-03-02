@@ -25,6 +25,10 @@ namespace Iberus {
 		/// Albedo
 		Vec4 albedoColor{1.0f, 1.0f, 1.0f, 1.0f};
 
+		/// Emissive (glow)
+		Vec3 emissiveColor{0.0f, 0.0f, 0.0f};
+		float emissiveIntensity{0.0f};
+
 		/// Normal Map
 
 		/// Metalic?

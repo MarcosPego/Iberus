@@ -216,7 +216,7 @@ namespace Iberus {
 		if (entityId == NullEntity || !world.IsAlive(entityId)) {
 			return;
 		}
-		BehaviourSystem::NotifyEntityChanged(world, entityId);
+		onEntityChanged.Invoke(entityId);
 	}
 
 	void Scene::Update(double deltaTime) {

@@ -4,12 +4,15 @@
 #include "Engine.h"
 #include "SceneManager.h"
 #include "SceneSerializer.h"
+#include "Scene.h"
+#include "EditorPicking.h"
 #include "KeyCode.h"
 #include "MouseCode.h"
 #include "Matrix.h"
 
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "IconsFontAwesome6.h"
 
 using namespace Math;
 
@@ -23,7 +26,9 @@ namespace Iberus {
 		, inspectorPanel(std::make_unique<InspectorPanel>(*this))
 		, creatureCreatorPanel(std::make_unique<CreatureCreatorPanel>(*this))
 		, fileSystemPanel(std::make_unique<FileSystemPanel>(*this))
-		, assetInspectorPanel(std::make_unique<AssetInspectorPanel>(*this)) {
+		, assetInspectorPanel(std::make_unique<AssetInspectorPanel>(*this))
+		, profilerPanel(std::make_unique<ProfilerPanel>(*this))
+		, renderSettingsPanel(std::make_unique<RenderSettingsPanel>(*this)) {
 	}
 
 	Editor::~Editor() = default;
@@ -60,6 +65,48 @@ namespace Iberus {
 			}
 		} else {
 			editorCameraDragging = false;
+		}
+
+		// Left-click pan (Hand tool)
+		if (gizmoOperation == GizmoOperation::Hand && input.IsMouseButtonPressed(MouseCode::Left)) {
+			Vec2 currentMouse = input.GetMousePosition();
+			if (!editorCameraPanning) {
+				editorCameraPanning = true;
+				editorCameraLastMouse = currentMouse;
+			} else {
+				Vec2 delta = currentMouse - editorCameraLastMouse;
+				float pitchRad = Deg2Rad(editorCameraPitch);
+				float yawRad = Deg2Rad(editorCameraYaw);
+				Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
+				forward = normalize(forward);
+				Vec3 right = normalize(cross(forward, Vec3(0, 1, 0)));
+				Vec3 up = normalize(cross(right, forward));
+				float panScale = editorCamera.IsOrthographic ? editorCamera.OrthoSize * 0.02f : 0.03f;
+				editorCamera.Position = editorCamera.Position - right * (delta.x * panScale);
+				editorCamera.Position = editorCamera.Position + up * (delta.y * panScale);
+				editorCameraLastMouse = currentMouse;
+			}
+		} else {
+			editorCameraPanning = false;
+		}
+
+		// Scroll wheel zoom
+		{
+			Vec2 scroll = input.GetScrollDelta();
+			if (scroll.y != 0.0f) {
+				float pitchRad = Deg2Rad(editorCameraPitch);
+				float yawRad = Deg2Rad(editorCameraYaw);
+				Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
+				forward = normalize(forward);
+				float zoomSpeed = 2.0f;
+				if (editorCamera.IsOrthographic) {
+					float delta = -scroll.y * editorCamera.OrthoSize * 0.1f;
+					editorCamera.OrthoSize = std::max(0.5f, editorCamera.OrthoSize + delta);
+				} else {
+					float delta = scroll.y * zoomSpeed;
+					editorCamera.Position = editorCamera.Position + forward * delta;
+				}
+			}
 		}
 
 		// WASD movement - forward/back along view direction, strafe left/right.
@@ -103,18 +150,20 @@ namespace Iberus {
 
 		float pitchRad = Deg2Rad(rot.x);
 		float yawRad = Deg2Rad(rot.y);
-		float cosPitch = cosf(pitchRad);
-		float sinPitch = sinf(pitchRad);
-		float cosYaw = cosf(yawRad);
-		float sinYaw = sinf(yawRad);
-
 		Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
 		forward = normalize(forward);
 		Vec3 up(0, 1, 0);
 		Vec3 center = pos + forward;
 		Mat4 viewMatrix = MatrixFactory::CreateViewMat4(pos, center, up);
-		Mat4 projectionMatrix = MatrixFactory::CreatePerspectiveMat4(
-			editorCamera.Fovy, aspectRatio, editorCamera.NearZ, editorCamera.FarZ);
+		Mat4 projectionMatrix;
+		if (editorCamera.IsOrthographic) {
+			float halfH = editorCamera.OrthoSize * 0.5f;
+			float halfW = halfH * aspectRatio;
+			projectionMatrix = MatrixFactory::CreateOrtoMat4(-halfW, halfW, -halfH, halfH, editorCamera.NearZ, editorCamera.FarZ);
+		} else {
+			projectionMatrix = MatrixFactory::CreatePerspectiveMat4(
+				editorCamera.Fovy, aspectRatio, editorCamera.NearZ, editorCamera.FarZ);
+		}
 		Mat4 cameraToWorld = inverse(viewMatrix);
 
 		return std::make_unique<CameraRenderCmd>(viewMatrix, projectionMatrix, pos, cameraToWorld);
@@ -130,9 +179,46 @@ namespace Iberus {
 		Vec3 up(0, 1, 0);
 		Vec3 center = pos + forward;
 		outView = MatrixFactory::CreateViewMat4(pos, center, up);
-		outProj = MatrixFactory::CreatePerspectiveMat4(
-			editorCamera.Fovy, aspectRatio, editorCamera.NearZ, editorCamera.FarZ);
+		if (editorCamera.IsOrthographic) {
+			float halfH = editorCamera.OrthoSize * 0.5f;
+			float halfW = halfH * aspectRatio;
+			outProj = MatrixFactory::CreateOrtoMat4(-halfW, halfW, -halfH, halfH, editorCamera.NearZ, editorCamera.FarZ);
+		} else {
+			outProj = MatrixFactory::CreatePerspectiveMat4(
+				editorCamera.Fovy, aspectRatio, editorCamera.NearZ, editorCamera.FarZ);
+		}
 		return true;
+	}
+
+	void Editor::FocusCameraOnEntity(EntityId entityId) {
+		auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene();
+		if (!scene || entityId == NullEntity || !scene->GetWorld().IsAlive(entityId)) {
+			return;
+		}
+		Math::Vec3 aabbMin, aabbMax;
+		GetEntityAABB(scene->GetWorld(), entityId, aabbMin, aabbMax);
+		Math::Vec3 center = (aabbMin + aabbMax) * 0.5f;
+		Math::Vec3 size = aabbMax - aabbMin;
+		float maxDim = std::max({ size.x, size.y, size.z, 1.0f });
+		float distance = maxDim * 2.5f;
+
+		Math::Vec3 toCamera = editorCamera.Position - center;
+		float len = toCamera.length();
+		if (len < 1e-6f) {
+			toCamera = Math::Vec3(0, 0, -1);
+			len = 1.0f;
+		} else {
+			toCamera = toCamera / len;
+		}
+		float yawRad = atan2f(toCamera.x, -toCamera.z);
+		float pitchRad = asinf(-toCamera.y);
+		editorCameraPitch = Rad2Deg(pitchRad);
+		editorCameraYaw = Rad2Deg(yawRad);
+		editorCamera.Rotation = Math::Vec3(editorCameraPitch, editorCameraYaw, 0.0f);
+
+		Math::Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
+		forward = normalize(forward);
+		editorCamera.Position = center - forward * distance;
 	}
 
 	void Editor::OnUpdate(double deltaTime, IGUIContext* gui) {
@@ -202,47 +288,13 @@ namespace Iberus {
 		// DockSpace must be submitted before any windows it hosts (menu bar creates a window)
 		gui->BeginDockSpace();
 
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 8));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 10));
 		if (ImGui::BeginMainMenuBar()) {
-			// Play / Stop / Pause / Step toolbar
-			if (editorMode == EditorMode::Editor) {
-				if (ImGui::Button("Play (P)##EditorToolbar") && hasScene) {
-					if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
-						Buffer buf = SceneSerializer::Serialize(*scene, NullEntity);
-						if (!buf.Invalid()) {
-							playModeSnapshot.CopyDataFrom(buf);
-						}
-					}
-					editorMode = EditorMode::Game;
-					gamePaused = false;
-					Engine::Instance()->OnSwitchedToGameMode();
-				}
-			} else {
-				if (ImGui::Button("Stop##EditorToolbar")) {
-					if (!playModeSnapshot.Invalid()) {
-						if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
-							SceneSerializer::RestoreFromBuffer(*scene, playModeSnapshot);
-						}
-						SetSelectedEntity(NullEntity);
-					}
-					editorMode = EditorMode::Editor;
-					gamePaused = false;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button(gamePaused ? "Resume##EditorToolbar" : "Pause##EditorToolbar") && hasScene) {
-					gamePaused = !gamePaused;
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Step##EditorToolbar") && gamePaused) {
-					RequestStep();
-				}
-			}
-			ImGui::SameLine();
-			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
-			ImGui::SameLine();
 			if (ImGui::BeginMenu("File##EditorFileMenu")) {
 				bool hasScenePath = !Application::Get()->GetCurrentScenePath().empty();
 				bool hasScene = Engine::Instance()->GetSceneManager().GetActiveScene() != nullptr;
-				if (ImGui::MenuItem("Save##EditorSave", "Ctrl+S", false, hasScene && hasScenePath)) {
+				if (ImGui::MenuItem(ICON_FA_FLOPPY_DISK " Save##EditorSave", "Ctrl+S", false, hasScene && hasScenePath)) {
 					if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
 						if (SceneSerializer::SaveToFile(*scene, Application::Get()->GetCurrentScenePath())) {
 							Application::Get()->SetSceneDirty(false);
@@ -257,6 +309,74 @@ namespace Iberus {
 				}
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("View##EditorViewMenu")) {
+				if (ImGui::MenuItem("Scene Tree##ViewSceneTree", nullptr, &sceneTreeOpen)) {}
+				if (ImGui::MenuItem("Scene View##ViewSceneView", nullptr, &sceneViewOpen)) {}
+				if (ImGui::MenuItem("Game##ViewGame", nullptr, &gameViewOpen)) {}
+				if (ImGui::MenuItem("Inspector##ViewInspector", nullptr, &inspectorOpen)) {}
+				if (ImGui::MenuItem("Creature Creator##ViewCreatureCreator", nullptr, &creatureCreatorOpen)) {}
+				if (ImGui::MenuItem("Project##ViewProject", nullptr, &fileSystemOpen)) {}
+				if (ImGui::MenuItem("Asset Inspector##ViewAssetInspector", nullptr, &assetInspectorOpen)) {}
+				if (ImGui::MenuItem("Profiler##ViewProfiler", nullptr, &profilerOpen)) {}
+				if (ImGui::MenuItem("Render Settings##ViewRenderSettings", nullptr, &renderSettingsOpen)) {}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Settings##EditorSettingsMenu")) {
+				if (ImGui::MenuItem("Render Settings##EditorRenderSettings")) {
+					renderSettingsPanel->RequestOpen();
+					renderSettingsOpen = true;
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Style##EditorStyleMenu")) {
+				if (ImGui::MenuItem("Style Editor##EditorStyleEditor", nullptr, false)) {
+					styleEditorOpen = true;
+				}
+				ImGui::EndMenu();
+			}
+
+			float winWidth = ImGui::GetWindowWidth();
+			float centerGroupWidth = (editorMode == EditorMode::Editor) ? 40.0f : 140.0f;
+			ImGui::SetCursorPosX((winWidth - centerGroupWidth) * 0.5f);
+			if (editorMode == EditorMode::Editor) {
+				if (ImGui::Button(ICON_FA_PLAY "##EditorToolbar", ImVec2(32, 0)) && hasScene) {
+					if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
+						Buffer buf = SceneSerializer::Serialize(*scene, NullEntity);
+						if (!buf.Invalid()) {
+							playModeSnapshot.CopyDataFrom(buf);
+						}
+					}
+					editorMode = EditorMode::Game;
+					gamePaused = false;
+					Engine::Instance()->OnSwitchedToGameMode();
+				}
+				if (ImGui::IsItemHovered()) {
+					ImGui::SetTooltip("Play (P)");
+				}
+			} else {
+				if (ImGui::Button(ICON_FA_STOP "##EditorToolbar", ImVec2(32, 0))) {
+					if (!playModeSnapshot.Invalid()) {
+						if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
+							SceneSerializer::RestoreFromBuffer(*scene, playModeSnapshot);
+						}
+						SetSelectedEntity(NullEntity);
+					}
+					editorMode = EditorMode::Editor;
+					gamePaused = false;
+				}
+				if (ImGui::IsItemHovered()) {
+					ImGui::SetTooltip("Stop");
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(gamePaused ? "Resume##EditorToolbar" : "Pause##EditorToolbar") && hasScene) {
+					gamePaused = !gamePaused;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Step##EditorToolbar") && gamePaused) {
+					RequestStep();
+				}
+			}
+
 			if (editorMode == EditorMode::Game) {
 				ImGui::SameLine();
 				ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), gamePaused ? " [Paused]" : " [Playing]");
@@ -265,14 +385,41 @@ namespace Iberus {
 			}
 			ImGui::EndMainMenuBar();
 		}
+		ImGui::PopStyleVar(2);
 
-		sceneTreePanel->OnDraw(*gui);
-		sceneViewPanel->OnDraw(*gui);
-		gameViewPanel->OnDraw(*gui);
-		inspectorPanel->OnDraw(*gui);
-		creatureCreatorPanel->OnDraw(*gui);
-		fileSystemPanel->OnDraw(*gui);
-		assetInspectorPanel->OnDraw(*gui);
+		if (sceneTreeOpen) {
+			sceneTreePanel->OnDraw(*gui, &sceneTreeOpen);
+		}
+		if (sceneViewOpen) {
+			sceneViewPanel->OnDraw(*gui, &sceneViewOpen);
+		}
+		if (gameViewOpen) {
+			gameViewPanel->OnDraw(*gui, &gameViewOpen);
+		}
+		if (inspectorOpen) {
+			inspectorPanel->OnDraw(*gui, &inspectorOpen);
+		}
+		if (creatureCreatorOpen) {
+			creatureCreatorPanel->OnDraw(*gui, &creatureCreatorOpen);
+		}
+		if (fileSystemOpen) {
+			fileSystemPanel->OnDraw(*gui, &fileSystemOpen);
+		}
+		if (assetInspectorOpen) {
+			assetInspectorPanel->OnDraw(*gui, &assetInspectorOpen);
+		}
+		if (profilerOpen) {
+			profilerPanel->OnDraw(*gui, &profilerOpen);
+		}
+		if (renderSettingsOpen) {
+			renderSettingsPanel->OnDraw(*gui, &renderSettingsOpen);
+		}
+		if (styleEditorOpen) {
+			if (ImGui::Begin("Style Editor##EditorStyleEditor", &styleEditorOpen)) {
+				ImGui::ShowStyleEditor();
+			}
+			ImGui::End();
+		}
 		gui->EndDockSpace();
 
 		UpdateEditorCamera(deltaTime);

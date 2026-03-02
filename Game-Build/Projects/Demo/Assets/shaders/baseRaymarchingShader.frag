@@ -1,4 +1,4 @@
-#version 330 core
+#version 460 core
 
 in mat4 worldMatrix;
 
@@ -8,24 +8,29 @@ uniform sampler2D normalIn;
 uniform sampler2D uvsIn;
 uniform sampler2D depthIn;
 
+const int sdfPartBufferSize = 16;
+const int sdfMeshBufferSize = 16;
+
+// vec4 used instead of vec3 to avoid std140 padding/alignment ambiguity across drivers
 struct SDFPart {
-	vec3 center;
-	vec4 color; // For now only color, later I want textures too
+	vec4 center;   // .xyz = position, .w unused
+	vec4 color;
 	float radius;
 	int type;
-	vec3 endpoint; // For capsule: segment endpoint in world space
+	vec4 endpoint; // .xyz = capsule end, .w unused
 };
 
-const int sdfPartBufferSize = 16;
 struct SDFMesh {
 	int size;
-	vec3 boundCenter;
+	vec4 boundCenter; // .xyz = center, .w unused
 	float boundRadius;
 	SDFPart sdfParts[sdfPartBufferSize];
 };
 
-const int sdfMeshBufferSize = 4;
-uniform SDFMesh sdfMeshes[sdfMeshBufferSize];
+// std140 layout - must match SDFUBO in OpenGLRaymarchingPass.h
+layout(std140) uniform SDFBlock {
+	SDFMesh sdfMeshes[sdfMeshBufferSize];
+};
 
 layout (location = 0) out vec3 worldPosOut;   
 layout (location = 1) out vec3 diffuseOut;     
@@ -35,7 +40,14 @@ layout (location = 3) out vec3 uvsOut;
 uniform vec2 screenSize;
 uniform vec3 cameraPos;
 uniform mat4 cameraToWorld;
-uniform int debugRayMode;  // 0=normal, 1=rayDir, 2=rayOrigin, 3=hitMiss, 4=sdfAtOrigin, 5=ndc
+uniform int debugRayMode;  // 0=normal, 1..5=debug views
+
+uniform usamplerBuffer tileIndicesBuffer;
+uniform int tilesX;
+uniform int tilesY;
+uniform int tileSize;
+
+const int tileStride = 17;  // count + 16 indices
 
 vec2 CalcUVCoord() {
   return gl_FragCoord.xy / screenSize;
@@ -43,6 +55,45 @@ vec2 CalcUVCoord() {
 
 vec2 CalcNDC() {
   return (gl_FragCoord.xy - 0.5) / screenSize * 2.0 - 1.0;
+}
+
+/// Ray-sphere intersection: returns true if ray hits sphere in [0, maxT]. D must be normalized.
+bool rayIntersectsSphere(vec3 O, vec3 D, vec3 center, float radius, float maxT) {
+	vec3 L = center - O;
+	float tCa = dot(L, D);
+	float lSq = dot(L, L);
+	float rSq = radius * radius;
+	float dSq = lSq - tCa * tCa;
+	if (dSq > rSq) {
+		return false;
+	}
+	float tHcSq = rSq - dSq;
+	float tHc = sqrt(max(0.0, tHcSq));
+	float t0 = tCa - tHc;
+	float t1 = tCa + tHc;
+	// Ray hits sphere if either t0 or t1 is in [0, maxT]
+	if (t1 < 0.0 || t0 > maxT) {
+		return false;
+	}
+	return true;
+}
+
+/// Quick test: does ray enter any SDF bound in this tile? If not, skip raymarching.
+bool rayMayHitSDFForTile(int tileIdx, vec3 rayOrigin, vec3 rayDir, float maxDist) {
+	int count = int(texelFetch(tileIndicesBuffer, tileIdx * tileStride).r);
+	const float boundMargin = 1.05;
+	for (int k = 0; k < count; k++) {
+		int i = int(texelFetch(tileIndicesBuffer, tileIdx * tileStride + 1 + k).r);
+		if (sdfMeshes[i].size <= 0) {
+			continue;
+		}
+		vec3 center = sdfMeshes[i].boundCenter.xyz;
+		float r = sdfMeshes[i].boundRadius * boundMargin;
+		if (rayIntersectsSphere(rayOrigin, rayDir, center, r, maxDist)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /// Distance Field Functions
@@ -73,14 +124,16 @@ float smootMin(float a, float b, float k) {
 	return min(a, b) - h * h * k * 0.25;
 }
 
-float distanceField(vec3 position) {
+float distanceFieldForTile(vec3 position, int tileIdx) {
 	float result = 1e30;
-	for (int i = 0; i < sdfMeshBufferSize; i++) {
+	int count = int(texelFetch(tileIndicesBuffer, tileIdx * tileStride).r);
+	for (int k = 0; k < count; k++) {
+		int i = int(texelFetch(tileIndicesBuffer, tileIdx * tileStride + 1 + k).r);
 		if (sdfMeshes[i].size <= 0) {
 			continue;
 		}
 		// Bounding sphere culling: if we're farther from this mesh than current best hit, skip it
-		float dToBound = length(position - sdfMeshes[i].boundCenter) - sdfMeshes[i].boundRadius;
+		float dToBound = length(position - sdfMeshes[i].boundCenter.xyz) - sdfMeshes[i].boundRadius;
 		if (dToBound > result) {
 			continue;
 		}
@@ -88,57 +141,65 @@ float distanceField(vec3 position) {
 		float resultingT = result;
 		for (int j = 0; j < meshSize; j++) {
 			SDFPart part = sdfMeshes[i].sdfParts[j];
-			if (part.type <= 0) {
-				break;
+			int ptype = part.type;
+			if (ptype <= 0) {
+				ptype = 1;
+			}
+			vec3 center = part.center.xyz;
+			float radius = part.radius;
+
+			float dist;
+			if (ptype == 1) {
+				dist = sdSphere(position - center, radius);
+			} else if (ptype == 2) {
+				dist = sdBox(position - center, radius);
+			} else if (ptype == 3) {
+				dist = sdCapsule(position, center, part.endpoint.xyz, radius);
+			} else {
+				dist = sdSphere(position - center, radius);
 			}
 
 			if (j == 0) {
-				if (part.type == 1) {
-					resultingT = sdSphere(position - part.center, part.radius);
-				} else if (part.type == 2) {
-					resultingT = sdBox(position - part.center, part.radius);
-				} else if (part.type == 3) {
-					resultingT = sdCapsule(position, part.center, part.endpoint, part.radius);
-				}
-
-				if (resultingT < result) {
-					finalColor = part.color;
-					result = resultingT;
-				}	
+				resultingT = dist;
 			} else {
-				float _previousT = resultingT;
-				if (part.type == 1) {
-					resultingT = smootMin(sdSphere(position - part.center, part.radius), resultingT, 0.5f);
-				} else if (part.type == 2) {
-					resultingT = smootMin(sdBox(position - part.center, part.radius), resultingT, 0.4f);
-				} else if (part.type == 3) {
-					resultingT = smootMin(sdCapsule(position, part.center, part.endpoint, part.radius), resultingT, 0.5f);
-				}
-				if (resultingT < result) {
-					finalColor = mix(finalColor, part.color, clamp(_previousT - resultingT, 0, 1));
-					result = resultingT;
-				}	
-			}			
-		}		
+				resultingT = smootMin(dist, resultingT, (ptype == 2) ? 0.4f : 0.5f);
+			}
+			if (resultingT < result) {
+				float prevResult = result;
+				result = resultingT;
+				finalColor = (j == 0) ? part.color : mix(finalColor, part.color, clamp(prevResult - resultingT, 0.0, 1.0));
+			}
+		}
+	}
+	// Fallback: bound sphere when part loop yields nothing
+	if (result > 1e20 && count > 0) {
+		int i = int(texelFetch(tileIndicesBuffer, tileIdx * tileStride + 1).r);
+		if (sdfMeshes[i].size > 0) {
+			float d = length(position - sdfMeshes[i].boundCenter.xyz) - sdfMeshes[i].boundRadius;
+			if (d < result) {
+				result = d;
+				finalColor = vec4(1.0, 1.0, 1.0, 1.0);
+			}
+		}
 	}
 	return result;
 }
 
-// Tetrahedron gradient - 4 evaluations instead of 6
-vec3 getNormal(vec3 p) {
+// Tetrahedron gradient - 4 evaluations (optimal for precision)
+vec3 getNormalForTile(vec3 p, int tileIdx) {
 	vec2 e = vec2(0.001, -0.001);
 	return normalize(
-		e.xyy * distanceField(p + e.xyy) +
-		e.yyx * distanceField(p + e.yyx) +
-		e.yxy * distanceField(p + e.yxy) +
-		e.xxx * distanceField(p + e.xxx)
+		e.xyy * distanceFieldForTile(p + e.xyy, tileIdx) +
+		e.yyx * distanceFieldForTile(p + e.yyx, tileIdx) +
+		e.yxy * distanceFieldForTile(p + e.yxy, tileIdx) +
+		e.xxx * distanceFieldForTile(p + e.xxx, tileIdx)
 	);
 }
 
-float raymarching(vec3 origin, vec3 direction) {
+float raymarchingForTile(vec3 origin, vec3 direction, int tileIdx) {
 	float t = 0;
-	const int maxIteration = 64;
-	float maxDistance = 100.0f;
+	const int maxIteration = 48;
+	float maxDistance = 500.0;
 
 	for (int i = 0; i < maxIteration; i++) {
 		if (t > maxDistance) {
@@ -146,12 +207,13 @@ float raymarching(vec3 origin, vec3 direction) {
 		}
 
 		vec3 position = origin + direction * t;
-		float distance = distanceField(position);
+		float d = distanceFieldForTile(position, tileIdx);
 
-		if (distance < 0.01) {
+		if (d < 0.01) {
 			return t;
 		}
-		t += max(distance, 0.001);  // min step to avoid stepping backward (negative dist = inside SDF)
+		float step = (d < 0.0) ? max(-d * 0.5, 0.01) : max(d, 0.001);
+		t += step;
 	}
 
 	return -1.0;
@@ -162,6 +224,23 @@ float raymarching(vec3 origin, vec3 direction) {
 void main(void)
 {
 	vec2 uvCoord = CalcUVCoord();
+
+	int tileX = int(gl_FragCoord.x) / tileSize;
+	int tileY = int(gl_FragCoord.y) / tileSize;
+	tileX = clamp(tileX, 0, tilesX - 1);
+	tileY = clamp(tileY, 0, tilesY - 1);
+	int tileIdx = tileY * tilesX + tileX;
+
+	// Early-out: no SDF entities in this tile - use geometry directly
+	int tileCount = int(texelFetch(tileIndicesBuffer, tileIdx * tileStride).r);
+	if (tileCount <= 0) {
+		worldPosOut = texture(worldPosIn, uvCoord).xyz;
+		diffuseOut = texture(diffuseIn, uvCoord).xyz;
+		normalOut = texture(normalIn, uvCoord).xyz;
+		uvsOut = texture(uvsIn, uvCoord).xyz;
+		return;
+	}
+
 	vec2 ndc = CalcNDC();
 	mat4 camToWorld = inverse(worldMatrix);
 
@@ -174,25 +253,34 @@ void main(void)
 	vec3 rayOrigin = nearPos;
 	vec3 rayDirection = normalize(farPos - nearPos);
 
+	// Ray-bounds early skip: if ray can't hit any SDF in this tile, use geometry
+	const float maxDist = 500.0;
+	if (!rayMayHitSDFForTile(tileIdx, rayOrigin, rayDirection, maxDist)) {
+		worldPosOut = texture(worldPosIn, uvCoord).xyz;
+		diffuseOut = texture(diffuseIn, uvCoord).xyz;
+		normalOut = texture(normalIn, uvCoord).xyz;
+		uvsOut = texture(uvsIn, uvCoord).xyz;
+		return;
+	}
+
 	vec3 normal = vec3(0,0,0);
 	vec3 pos = vec3(0,0,0);
 
-	float t = raymarching(rayOrigin, rayDirection);
+	float t = raymarchingForTile(rayOrigin, rayDirection, tileIdx);
 	if (t >= 0.0) {
 		pos = rayOrigin + rayDirection * t;
-		normal = normalize(getNormal(pos));
+		normal = normalize(getNormalForTile(pos, tileIdx));
 	} else {
 		finalColor = vec4(0, 0, 0, 0);
 	}
 
-	// Depth occlusion: use geometry depth buffer (precision-stable at any distance)
+	// Depth occlusion: if geometry is closer than SDF hit, use geometry
 	if (t >= 0.0) {
 		float geomDepth = texture(depthIn, uvCoord).r;
 		vec4 clipPos = worldMatrix * vec4(pos, 1.0);
 		float raymarchDepth = (clipPos.z / clipPos.w) * 0.5 + 0.5;
 		const float depthBias = 0.0001;
 		if (raymarchDepth > geomDepth + depthBias) {
-			// SDF hit is behind geometry - treat as miss
 			pos = vec3(0, 0, 0);
 			normal = vec3(0, 0, 0);
 			finalColor = vec4(0, 0, 0, 0);
@@ -206,21 +294,15 @@ void main(void)
 	vec3 geomDiffuse = texture(diffuseIn, uvCoord).xyz;
 	vec3 geomNormal = texture(normalIn, uvCoord).xyz;
 
-	// DEBUG: ray visualization - compare game vs editor viewport
 	vec3 outColor;
 	if (debugRayMode == 1) {
 		outColor = 0.5 + 0.5 * rayDirection;
 	} else if (debugRayMode == 2) {
-		vec3 originOffset = rayOrigin - cameraPos;
-		float len = length(originOffset);
-		outColor = vec3(min(len * 0.1, 1.0), 0.0, 0.0);
-	} else if (debugRayMode == 3) {
 		outColor = (t >= 0.0) ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
+	} else if (debugRayMode == 3) {
+		float d = distanceFieldForTile(rayOrigin, tileIdx);
+		outColor = vec3(1.0 - smoothstep(0.0, 50.0, d));
 	} else if (debugRayMode == 4) {
-		float d = distanceField(rayOrigin);
-		float v = 1.0 - smoothstep(0.0, 10.0, d);
-		outColor = vec3(v, v, v);
-	} else if (debugRayMode == 5) {
 		outColor = vec3(ndc * 0.5 + 0.5, 0.0);
 	} else {
 		outColor = sdfInFront ? finalColor.xyz : geomDiffuse;
@@ -229,5 +311,6 @@ void main(void)
 	worldPosOut     = sdfInFront ? pos : geomPos;
 	diffuseOut      = outColor;
 	normalOut       = sdfInFront ? normal : geomNormal;
-	uvsOut			= texture(uvsIn, uvCoord).xyz;
+	// SDF has no emissive; only pass through geometry's emissive when showing geometry (avoids adding occluded geometry's emissive to SDF = see-through).
+	uvsOut			= sdfInFront ? vec3(0.0) : texture(uvsIn, uvCoord).xyz;
 }

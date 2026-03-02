@@ -17,6 +17,9 @@ namespace Iberus {
 		void Resize(int width, int height) override;
 
 	private:
+		void SyncLightPassShader();
+		void SetLightPassPipelineUniforms(RenderPass* lightPass);
+
 		Framebuffer* sourceFBO{ nullptr };
 		Framebuffer* targetFBO{ nullptr };
 		int currentWidth{ 0 };

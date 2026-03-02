@@ -11,18 +11,23 @@ namespace Iberus {
 	GameViewPanel::GameViewPanel(Editor& editor) : editor(editor) {
 	}
 
-	void GameViewPanel::OnDraw(IGUIContext& gui) {
-		if (!ImGui::Begin("Game", nullptr, ImGuiWindowFlags_NoNavInputs)) {
+	void GameViewPanel::OnDraw(IGUIContext& gui, bool* p_open) {
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+		if (!ImGui::Begin("Game", p_open, ImGuiWindowFlags_NoNavInputs)) {
+			ImGui::End();
+			ImGui::PopStyleVar();
 			return;
 		}
 
 		if (Application::Get()->IsGameFullscreen()) {
 			ImGui::End();
+			ImGui::PopStyleVar();
 			return;
 		}
 
 		if (ImGui::IsWindowCollapsed()) {
 			ImGui::End();
+			ImGui::PopStyleVar();
 			return;
 		}
 
@@ -32,6 +37,7 @@ namespace Iberus {
 		const int minViewportSize = 8;
 		if (w < minViewportSize || h < minViewportSize || w > 16384 || h > 16384) {
 			ImGui::End();
+			ImGui::PopStyleVar();
 			return;
 		}
 		{
@@ -46,6 +52,7 @@ namespace Iberus {
 			}
 		}
 		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
 }

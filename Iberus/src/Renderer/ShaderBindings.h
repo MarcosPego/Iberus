@@ -1,5 +1,7 @@
 #pragma once
 
+#include "MathUtils.h"
+
 namespace Iberus {
 	class ShaderBindings {
 	public:
@@ -10,6 +12,12 @@ namespace Iberus {
 		template<typename T>
 		static void SetUniform(GLuint programID, const GLchar* name, const T& value);
 
+		/// Set uniform by pre-resolved location (avoids per-frame glGetUniformLocation).
+		static void SetUniformByLocation(GLuint programID, int location, int value);
+		static void SetUniformByLocation(GLuint programID, int location, float value);
+		static void SetUniformByLocation(GLuint programID, int location, const Math::Vec2& value);
+		static void SetUniformByLocation(GLuint programID, int location, const Math::Vec3& value);
+		static void SetUniformByLocation(GLuint programID, int location, const Math::Vec4& value);
 	};
 }
 

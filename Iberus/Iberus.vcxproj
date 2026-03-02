@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\IconFontCppHeaders;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -99,7 +99,9 @@ if not exist "$(SolutionDir)Game-Build/App" mkdir "$(SolutionDir)Game-Build/App"
 copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
-if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" "$(SolutionDir)Game-Build/App\"</Command>
+if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" "$(SolutionDir)Game-Build/App\"
+if not exist "$(SolutionDir)Game-Build/App/fonts" mkdir "$(SolutionDir)Game-Build/App/fonts"
+if exist "$(ProjectDir)dependencies\fontawesome\fa-solid-900.ttf" copy /Y "$(ProjectDir)dependencies\fontawesome\fa-solid-900.ttf" "$(SolutionDir)Game-Build/App/fonts\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -108,7 +110,7 @@ if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoiseD.dll" copy /Y "$(Pr
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\IconFontCppHeaders;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -132,7 +134,9 @@ copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)Game-Build/App\"
-if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"</Command>
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
+if not exist "$(SolutionDir)Game-Build/App/fonts" mkdir "$(SolutionDir)Game-Build/App/fonts"
+if exist "$(ProjectDir)dependencies\fontawesome\fa-solid-900.ttf" copy /Y "$(ProjectDir)dependencies\fontawesome\fa-solid-900.ttf" "$(SolutionDir)Game-Build/App/fonts\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -141,7 +145,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
       <PrecompiledHeaderFile>Enginepch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>IB_PLATFORM_WINDOWS;IB_BUILD_DLL;IB_DYNAMIC_LINK;IB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\BuiltInBehaviors;src\Core;src\Events;src\FileSystem;src\Logging;src\Maths;src\Platform;src\Project;src\Renderer;src\Scene;src\Scripting;src\Serialization;src\Tools;src\Core\Input;src\Core\Types;src\Platform\GLFW;src\Renderer\OpenGLRenderer;src\Renderer\Platform;src\Renderer\OpenGLRenderer\OpenGLPasses;src\Scene\ECS;src\Scene\Resources;src\Scene\Serialization;src\Tools\Editor;src\Tools\GUI;src\Tools\Editor\EditorPanels;src\Tools\GUI\Imgui;src;dependencies\spdlog\include;dependencies\glfw\include;dependencies\glfw\include\GLFW;dependencies\glew\include;dependencies\glew\include\GL;dependencies\stb_image;dependencies\imgui;dependencies\imgui\backends;dependencies\IconFontCppHeaders;dependencies\FastNoise2\include;dependencies\FastNoise2\include\FastNoise;dependencies\FastNoise2\include\FastSIMD;dependencies\FastNoise2\include\FastNoise\Generators;dependencies\FastNoise2\include\FastNoise\Utility;dependencies\FastNoise2\include\FastSIMD\Utility;dependencies;dependencies\dotnet-hosting;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -165,7 +169,9 @@ copy /Y "$(TargetPath)" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" copy /Y "$(ProjectDir)dependencies\glew\bin\Release\x64\glew32.dll" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
 if exist "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" copy /Y "$(ProjectDir)dependencies\FastNoise2\bin\FastNoise.dll" "$(SolutionDir)Game-Build/App\"
-if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"</Command>
+if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" "$(SolutionDir)Game-Build/App\"
+if not exist "$(SolutionDir)Game-Build/App/fonts" mkdir "$(SolutionDir)Game-Build/App/fonts"
+if exist "$(ProjectDir)dependencies\fontawesome\fa-solid-900.ttf" copy /Y "$(ProjectDir)dependencies\fontawesome\fa-solid-900.ttf" "$(SolutionDir)Game-Build/App/fonts\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -239,6 +245,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
     <ClInclude Include="src\BuiltInBehaviors\CameraController.h" />
     <ClInclude Include="src\Core\Application.h" />
+    <ClInclude Include="src\Core\Callback.h" />
     <ClInclude Include="src\Core\Core.h" />
     <ClInclude Include="src\Core\Engine.h" />
     <ClInclude Include="src\Core\Enginepch.h" />
@@ -249,6 +256,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Core\Input\MouseCode.h" />
     <ClInclude Include="src\Core\InputManager.h" />
     <ClInclude Include="src\Core\Layer.h" />
+    <ClInclude Include="src\Core\Profiler.h" />
     <ClInclude Include="src\Core\LayerStack.h" />
     <ClInclude Include="src\Core\Types\Color.h" />
     <ClInclude Include="src\Events\ApplicationEvent.h" />
@@ -279,6 +287,8 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLOutlinePass.h" />
+    <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLPixelationPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.h" />
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLShader.h" />
@@ -286,6 +296,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Renderer\OpenGLRenderer\OpenGLTexture.h" />
     <ClInclude Include="src\Renderer\Platform\WindowsWindow.h" />
     <ClInclude Include="src\Renderer\RenderBatch.h" />
+    <ClInclude Include="src\Renderer\RenderSettings.h" />
     <ClInclude Include="src\Renderer\RenderCmd.h" />
     <ClInclude Include="src\Renderer\RenderObject.h" />
     <ClInclude Include="src\Renderer\RenderPass.h" />
@@ -335,6 +346,8 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClInclude Include="src\Tools\Editor\EditorPanels\FileSystemPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\GameViewPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\ProfilerPanel.h" />
+    <ClInclude Include="src\Tools\Editor\EditorPanels\RenderSettingsPanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\SceneTreePanel.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewFBO.h" />
     <ClInclude Include="src\Tools\Editor\EditorPanels\SceneViewPanel.h" />
@@ -370,6 +383,7 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\BuiltInBehaviors\CameraController.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Engine.cpp" />
+    <ClCompile Include="src\Core\Profiler.cpp" />
     <ClCompile Include="src\Core\Enginepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -404,6 +418,8 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLForwardPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLGeometryPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLHDRPass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLOutlinePass.cpp" />
+    <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLPixelationPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLPasses\OpenGLRaymarchingPass.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLRenderer.cpp" />
     <ClCompile Include="src\Renderer\OpenGLRenderer\OpenGLShader.cpp" />
@@ -456,6 +472,8 @@ if exist "$(ProjectDir)dependencies\glfw\lib-vc2019\glfw3.dll" copy /Y "$(Projec
     <ClCompile Include="src\Tools\Editor\EditorPanels\FileSystemPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\GameViewPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\ProfilerPanel.cpp" />
+    <ClCompile Include="src\Tools\Editor\EditorPanels\RenderSettingsPanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\SceneTreePanel.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewFBO.cpp" />
     <ClCompile Include="src\Tools\Editor\EditorPanels\SceneViewPanel.cpp" />

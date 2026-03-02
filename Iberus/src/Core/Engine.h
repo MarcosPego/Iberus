@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "RenderCmd.h"
+#include "RenderSettings.h"
 
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -27,6 +28,9 @@ namespace Iberus {
 		void OnWindowResize(uint32_t width, uint32_t height);
 
 		Renderer& GetRenderer() { return *renderer.get(); }
+
+		PostProcessSettings& GetPostProcessSettings() { return postProcessSettings; }
+		const PostProcessSettings& GetPostProcessSettings() const { return postProcessSettings; }
 
 		ResourceManager& GetResourceManager() { return *resourceManager.get(); }
 
@@ -105,6 +109,8 @@ namespace Iberus {
 		bool sceneSimulationEnabled{ false };
 		bool stepSimulationRequested{ false };
 		std::string scriptBaseDir;
+
+		PostProcessSettings postProcessSettings;
 	};
 }
 

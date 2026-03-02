@@ -411,6 +411,9 @@
     <ClInclude Include="src\Core\Layer.h">
       <Filter>src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Profiler.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\LayerStack.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -669,6 +672,9 @@
     <ClInclude Include="src\Tools\Editor\EditorPanels\InspectorPanel.h">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tools\Editor\EditorPanels\ProfilerPanel.h">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClInclude>
     <ClInclude Include="src\Tools\Editor\EditorPanels\SceneTreePanel.h">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClInclude>
@@ -726,6 +732,9 @@
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Engine.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Profiler.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Enginepch.cpp">
@@ -978,6 +987,9 @@
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorPanels\InspectorPanel.cpp">
+      <Filter>src\Tools\Editor\EditorPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tools\Editor\EditorPanels\ProfilerPanel.cpp">
       <Filter>src\Tools\Editor\EditorPanels</Filter>
     </ClCompile>
     <ClCompile Include="src\Tools\Editor\EditorPanels\SceneTreePanel.cpp">

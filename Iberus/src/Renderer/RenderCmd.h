@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstdint>
+#include <string>
+#include <vector>
 #include "MathUtils.h"
 
 using namespace Math;
@@ -26,6 +29,7 @@ namespace Iberus {
 		PUSH_CAMERA,
 		PUSH_LIGHTS,
 		PUSH_TEXTURE,
+		PUSH_SDF_BUFFER,
 		DELETE_SHADER,
 		DELETE_MESH,
 		DELETE_TEXTURE,
@@ -45,6 +49,11 @@ namespace Iberus {
 
 		UniformType GetUniformType() const {
 			return uniType;
+		}
+
+		/// For uniform commands only; returns empty string for other command types.
+		virtual std::string GetUniformName() const {
+			return "";
 		}
 
 	protected:
@@ -98,6 +107,10 @@ namespace Iberus {
 			uniType = inboundUniType;
 
 			renderCmdType = RenderCmdType::PUSH_UNIFORM;
+		}
+
+		std::string GetUniformName() const override {
+			return name;
 		}
 
 		const std::string& GetName() const {
@@ -159,6 +172,16 @@ namespace Iberus {
 		Mat4 viewMatrix;
 		Vec3 cameraPos;
 		Mat4 cameraToWorld;
+	};
+
+	/// Single UBO payload for all SDF meshes/parts (std140 layout). Replaces many PUSH_UNIFORM SDF commands.
+	class IBERUS_API SDFBufferRenderCmd : public RenderCmd {
+	public:
+		SDFBufferRenderCmd() {
+			renderCmdType = RenderCmdType::PUSH_SDF_BUFFER;
+		}
+
+		std::vector<uint8_t> uboData;
 	};
 
 	/// Create and Delete Cmds

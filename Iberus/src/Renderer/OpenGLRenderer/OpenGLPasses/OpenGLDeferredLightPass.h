@@ -7,12 +7,12 @@ namespace Iberus {
 
 	class OpenGLDeferredLightPass : public RenderPass {
 	public:
-		OpenGLDeferredLightPass(Framebuffer* inSourceFBO = nullptr, Framebuffer* inTargetFBO = nullptr);
+		OpenGLDeferredLightPass();
 
-		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
+		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source = nullptr, Framebuffer* target = nullptr) override;
+		std::string GetName() const override { return "Light"; }
 	private:
 		MeshApi* quadMesh{ nullptr };
-		
 		std::vector<int> texturesIdxs{ 4, 5, 6, 7 };
 	};
 

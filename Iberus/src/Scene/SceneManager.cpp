@@ -1,11 +1,16 @@
 #include "Enginepch.h"
 #include "SceneManager.h"
+#include "BehaviourSystem.h"
 
 namespace Iberus {
 
 	Scene* SceneManager::CreateScene(const std::string& sceneID, bool setActive) {
 		scenes.emplace(sceneID, std::make_unique<Scene>(sceneID));
 		auto* scene = scenes[sceneID].get();
+
+		scene->OnEntityChanged().subscribe([scene](EntityId id) {
+			BehaviourSystem::NotifyEntityChanged(scene->GetWorld(), id);
+		});
 
 		if (setActive) {
 			activeScene = scene;

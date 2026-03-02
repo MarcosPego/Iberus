@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "Callback.h"
 #include "MathUtils.h"
 #include "Behaviour.h"
 #include "World.h"
@@ -75,6 +76,10 @@ namespace Iberus {
 		/// Notify scripts on entity that its structure changed (e.g. creature creator preset).
 		void NotifyEntityChanged(EntityId entityId);
 
+		/// Callback invoked when an entity's structure changes (e.g. creature editor). Invoke this or NotifyEntityChanged.
+		Callback<EntityId>& OnEntityChanged() { return onEntityChanged; }
+		const Callback<EntityId>& OnEntityChanged() const { return onEntityChanged; }
+
 	public:
 		template<typename T>
 		bool PushBehaviour(EntityId entityId, std::unique_ptr<T> behaviour) {
@@ -114,6 +119,7 @@ namespace Iberus {
 	private:
 		std::string ID;
 
+		Callback<EntityId> onEntityChanged;
 		World world;
 		EntityId sceneRootId{ NullEntity };
 		EntityId activeCameraId{ NullEntity };

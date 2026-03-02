@@ -8,6 +8,8 @@
 #include "CreatureCreatorPanel.h"
 #include "FileSystemPanel.h"
 #include "AssetInspectorPanel.h"
+#include "ProfilerPanel.h"
+#include "RenderSettingsPanel.h"
 #include "WelcomePanel.h"
 #include "EntityId.h"
 #include "MathUtils.h"
@@ -24,7 +26,7 @@ namespace Iberus {
 
 	enum class EditorMode { Editor, Game };
 
-	enum class GizmoOperation { Translate, Rotate, Scale };
+	enum class GizmoOperation { Hand, Translate, Rotate, Scale };
 	enum class GizmoMode { Local, World };
 
 	/// Editor camera - separate from scene, used to render the viewport in Edit mode. Not in scene tree, never serialized.
@@ -34,6 +36,8 @@ namespace Iberus {
 		float Fovy{ 60.0f };
 		float NearZ{ 0.1f };
 		float FarZ{ 100000.0f };
+		bool IsOrthographic{ false };
+		float OrthoSize{ 10.0f };
 	};
 
 	class IBERUS_API Editor {
@@ -80,6 +84,9 @@ namespace Iberus {
 		/// Get view and projection matrices for editor camera (for picking). Returns false if not available.
 		bool GetEditorViewProjection(Math::Mat4& outView, Math::Mat4& outProj, float aspectRatio) const;
 
+		/// Frame editor camera on entity (double-click focus). Moves camera to look at entity AABB center.
+		void FocusCameraOnEntity(EntityId entityId);
+
 	private:
 		void UpdateEditorCamera(double deltaTime);
 
@@ -91,6 +98,8 @@ namespace Iberus {
 		std::unique_ptr<CreatureCreatorPanel> creatureCreatorPanel;
 		std::unique_ptr<FileSystemPanel> fileSystemPanel;
 		std::unique_ptr<AssetInspectorPanel> assetInspectorPanel;
+		std::unique_ptr<ProfilerPanel> profilerPanel;
+		std::unique_ptr<RenderSettingsPanel> renderSettingsPanel;
 		EditorMode editorMode{ EditorMode::Editor };
 		std::string selectedAssetPath;
 		bool wasF11Down{ false };
@@ -103,13 +112,26 @@ namespace Iberus {
 		bool gamePaused{ false };
 		bool gameFullscreen{ false };
 		bool stepRequested{ false };
-		GizmoOperation gizmoOperation{ GizmoOperation::Translate };
+		GizmoOperation gizmoOperation{ GizmoOperation::Hand };
 		GizmoMode gizmoMode{ GizmoMode::World };
 
 		// Editor camera controller state
 		float editorCameraPitch{ 0 };
 		float editorCameraYaw{ 180 };
 		bool editorCameraDragging{ false };
+		bool editorCameraPanning{ false };
 		Math::Vec2 editorCameraLastMouse{ 0, 0 };
+
+		// Panel visibility (View menu + close buttons)
+		bool sceneTreeOpen{ true };
+		bool sceneViewOpen{ true };
+		bool gameViewOpen{ true };
+		bool inspectorOpen{ true };
+		bool creatureCreatorOpen{ true };
+		bool fileSystemOpen{ true };
+		bool assetInspectorOpen{ true };
+		bool profilerOpen{ true };
+		bool renderSettingsOpen{ true };
+		bool styleEditorOpen{ false };
 	};
 }

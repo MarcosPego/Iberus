@@ -7,8 +7,11 @@
 
 namespace Iberus {
 
-	OpenGLFramebuffer::OpenGLFramebuffer(const std::string& ID, std::vector<TextureApi*> inTextures) : Framebuffer(ID) {
+	OpenGLFramebuffer::OpenGLFramebuffer(const std::string& ID, std::vector<TextureApi*> inTextures, int customWidth, int customHeight) : Framebuffer(ID) {
 		textures = inTextures;
+
+		int width = customWidth > 0 ? customWidth : Engine::Instance()->GetCurrentWindow()->GetWidth();
+		int height = customHeight > 0 ? customHeight : Engine::Instance()->GetCurrentWindow()->GetHeight();
 
 		glGenFramebuffers(1, &fbo);
 		glGenTextures(1, &depthTexture);
@@ -17,9 +20,7 @@ namespace Iberus {
 		for (unsigned int i = 0; i < textures.size(); i++) {
 			textures[i]->Bind();
 
-			auto* currentWindow = Engine::Instance()->GetCurrentWindow();
-
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, currentWindow->GetWidth(), currentWindow->GetHeight(), 0, GL_RGB, GL_FLOAT, NULL);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_HALF_FLOAT, NULL);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
@@ -38,9 +39,8 @@ namespace Iberus {
 
 		glDrawBuffers(4, DrawBuffers);
 
-		auto* currentWindow = Engine::Instance()->GetCurrentWindow();
 		glBindTexture(GL_TEXTURE_2D, depthTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, currentWindow->GetWidth(), currentWindow->GetHeight(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
@@ -110,7 +110,7 @@ namespace Iberus {
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 		for (unsigned int i = 0; i < textures.size(); i++) {
 			textures[i]->Bind();
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, nullptr);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_HALF_FLOAT, nullptr);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		}

@@ -8,7 +8,7 @@ namespace Iberus {
 	public:
 		virtual ~IGUIContext() = default;
 
-		virtual bool BeginWindow(const char* title) = 0;
+		virtual bool BeginWindow(const char* title, bool* p_open = nullptr) = 0;
 		virtual void EndWindow() = 0;
 		virtual void Text(const char* text) = 0;
 		virtual bool Button(const char* label) = 0;

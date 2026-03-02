@@ -9,7 +9,8 @@ namespace Iberus {
 	public:
 		OpenGLForwardPass();
 
-		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame) override;
+		void ExecutePass(Frame& frame, std::function<void(Frame&, ShaderApi*)> renderFrame, Framebuffer* source = nullptr, Framebuffer* target = nullptr) override;
+		std::string GetName() const override { return "Forward"; }
 	};
 
 }

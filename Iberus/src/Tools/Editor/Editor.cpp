@@ -288,43 +288,26 @@ namespace Iberus {
 		// DockSpace must be submitted before any windows it hosts (menu bar creates a window)
 		gui->BeginDockSpace();
 
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 8));
 		if (ImGui::BeginMainMenuBar()) {
-			// Play / Stop / Pause / Step toolbar
-			if (editorMode == EditorMode::Editor) {
-				if (ImGui::Button("Play (P)##EditorToolbar") && hasScene) {
+			if (ImGui::BeginMenu("File##EditorFileMenu")) {
+				bool hasScenePath = !Application::Get()->GetCurrentScenePath().empty();
+				bool hasScene = Engine::Instance()->GetSceneManager().GetActiveScene() != nullptr;
+				if (ImGui::MenuItem(ICON_FA_FLOPPY_DISK " Save##EditorSave", "Ctrl+S", false, hasScene && hasScenePath)) {
 					if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
-						Buffer buf = SceneSerializer::Serialize(*scene, NullEntity);
-						if (!buf.Invalid()) {
-							playModeSnapshot.CopyDataFrom(buf);
+						if (SceneSerializer::SaveToFile(*scene, Application::Get()->GetCurrentScenePath())) {
+							Application::Get()->SetSceneDirty(false);
 						}
 					}
-					editorMode = EditorMode::Game;
-					gamePaused = false;
-					Engine::Instance()->OnSwitchedToGameMode();
 				}
-			} else {
-				if (ImGui::Button("Stop##EditorToolbar")) {
-					if (!playModeSnapshot.Invalid()) {
-						if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
-							SceneSerializer::RestoreFromBuffer(*scene, playModeSnapshot);
-						}
-						SetSelectedEntity(NullEntity);
-					}
-					editorMode = EditorMode::Editor;
-					gamePaused = false;
+				if (ImGui::MenuItem("Open Project##EditorOpenProject")) {
+					Application::Get()->RequestProjectScreen();
 				}
-				ImGui::SameLine();
-				if (ImGui::Button(gamePaused ? "Resume##EditorToolbar" : "Pause##EditorToolbar") && hasScene) {
-					gamePaused = !gamePaused;
+				if (ImGui::MenuItem("Close Project##EditorCloseProject")) {
+					Application::Get()->OnCloseProject();
 				}
-				ImGui::SameLine();
-				if (ImGui::Button("Step##EditorToolbar") && gamePaused) {
-					RequestStep();
-				}
+				ImGui::EndMenu();
 			}
-			ImGui::SameLine();
-			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
-			ImGui::SameLine();
 			if (ImGui::BeginMenu("View##EditorViewMenu")) {
 				if (ImGui::MenuItem("Scene Tree##ViewSceneTree", nullptr, &sceneTreeOpen)) {}
 				if (ImGui::MenuItem("Scene View##ViewSceneView", nullptr, &sceneViewOpen)) {}
@@ -344,24 +327,49 @@ namespace Iberus {
 				}
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("File##EditorFileMenu")) {
-				bool hasScenePath = !Application::Get()->GetCurrentScenePath().empty();
-				bool hasScene = Engine::Instance()->GetSceneManager().GetActiveScene() != nullptr;
-				if (ImGui::MenuItem(ICON_FA_FLOPPY_DISK " Save##EditorSave", "Ctrl+S", false, hasScene && hasScenePath)) {
+
+			float winWidth = ImGui::GetWindowWidth();
+			float centerGroupWidth = (editorMode == EditorMode::Editor) ? 40.0f : 140.0f;
+			ImGui::SetCursorPosX((winWidth - centerGroupWidth) * 0.5f);
+			if (editorMode == EditorMode::Editor) {
+				if (ImGui::Button(ICON_FA_PLAY "##EditorToolbar", ImVec2(32, 0)) && hasScene) {
 					if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
-						if (SceneSerializer::SaveToFile(*scene, Application::Get()->GetCurrentScenePath())) {
-							Application::Get()->SetSceneDirty(false);
+						Buffer buf = SceneSerializer::Serialize(*scene, NullEntity);
+						if (!buf.Invalid()) {
+							playModeSnapshot.CopyDataFrom(buf);
 						}
 					}
+					editorMode = EditorMode::Game;
+					gamePaused = false;
+					Engine::Instance()->OnSwitchedToGameMode();
 				}
-				if (ImGui::MenuItem("Open Project##EditorOpenProject")) {
-					Application::Get()->RequestProjectScreen();
+				if (ImGui::IsItemHovered()) {
+					ImGui::SetTooltip("Play (P)");
 				}
-				if (ImGui::MenuItem("Close Project##EditorCloseProject")) {
-					Application::Get()->OnCloseProject();
+			} else {
+				if (ImGui::Button(ICON_FA_STOP "##EditorToolbar", ImVec2(32, 0))) {
+					if (!playModeSnapshot.Invalid()) {
+						if (auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene()) {
+							SceneSerializer::RestoreFromBuffer(*scene, playModeSnapshot);
+						}
+						SetSelectedEntity(NullEntity);
+					}
+					editorMode = EditorMode::Editor;
+					gamePaused = false;
 				}
-				ImGui::EndMenu();
+				if (ImGui::IsItemHovered()) {
+					ImGui::SetTooltip("Stop");
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(gamePaused ? "Resume##EditorToolbar" : "Pause##EditorToolbar") && hasScene) {
+					gamePaused = !gamePaused;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Step##EditorToolbar") && gamePaused) {
+					RequestStep();
+				}
 			}
+
 			if (editorMode == EditorMode::Game) {
 				ImGui::SameLine();
 				ImGui::TextColored(ImVec4(0.4f, 1.0f, 0.4f, 1.0f), gamePaused ? " [Paused]" : " [Playing]");
@@ -370,6 +378,7 @@ namespace Iberus {
 			}
 			ImGui::EndMainMenuBar();
 		}
+		ImGui::PopStyleVar();
 
 		if (sceneTreeOpen) {
 			sceneTreePanel->OnDraw(*gui, &sceneTreeOpen);

@@ -289,6 +289,7 @@ namespace Iberus {
 		gui->BeginDockSpace();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8, 8));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 10));
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File##EditorFileMenu")) {
 				bool hasScenePath = !Application::Get()->GetCurrentScenePath().empty();
@@ -378,7 +379,7 @@ namespace Iberus {
 			}
 			ImGui::EndMainMenuBar();
 		}
-		ImGui::PopStyleVar();
+		ImGui::PopStyleVar(2);
 
 		if (sceneTreeOpen) {
 			sceneTreePanel->OnDraw(*gui, &sceneTreeOpen);

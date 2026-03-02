@@ -38,3 +38,6 @@
 #define ICON_FA_ANGLES_LEFT "\xef\x84\x80" // U+f100
 #define ICON_FA_LIST "\xef\x80\xba" // U+f03a
 #define ICON_FA_GRIP "\xef\x96\x8d" // U+f58d
+#define ICON_FA_HAND "\xef\x89\x96" // U+f256
+#define ICON_FA_GRIP_LINES "\xef\x9e\xa4" // U+f7a4 - parallel lines
+#define ICON_FA_FILTER "\xef\x82\xb0" // U+f0b0 - converging lines (perspective)

@@ -358,21 +358,23 @@ namespace Iberus {
 			}
 
 			int gizmoHitAxis = -1;
-			if (editor.GetMode() == EditorMode::Editor &&
-				editor.GetSelectedEntityId() != NullEntity && editor.IsSceneViewFocused()) {
-				if (ImGui::IsKeyPressed(ImGuiKey_W)) {
+			if (editor.GetMode() == EditorMode::Editor && editor.IsSceneViewFocused()) {
+				if (ImGui::IsKeyPressed(ImGuiKey_1)) {
+					editor.SetGizmoOperation(GizmoOperation::Hand);
+				}
+				if (ImGui::IsKeyPressed(ImGuiKey_2)) {
 					editor.SetGizmoOperation(GizmoOperation::Translate);
 				}
-				if (ImGui::IsKeyPressed(ImGuiKey_E)) {
+				if (ImGui::IsKeyPressed(ImGuiKey_3)) {
 					editor.SetGizmoOperation(GizmoOperation::Rotate);
 				}
-				if (ImGui::IsKeyPressed(ImGuiKey_R)) {
+				if (ImGui::IsKeyPressed(ImGuiKey_4)) {
 					editor.SetGizmoOperation(GizmoOperation::Scale);
 				}
 			}
 
 			if (editor.GetMode() == EditorMode::Editor &&
-				editor.GetSelectedEntityId() != NullEntity && ImGui::IsItemHovered()) {
+				editor.GetSelectedEntityId() != NullEntity && editor.GetGizmoOperation() != GizmoOperation::Hand && ImGui::IsItemHovered()) {
 				auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene();
 				if (scene) {
 					Math::Mat4 viewMat, projMat;
@@ -410,6 +412,7 @@ namespace Iberus {
 			}
 
 			if (editor.GetMode() == EditorMode::Editor &&
+				editor.GetGizmoOperation() != GizmoOperation::Hand &&
 				ImGui::IsItemHovered() && ImGui::IsMouseClicked(0) && gizmoHitAxis < 0) {
 				auto* scene = Engine::Instance()->GetSceneManager().GetActiveScene();
 				if (scene) {
@@ -444,18 +447,52 @@ namespace Iberus {
 			}
 
 			if (editor.GetMode() == EditorMode::Editor) {
-				ImGui::SetCursorScreenPos(ImVec2(imageMin.x + static_cast<float>(w) - 110.0f, imageMin.y + 8.0f));
-				bool ortho = editor.GetEditorCamera().IsOrthographic;
-				if (ImGui::Checkbox(ICON_FA_VIDEO " Ortho##SceneViewOrtho", &ortho)) {
-					editor.GetEditorCamera().IsOrthographic = ortho;
-				}
-				if (ortho) {
-					ImGui::SetCursorScreenPos(ImVec2(imageMin.x + static_cast<float>(w) - 110.0f, imageMin.y + 36.0f));
-					float orthoSize = editor.GetEditorCamera().OrthoSize;
-					if (ImGui::SliderFloat("##OrthoSize", &orthoSize, 1.0f, 100.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp)) {
-						editor.GetEditorCamera().OrthoSize = orthoSize;
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 4));
+				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 0));
+
+				float toolbarY = imageMin.y + 8.0f;
+				float toolbarX = imageMin.x + 8.0f;
+
+				ImGui::SetCursorScreenPos(ImVec2(toolbarX, toolbarY));
+				GizmoOperation op = editor.GetGizmoOperation();
+				ImVec4 activeTint = ImGui::GetStyleColorVec4(ImGuiCol_ButtonActive);
+
+				auto DrawGizmoButton = [&](GizmoOperation thisOp, const char* icon, const char* tooltip) {
+					if (op == thisOp) {
+						ImGui::PushStyleColor(ImGuiCol_Button, activeTint);
 					}
+					bool clicked = ImGui::Button(icon, ImVec2(28, 24));
+					if (op == thisOp) {
+						ImGui::PopStyleColor();
+					}
+					if (ImGui::IsItemHovered()) {
+						ImGui::SetTooltip("%s", tooltip);
+					}
+					if (clicked) {
+						editor.SetGizmoOperation(thisOp);
+					}
+				};
+
+				DrawGizmoButton(GizmoOperation::Hand, ICON_FA_HAND, "Hand (1)");
+				ImGui::SameLine();
+				DrawGizmoButton(GizmoOperation::Translate, ICON_FA_ARROWS_UP_DOWN_LEFT_RIGHT, "Move (2)");
+				ImGui::SameLine();
+				DrawGizmoButton(GizmoOperation::Rotate, ICON_FA_ARROWS_ROTATE, "Rotate (3)");
+				ImGui::SameLine();
+				DrawGizmoButton(GizmoOperation::Scale, ICON_FA_UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER, "Scale (4)");
+
+				bool ortho = editor.GetEditorCamera().IsOrthographic;
+				const char* projLabel = ortho ? ICON_FA_GRIP_LINES " Iso##SceneViewProj" : ICON_FA_FILTER " Persp##SceneViewProj";
+				float projButtonW = 70.0f;
+				ImGui::SetCursorScreenPos(ImVec2(imageMin.x + static_cast<float>(w) - projButtonW - 8.0f, toolbarY));
+				if (ImGui::Button(projLabel, ImVec2(projButtonW, 24))) {
+					editor.GetEditorCamera().IsOrthographic = !ortho;
 				}
+				if (ImGui::IsItemHovered()) {
+					ImGui::SetTooltip("%s", ortho ? "Switch to Perspective" : "Switch to Isometric");
+				}
+
+				ImGui::PopStyleVar(2);
 			}
 		}
 		ImGui::End();

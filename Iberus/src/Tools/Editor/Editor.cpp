@@ -67,6 +67,48 @@ namespace Iberus {
 			editorCameraDragging = false;
 		}
 
+		// Left-click pan (Hand tool)
+		if (gizmoOperation == GizmoOperation::Hand && input.IsMouseButtonPressed(MouseCode::Left)) {
+			Vec2 currentMouse = input.GetMousePosition();
+			if (!editorCameraPanning) {
+				editorCameraPanning = true;
+				editorCameraLastMouse = currentMouse;
+			} else {
+				Vec2 delta = currentMouse - editorCameraLastMouse;
+				float pitchRad = Deg2Rad(editorCameraPitch);
+				float yawRad = Deg2Rad(editorCameraYaw);
+				Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
+				forward = normalize(forward);
+				Vec3 right = normalize(cross(forward, Vec3(0, 1, 0)));
+				Vec3 up = normalize(cross(right, forward));
+				float panScale = editorCamera.IsOrthographic ? editorCamera.OrthoSize * 0.02f : 0.03f;
+				editorCamera.Position = editorCamera.Position - right * (delta.x * panScale);
+				editorCamera.Position = editorCamera.Position + up * (delta.y * panScale);
+				editorCameraLastMouse = currentMouse;
+			}
+		} else {
+			editorCameraPanning = false;
+		}
+
+		// Scroll wheel zoom
+		{
+			Vec2 scroll = input.GetScrollDelta();
+			if (scroll.y != 0.0f) {
+				float pitchRad = Deg2Rad(editorCameraPitch);
+				float yawRad = Deg2Rad(editorCameraYaw);
+				Vec3 forward(sinf(yawRad) * cosf(pitchRad), -sinf(pitchRad), -cosf(yawRad) * cosf(pitchRad));
+				forward = normalize(forward);
+				float zoomSpeed = 2.0f;
+				if (editorCamera.IsOrthographic) {
+					float delta = -scroll.y * editorCamera.OrthoSize * 0.1f;
+					editorCamera.OrthoSize = std::max(0.5f, editorCamera.OrthoSize + delta);
+				} else {
+					float delta = scroll.y * zoomSpeed;
+					editorCamera.Position = editorCamera.Position + forward * delta;
+				}
+			}
+		}
+
 		// WASD movement - forward/back along view direction, strafe left/right.
 		{
 			float pitchRad = Deg2Rad(editorCameraPitch);

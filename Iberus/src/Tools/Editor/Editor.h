@@ -26,7 +26,7 @@ namespace Iberus {
 
 	enum class EditorMode { Editor, Game };
 
-	enum class GizmoOperation { Translate, Rotate, Scale };
+	enum class GizmoOperation { Hand, Translate, Rotate, Scale };
 	enum class GizmoMode { Local, World };
 
 	/// Editor camera - separate from scene, used to render the viewport in Edit mode. Not in scene tree, never serialized.
@@ -112,13 +112,14 @@ namespace Iberus {
 		bool gamePaused{ false };
 		bool gameFullscreen{ false };
 		bool stepRequested{ false };
-		GizmoOperation gizmoOperation{ GizmoOperation::Translate };
+		GizmoOperation gizmoOperation{ GizmoOperation::Hand };
 		GizmoMode gizmoMode{ GizmoMode::World };
 
 		// Editor camera controller state
 		float editorCameraPitch{ 0 };
 		float editorCameraYaw{ 180 };
 		bool editorCameraDragging{ false };
+		bool editorCameraPanning{ false };
 		Math::Vec2 editorCameraLastMouse{ 0, 0 };
 
 		// Panel visibility (View menu + close buttons)

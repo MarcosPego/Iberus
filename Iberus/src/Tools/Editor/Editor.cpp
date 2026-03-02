@@ -328,6 +328,12 @@ namespace Iberus {
 				}
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Style##EditorStyleMenu")) {
+				if (ImGui::MenuItem("Style Editor##EditorStyleEditor", nullptr, false)) {
+					styleEditorOpen = true;
+				}
+				ImGui::EndMenu();
+			}
 
 			float winWidth = ImGui::GetWindowWidth();
 			float centerGroupWidth = (editorMode == EditorMode::Editor) ? 40.0f : 140.0f;
@@ -407,6 +413,12 @@ namespace Iberus {
 		}
 		if (renderSettingsOpen) {
 			renderSettingsPanel->OnDraw(*gui, &renderSettingsOpen);
+		}
+		if (styleEditorOpen) {
+			if (ImGui::Begin("Style Editor##EditorStyleEditor", &styleEditorOpen)) {
+				ImGui::ShowStyleEditor();
+			}
+			ImGui::End();
 		}
 		gui->EndDockSpace();
 

@@ -136,18 +136,14 @@ namespace Iberus {
 		}
 	}
 
-	static bool FolderHasSubfolders(const std::string& path) {
+	static bool FolderHasContents(const std::string& path) {
 		auto entries = FileSystem::ListDirectory(path);
-		for (const auto& e : entries) {
-			if (e.isDirectory) {
-				return true;
-			}
-		}
-		return false;
+		return !entries.empty();
 	}
 
-	void FileSystemPanel::DrawFolderTree(const std::string& path, int depth) {
+	void FileSystemPanel::DrawFolderTreeContents(const std::string& path, int depth) {
 		auto entries = FileSystem::ListDirectory(path);
+		// Subfolders first (expandable)
 		for (const auto& e : entries) {
 			if (!e.isDirectory) {
 				continue;
@@ -155,18 +151,16 @@ namespace Iberus {
 			if (!PassesFilter(e.name)) {
 				continue;
 			}
-
 			std::string fullPath = (std::filesystem::path(path) / e.name).string();
 			bool selected = (currentPath == fullPath);
-			bool hasSubfolders = FolderHasSubfolders(fullPath);
+			bool hasContents = FolderHasContents(fullPath);
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 			if (selected) {
 				flags |= ImGuiTreeNodeFlags_Selected;
 			}
-			if (!hasSubfolders) {
+			if (!hasContents) {
 				flags |= ImGuiTreeNodeFlags_Leaf;
 			}
-
 			char treeBuf[512];
 			snprintf(treeBuf, sizeof(treeBuf), "%s %s##FolderTree_%s", ICON_FA_FOLDER, e.name.c_str(), fullPath.c_str());
 			bool open = ImGui::TreeNodeEx(treeBuf, flags);
@@ -175,8 +169,50 @@ namespace Iberus {
 				contentDirty = true;
 			}
 			if (open) {
-				DrawFolderTree(fullPath, depth + 1);
+				DrawFolderTreeContents(fullPath, depth + 1);
 				ImGui::TreePop();
+			}
+		}
+		// Files as leaf items with icon + name (TreeNodeEx for alignment with folders)
+		for (const auto& e : entries) {
+			if (e.isDirectory) {
+				continue;
+			}
+			if (!PassesFilter(e.name)) {
+				continue;
+			}
+			std::string fullPath = (std::filesystem::path(path) / e.name).string();
+			bool selected = (editor.GetSelectedAssetPath() == fullPath);
+			AssetIconType iconType = thumbnailCache->GetIconTypeForPath(fullPath, false);
+			char treeBuf[512];
+			snprintf(treeBuf, sizeof(treeBuf), "%s %s##FolderTreeFile_%s", GetIconForAssetType(iconType), e.name.c_str(), fullPath.c_str());
+			ImGuiTreeNodeFlags fileFlags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+			if (selected) {
+				fileFlags |= ImGuiTreeNodeFlags_Selected;
+			}
+			ImGui::TreeNodeEx(treeBuf, fileFlags);
+			if (ImGui::IsItemClicked()) {
+				editor.SetSelectedAssetPath(fullPath);
+				currentPath = path;
+				contentDirty = true;
+			}
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+				ImGui::SetDragDropPayload("IBERUS_ASSET_PATH", fullPath.c_str(), fullPath.size() + 1);
+				ImGui::TextUnformatted(e.name.c_str());
+				ImGui::EndDragDropSource();
+			}
+			if (ImGui::BeginPopupContextItem()) {
+				if (ImGui::MenuItem("Select##SelectAssetTree")) {
+					editor.SetSelectedAssetPath(fullPath);
+				}
+#ifdef _WIN32
+				if (ImGui::MenuItem("Show in Explorer##ShowInExplorerTree")) {
+					std::string pathToOpen = std::filesystem::path(fullPath).parent_path().string();
+					std::wstring wpath(pathToOpen.begin(), pathToOpen.end());
+					ShellExecuteW(nullptr, L"explore", wpath.c_str(), nullptr, nullptr, SW_SHOW);
+				}
+#endif
+				ImGui::EndPopup();
 			}
 		}
 	}
@@ -208,14 +244,16 @@ namespace Iberus {
 				useImage = useImage && (texId != nullptr);
 
 				bool clicked = false;
+				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
 				if (useImage) {
-					clicked = ImGui::ImageButton("##AssetIcon", ImTextureRef(static_cast<ImTextureID>(reinterpret_cast<intptr_t>(texId))), ImVec2(iconSize, iconSize), ImVec2(0, 1), ImVec2(1, 0), selected ? ImVec4(0.3f, 0.5f, 0.8f, 1.f) : ImVec4(0, 0, 0, 0));
+					ImVec4 selTint = selected ? ImGui::GetStyleColorVec4(ImGuiCol_Header) : ImVec4(0, 0, 0, 0);
+					clicked = ImGui::ImageButton("##AssetIcon", ImTextureRef(static_cast<ImTextureID>(reinterpret_cast<intptr_t>(texId))), ImVec2(iconSize, iconSize), ImVec2(0, 1), ImVec2(1, 0), selTint);
 				} else {
 					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1, 1, 1, 0.15f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 1, 1, 0.25f));
 					if (selected) {
-						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.5f, 0.8f, 0.4f));
+						ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_Header));
 					}
 					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 					float iconScale = std::clamp(iconSize / 24.0f, 1.5f, 4.0f);
@@ -225,6 +263,7 @@ namespace Iberus {
 					ImGui::PopStyleVar();
 					ImGui::PopStyleColor(selected ? 4 : 3);
 				}
+				ImGui::PopStyleVar();
 				if (clicked) {
 					if (e.isDirectory) {
 						currentPath = fullPath;
@@ -327,12 +366,12 @@ namespace Iberus {
 				ImGui::BeginChild("FolderTree##FolderTreeChild", ImVec2(leftWidth, 0), ImGuiChildFlags_ResizeX);
 
 				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-				if (ImGui::TreeNodeEx(ICON_FA_FOLDER " Assets##FolderTreeRoot", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Leaf)) {
-					if (ImGui::IsItemClicked()) {
+				if (ImGui::TreeNodeEx(ICON_FA_FOLDER " Assets##FolderTreeRoot", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick)) {
+					if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
 						currentPath = assetsPath;
 						contentDirty = true;
 					}
-					DrawFolderTree(assetsPath, 0);
+					DrawFolderTreeContents(assetsPath, 0);
 					ImGui::TreePop();
 				}
 

@@ -132,5 +132,6 @@ namespace Iberus {
 		bool assetInspectorOpen{ true };
 		bool profilerOpen{ true };
 		bool renderSettingsOpen{ true };
+		bool styleEditorOpen{ false };
 	};
 }
